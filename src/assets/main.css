@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.overflow-y-scroll-nobar {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.overflow-y-scroll-nobar::-webkit-scrollbar {
+  display: none;
+}
+
+.contract-description {
+  max-height: 0rem;
+  transition: 0.25s linear max-height;
+}
+
+.expand-description {
+  height: auto;
+  max-height: 6rem;
+  /* transition: 1s linear max-height; */
+}
