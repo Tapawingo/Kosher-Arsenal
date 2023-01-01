@@ -1,5 +1,3 @@
-import type { fromJSON } from "postcss";
-
 export namespace arsenal {
   function deleteAt(array: Array<any>, item: any) {
     var index = array.indexOf(item);
@@ -13,7 +11,9 @@ export namespace arsenal {
     public id: Number = -1;
     public title: String = '';
     public description: String = '';
-    public preview: String = '';
+    public preview: string = '';
+    public owner: string = '';
+    public collaborators: Array<string> = [];
     public tags: Array<Tag> = [];
     public visibility: Number = 2; // 0 = private, 1 = unlisted, 2 = public
     public collections: Array<Collection> = [];
@@ -27,7 +27,7 @@ export namespace arsenal {
     public getID(): Number { return this.id };
     public getTitle(): String { return this.title };
     public getDescription(): String { return this.description };
-    public getpreview(): String { return this.preview };
+    public getpreview(): string { return this.preview };
     public getTags(): Array<Tag> { return this.tags };
     public getVisibility(): Number { return this.visibility };
     public getCollections(): Array<Collection> { return this.collections };
@@ -36,7 +36,7 @@ export namespace arsenal {
     /* Setters */
     public setTitle(title: String): void { this.title = title };
     public setDescription(description: String): void { this.description = description };
-    public setPreview(preview: String): void { this.preview = preview };
+    public setPreview(preview: string): void { this.preview = preview };
     public setTags(tags: Array<Tag>): void { this.tags = tags };
     public AppendTag(tag: Tag | Array<Tag>): void {
       if (tag instanceof Array) {
@@ -141,7 +141,6 @@ export namespace arsenal {
     public icon: String = '';
     public title: String = '';
     public items: Array<Item> = [];
-    public element: HTMLElement | null = null;
   
     public constructor(data: Partial<Category> = {}) {
       Object.assign(this, data);
@@ -153,13 +152,11 @@ export namespace arsenal {
     public getIcon(): String { return this.icon; }
     public getTitle(): String { return this.title; }
     public getItems(): Array<Item> { return this.items; }
-    public getElement(): HTMLElement | null { return this.element; }
 
     /* Setters */
     public setPos(pos: Number): void { this.pos = pos; }
     public setIcon(icon: String): void { this.icon = icon; }
     public setTitle(title: String): void { this.title = title; }
-    public setElement(element: HTMLElement): void { this.element = element; }
     public setItems(items: Array<Item>): void { this.items = items; }
     public AppendItem(item: Item | Array<Item>): void {
       if (item instanceof Array) {
@@ -219,8 +216,7 @@ export namespace arsenal {
     public title: String = '';
     public description: String = '';
     public preview: String = '';
-    public element: HTMLElement | null = null;
-    public subCategories: Array<Category> = [];
+    public categories: Array<Category> = [];
 
     public constructor(data: Partial<Item> = {}) {
       Object.assign(this, data);
@@ -232,37 +228,35 @@ export namespace arsenal {
     public getTitle(): String { return this.title; }
     public getDescription(): String { return this.description; }
     public getPreview(): String { return this.preview; }
-    public getElement(): HTMLElement | null { return this.element; }
-    public getSubCategories(): Array<Category> { return this.subCategories };
+    public getCategories(): Array<Category> { return this.categories };
 
     /* Setters */
     public setPos(pos: Number): void { this.pos = pos; }
     public setTitle(title: String): void { this.title = title; }
     public setDescription(description: String): void { this.description = description; }
     public setPreview(preview: String): void { this.preview = preview; }
-    public setElement(element: HTMLElement): void { this.element = element; }
-    public setSubCategories(subCategories: Array<Category>): void { this.subCategories = subCategories };
+    public setCategories(categories: Array<Category>): void { this.categories = categories };
     public AppendCategory(category: Category | Array<Category>): void {
       if (category instanceof Array) {
-        this.subCategories = this.subCategories.concat(category);
+        this.categories = this.categories.concat(category);
       } else {
-        this.subCategories.push(category);
+        this.categories.push(category);
       }
     };
     public deleteCategory(category: Category | Array<Category>) {
       if (category instanceof Array) {
         category.forEach(element => {
-          deleteAt(this.subCategories, element);
+          deleteAt(this.categories, element);
         });
       } else {
-        deleteAt(this.subCategories, category);
+        deleteAt(this.categories, category);
       }
     }
 
     /* Methods */
     public toJSON() {
-      var subCategories: Object = this.subCategories.map((subCategory: Category) => {
-        return subCategory.toJSON();
+      var categories: Object = this.categories.map((category: Category) => {
+        return category.toJSON();
       });
 
       var itemJSON = {
@@ -271,7 +265,7 @@ export namespace arsenal {
         title: this.title,
         description: this.description,
         preview: this.preview,
-        subCategories: subCategories
+        categories: categories
       };
 
       return itemJSON;
@@ -279,13 +273,13 @@ export namespace arsenal {
 
     public fromJSON(jsonString: string): Item {
       var data: any = JSON.parse(jsonString);
-      var subCategoriesData = data.subCategories;
+      var categoriesData = data.categories;
 
-      data.subCategories = [];
-      subCategoriesData.forEach((subCategory: Object) => {
+      data.categories = [];
+      categoriesData.forEach((category: Object) => {
         var categoryClass = new Category();
-        categoryClass.fromJSON(JSON.stringify(subCategory))
-        data.subCategories.push(categoryClass);
+        categoryClass.fromJSON(JSON.stringify(category))
+        data.categories.push(categoryClass);
       });
 
       Object.assign(this, data);

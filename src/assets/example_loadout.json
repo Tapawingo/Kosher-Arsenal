@@ -2,7 +2,9 @@
   "id": 0,
   "title": "example loadout",
   "description": "This is an example loadout",
-  "preview": "",
+  "owner": [],
+  "collaborators": [],
+  "preview": "/assets/img/editor/preview/preview.svg",
   "tags": [
     {
       "label": "Example Tag"
@@ -14,7 +16,7 @@
     {
       "id": 0,
       "pos": 0,
-      "icon": "/assets/img/editor/icon_handgun.png",
+      "icon": "/assets/img/editor/icons/icon_handgun.png",
       "title": "Example category 1",
       "items": [
         {
@@ -23,11 +25,11 @@
           "title": "Example Item 1",
           "description": "This is example item 1. It has a very long description so i can see what happens when the string is too long. It should just terminate the string in elippsies. When this happnes there should be a 'show more' button that opens a modal with the entire description in it. This string still isn't quite long enough so i'm gonna keep on typing until it reaches terminal length.",
           "preview": "",
-          "subCategories": [
+          "categories": [
             {
               "id": 0,
               "pos": 0,
-              "icon": "/assets/img/editor/icon_unknown.png",
+              "icon": "/assets/img/editor/icons/icon_unknown.png",
               "title": "Example sub category 1",
               "items": [
                 {
@@ -36,7 +38,7 @@
                   "title": "Example Sub Item 1",
                   "description": "This is example sub item 1",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 },
                 {
                   "id": 2,
@@ -44,7 +46,7 @@
                   "title": "Example Sub Item 2",
                   "description": "This is example sub item 2",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 }
               ]
             }
@@ -56,12 +58,12 @@
           "title": "Example Item 2",
           "description": "This is example item 2",
           "preview": "",
-          "subCategories": [
+          "categories": [
             {
               "id": 0,
               "pos": 0,
-              "icon": "/assets/img/editor/icon_unknown.png",
-              "title": "Example sub category 1",
+              "icon": "/assets/img/editor/icons/icon_unknown.png",
+              "title": "Example sub category 2",
               "items": [
                 {
                   "id": 1,
@@ -69,7 +71,7 @@
                   "title": "Example Sub Item 1",
                   "description": "This is example sub item 1",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 },
                 {
                   "id": 2,
@@ -77,48 +79,72 @@
                   "title": "Example Sub Item 2",
                   "description": "This is example sub item 2",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 }
               ]
             },
             {
               "id": 1,
               "pos": 0,
-              "icon": "/assets/img/editor/icon_unknown.png",
-              "title": "Example sub category 1",
+              "icon": "/assets/img/editor/icons/icon_unknown.png",
+              "title": "Example sub category 3",
               "items": [
                 {
                   "id": 1,
                   "pos": 0,
                   "title": "Example Sub Item 3",
-                  "description": "This is example sub item 1",
+                  "description": "This is example sub item 3",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 }
               ]
             }
           ]
+        },
+        {
+          "id": 2,
+          "pos": 2,
+          "title": "Example Item 3",
+          "description": "This is example item 3",
+          "preview": "",
+          "categories": []
+        },
+        {
+          "id": 3,
+          "pos": 3,
+          "title": "Example Item 4",
+          "description": "This is example item 4",
+          "preview": "",
+          "categories": []
+        },
+        {
+          "id": 4,
+          "pos": 4,
+          "title": "Example Item 5",
+          "description": "This is example item 5",
+          "preview": "",
+          "categories": []
         }
       ]
     },
     {
       "id": 1,
       "pos": 1,
-      "icon": "/assets/img/editor/icon_unknown.png",
+      "icon": "/assets/img/editor/icons/icon_unknown.png",
       "title": "Example category 2",
       "items": [
         {
           "id": 0,
           "pos": 1,
-          "title": "Example Item 3",
-          "description": "This is example item 3",
+          "title": "[✓] Example Item 6",
+          "description": "This is example item 6",
           "preview": "",
-          "subCategories": [
+          "categories": [
             {
               "id": 0,
               "pos": 0,
-              "icon": "/assets/img/editor/icon_unknown.png",
-              "title": "Example sub category 3",
+              "icon": "/assets/img/editor/icons/icon_unknown.png",
+              "title": "Example sub category 4",
               "items": [
                 {
                   "id": 1,
@@ -126,7 +152,7 @@
                   "title": "Example Sub Item 4",
                   "description": "This is example sub item 4",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 },
                 {
                   "id": 2,
@@ -134,7 +160,7 @@
                   "title": "Example Sub Item 5",
                   "description": "This is example sub item 5",
                   "preview": "",
-                  "subCategories": []
+                  "categories": []
                 }
               ]
             }

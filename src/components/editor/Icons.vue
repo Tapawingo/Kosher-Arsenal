@@ -1,72 +1,49 @@
 <template>
-  <nav ref="iconBar" class="w-[12%] flex p-[5px] flex-col overflow-y-scroll-nobar">
-    
+  <nav ref="iconsContainer" class="w-[12%] flex p-[5px] flex-col overflow-y-scroll-nobar">
+    <Icon v-if="context == 'main'" v-for="category in loadout.getCategories()" :iconObject="category" :context="context" @category-selected="selectCategory" />
+    <Icon v-if="context == 'item'" v-for="category in selectedMainItem.getCategories()" :iconObject="category" :context="context" @category-selected="selectCategory" />
   </nav>
 
 </template>
 
 <script lang="ts">
-  import type { arsenal } from '@/modules/arsenal';
   import Icon from './icon.vue'
-  import { createApp, h } from "vue"
+  import pinia from "@/store";
+  import { storeToRefs } from 'pinia'
+  import { useArsenalStore } from '@/stores/arsenal';
 
   export default {
     name: 'icons',
-    mounted: function() {
 
-      window.addEventListener('KA-loadout-loaded', (event: CustomEventInit) => {
-        const iconBar: any = this.$refs.iconBar;
-
-        switch (this.$props.context) {
-          case 'main':
-            var categories: Array<arsenal.Category> = globalThis.loadout.getCategories();
-            break;
-
-          case 'item':
-            var categories: Array<arsenal.Category> = [];
-            break;
-        
-          default:
-            var categories: Array<arsenal.Category> = [];
-            break;
-        }
-
-        for (let i = 0; i < categories.length; i++) {
-
-          var ComponentApp = createApp({
-            setup () {
-              return () => h(Icon, {iconObject: categories[i]})
-            }
-          });
-
-          const wrapper = document.createElement('div');
-          ComponentApp.mount(wrapper);
-          iconBar.appendChild(wrapper);
-
-          categories[i].setElement(wrapper);
-        }
-
-        switch (this.$props.context) {
-          case 'main':
-            globalThis.loadout.setCategories(categories);
-            break;
-
-          case 'item':
-            /* globalThis.loadout.setSubCategories(categories); */
-            break;
-        }
-      });
-
-    },
     props: {
       context: {
         type: String,
-        required: true,
-        default: 'main'
+        required: true
       }
     },
+
     components: {
       Icon
     },
+
+    setup(props) {
+      const store = useArsenalStore(pinia);
+      const { loadout, selectedMainItem } = storeToRefs(store);
+      const context = props.context;
+
+      return { loadout, selectedMainItem, context };
+    },
+
+    methods: {
+      selectCategory(selectedCategoryElement: HTMLDivElement) {
+        const itemsContainer: HTMLDivElement = this.$refs.iconsContainer as HTMLDivElement;
+
+        Array.from(itemsContainer.children).forEach(categoryElement => {
+          if (categoryElement != selectedCategoryElement) {
+            categoryElement.classList.remove('selected');
+          }
+        });
+      }
+    }
   }
 </script>

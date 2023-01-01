@@ -1,68 +1,28 @@
 # Kosher Arsenal
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
+## Editor TODO List
+@[~] Allow the user to drag items to reorder
+@[ ] Add, Edit and Remove modals for editing
+@[ ] Create logic to save the loadout on every change (fully reactive)
+@[ ] Create logic to get a loadout from a database (use mongoDB)
+@[ ] Store images outside the document root (so it's not accessible from an HTTP request and authorize the request)
+@[ ] Make sure uploaded images get randomized file names
+@[ ] Validate file type (don't use content-type-header as it can be spoofed)
+@[ ] In the upload modal inform the user of the recommended image size
+@[ ] Tooltips everywhere
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-## Type Support for `.vue` Imports in TS
+## Launch page TODO List
+@[ ] Implement user authentication using google and allowing nicknames
+@[ ] Loadout Meta data editing (description, name, visibility, tags, collections etc.)
+@[ ] Add collaborator functionality to loadouts
+@[ ] Tag Preferences
+@[ ] Follow other users
+@[ ] Search for loadouts by name, tag and search for users by name (tag using # to denote that it's a tag or @ to denote that it's a user)
+@[ ] Comments on loadout pages
+@[ ] Allow users to recommend changes to a loadout
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+## Buylist TODO List
+@[ ] Create a copy of the editor without the editing features, add checkmarks to each item and allow to add links to where product can be bought

@@ -1,11 +1,18 @@
 <template>
-  <div ref="itemRoot" arsenal-selected="false" class="font-mono">
-    <div ref="itemTitleContainer" class="bg-[#00000055] text-base text-white pt-5 pb-5 pl-2 hover:bg-[#00000035] cursor-pointer" @click="selectItem">
-      <div ref="dragIcon" v-if="editorMode === 1" draggable="true" class="w-[1.4rem] mr-px inline-block align-middle cursor-grab"><MenuIcon /></div> 
-      <span ref="itemTitle" class="align-middle font-bold"></span>
+  <div ref="itemRoot" class="font-mono item">
+    <div class="text-base text-white pt-5 pb-5 pl-2 hover:bg-[#00000035] cursor-pointer title" @click="select">
+      <div v-if="editorMode === 1" class="w-[1.4rem] mr-px inline-block align-middle cursor-grab" @mousedown="mouseDown">
+        <MenuIcon />
+      </div> 
+      <span class="align-middle font-bold">
+        {{ item.getTitle() }}
+      </span>
     </div>
-    <div ref="itemDescriptionContainer" class="bg-[#00000055] text-xs text-zinc-200 mb-[1px] overflow-hidden contract-description overflow-ellipsis">
-      <span ref="itemDescription" class="align-top font-bold pt-2 pb-5 block min-h-[4rem] overflow-ellipsis"></span>
+    <div class="flex flex-col text-xs text-zinc-200 mb-[1px] overflow-hidden description overflow-ellipsis">
+      <span class="align-top font-bold pt-2 pb-0 block min-h-[4rem] overflow-hidden overflow-ellipsis"> 
+        {{ item.getDescription() }} 
+      </span>
+      <div class="text-xs underline w-full text-center cursor-pointer">Show more</div>
     </div>
   </div>
 </template>
@@ -13,6 +20,9 @@
 <script lang="ts">
   import type { arsenal } from '@/modules/arsenal';
   import { MenuIcon } from '@heroicons/vue/solid';
+  import { useArsenalStore } from '@/stores/arsenal';
+  import pinia from "@/store";
+  import { storeToRefs } from 'pinia'
 
   export default {
     name: 'editor',
@@ -24,82 +34,85 @@
     props: {
       itemObject: {
         type: Object,
-        required: false,
-        default: {}
-      },
-      itemContainer: {
-        type: HTMLDivElement,
         required: true,
-        default: {}
+      },
+      context: {
+        type: String,
+        required: true
       }
     },
 
-    mounted() {
-      const item: arsenal.Item = this.$props.itemObject as arsenal.Item;
-      const itemRoot: HTMLDivElement = this.$refs.itemRoot as HTMLDivElement;
-      const dragIcon: HTMLSpanElement = this.$refs.dragIcon as HTMLDivElement;
-      const itemTitle: HTMLDivElement = this.$refs.itemTitle as HTMLDivElement;
-      const itemDescription: HTMLDivElement = this.$refs.itemDescription as HTMLDivElement;
-
-      itemTitle.innerHTML = item.title as string;
-      itemDescription.innerHTML = item.description as string;
+    watch: {
+      itemObject(newItem: arsenal.Item) {
+        (this.$refs.itemRoot as HTMLDivElement).classList.remove('selected');
+        this.$data.item = newItem;
+      }
     },
 
     methods: {
-      selectItem() {
+      select() {
+        const store = useArsenalStore(pinia);
+        const { setSelectedItem, setSelectedCategory } = store;
+        const { selectedMainItem, selectedItemItem } = storeToRefs(store);
+        const context = this.$props.context;
         const item: arsenal.Item = this.$props.itemObject as arsenal.Item;
         const itemRoot: HTMLDivElement = this.$refs.itemRoot as HTMLDivElement;
-        const itemsRoot: HTMLDivElement = (itemRoot.parentNode as HTMLDivElement).parentNode as HTMLDivElement;
-        const itemTitleContainer: HTMLDivElement = this.$refs.itemTitleContainer as HTMLDivElement;
-        const itemDescriptionContainer: HTMLDivElement = this.$refs.itemDescriptionContainer as HTMLDivElement;
+        const selectedItem = (context === 'main') ? selectedMainItem : selectedItemItem;
 
-        if (itemRoot.getAttribute('arsenal-selected') != undefined) {
-          const itemSelected: Boolean = itemRoot.getAttribute('arsenal-selected') === 'false';
-
-          /* unselect all icons */
-          if (itemsRoot != undefined) {
-            const itemsArray: Array<any> = Array.from(itemsRoot.children);
-              itemsArray.forEach((itemContainer: HTMLDivElement) => {
-              const itemEl: HTMLDivElement = itemContainer.children[0] as HTMLDivElement;
-              itemEl.setAttribute('arsenal-selected', 'false');
-              (itemEl.children[0] as HTMLDivElement).style.backgroundColor = '';
-              (itemEl.children[1] as HTMLDivElement).classList.remove('expand-description');
-            });
-          }
-
-          /* Toggle current icon */
-          if (itemSelected) {
-            itemRoot.setAttribute('arsenal-selected', 'true');
-            itemTitleContainer.style.backgroundColor = '#00000035';
-            itemDescriptionContainer.classList.add('expand-description');
-
-            /* If the text overflows show a "show more option" */
-            if (itemDescriptionContainer.offsetHeight < itemDescriptionContainer.scrollHeight) {
-              console.log('text too long')
-            }
-
-            globalThis.selectedItem = item;
-            //console.log(itemDescriptionContainer);
-
-          } else {
-            globalThis.selectedItem = null;
-            itemDescriptionContainer.classList.remove('expand-description');
-          }
-          
-          /* Dispatch event */
-          let event = new CustomEvent('onCategorySelect', { detail: {context: 'main' as String, category: globalThis.mainCategory as arsenal.Category} })
-          window.dispatchEvent(event);
+        /* Toggle current icon */
+        if (item != selectedItem.value) {
+          setSelectedItem(context, item);
+          itemRoot.classList.add('selected');
         } else {
-          itemRoot.setAttribute('arsenal-selected', 'false');
+          setSelectedItem(context, null);
+          itemRoot.classList.remove('selected');
+        };
+
+        /* Null itemItem and itemCategory when new item is selected */
+        if (context === 'main') {
+          setSelectedItem('item', null);
+          setSelectedCategory('item', null);
         }
 
+        this.$emit('item-select', itemRoot);
       },
+
+      mouseDown (evt: MouseEvent) {
+        this.$data.dragging = true;
+      },
+
+      mouseUp (evt: MouseEvent) {
+        const itemRoot: HTMLDivElement = this.$refs.itemRoot as HTMLDivElement;
+
+        if (this.$data.dragging) {
+          this.$data.dragging = false;
+          this.$emit('item-stopDrag', evt, itemRoot);
+        }
+      },
+
+      mouseMove (evt: MouseEvent) {
+        const itemRoot: HTMLDivElement = this.$refs.itemRoot as HTMLDivElement;
+        
+        if (this.$data.dragging) {
+          this.$emit('item-drag', evt, itemRoot);
+        }
+
+      }
     },
+
+    created () {
+      window.addEventListener('mouseup', this.mouseUp);
+      window.addEventListener('mousemove', this.mouseMove);
+    },
+
     data () {
+      const store = useArsenalStore(pinia);
+      const { mode } = storeToRefs(store);
 
       return {
-        editorMode: globalThis.mode,
-        draggedItem: new EventTarget
+        editorMode: mode,
+        item: this.$props.itemObject,
+        dragging: false
       }
     }
   }

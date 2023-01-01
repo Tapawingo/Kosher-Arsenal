@@ -1,20 +1,22 @@
 <template>
-  <div ref="panelRoot" class="w-[88%] pt-[5px] pb-[5px] h-full">
+  <div ref="panelRoot" class="w-[88%] pt-[5px] pb-[5px] h-full" v-if="(context === 'main' ? selectedMainCategory.getItems() : selectedItemCategory.getItems()).length != 0">
     <div class="bg-[#55555599] border-solid border-[1px] border-black h-full w-full flex flex-col">
       <div ref="panelTitle" class="bg-[#00000088] basis-[4%] text-[#DDDDDDFF] p-[5px] text-center font-mono text-[20px] font-bold">
-        <!-- Category title -->
+        {{ context === 'main' ? selectedMainCategory.getTitle() : selectedItemCategory.getTitle() }}
       </div>
       <div ref="panelItems" class="basis-[96%] flex flex-col overflow-y-scroll-nobar">
-        <!-- Category Items -->
+        <panelItem v-if="context == 'main'" v-for="item in selectedMainCategory.getItems()" :context="context" :itemObject="item" @item-select="selectItem" @item-drag="dragItem" @item-stopDrag="stopDragItem"/>
+        <panelItem v-if="context == 'item'" v-for="item in selectedItemCategory.getItems()" :context="context" :itemObject="item" @item-select="selectItem" @item-drag="dragItem" @item-stopDrag="stopDragItem"/>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import type { arsenal } from '@/modules/arsenal';
   import panelItem from './panelItem.vue'
-  import { createApp, h } from "vue"
+  import pinia from "@/store";
+  import { storeToRefs } from 'pinia'
+  import { useArsenalStore } from '@/stores/arsenal';
 
   export default {
     name: 'editor',
@@ -30,43 +32,66 @@
       panelItem
     },
 
-    mounted() {
-      const panelRoot: HTMLDivElement = this.$refs.panelRoot as HTMLDivElement;
-      const panelTitle: HTMLDivElement = this.$refs.panelTitle as HTMLDivElement;
-      const panelItems: HTMLDivElement = this.$refs.panelItems as HTMLDivElement;
-      const panelContext: String = this.$props.context;
+    setup(props) {
+      const store = useArsenalStore(pinia);
+      const { selectedMainCategory, selectedItemCategory } = storeToRefs(store);
+      const context = props.context;
 
-      /* Triggered when category gets selected */
-      window.addEventListener('KA-arsenal-category-select', (event: CustomEventInit) => {
-        const context: String = event.detail.context; 
-        const category: arsenal.Category = event.detail.category;
-
-        if (context === panelContext) {
-          if (category != null) {
-            panelTitle.innerHTML = category.title as string;
-
-            const items = category.items;
-
-            panelItems.innerHTML = '';
-            for (let i = 0; i < items.length; i++) {
-              var ComponentApp = createApp({
-                setup () {
-                  return () => h(panelItem, {itemObject: items[i], itemContainer: panelItems})
-                }
-              });
-
-              const wrapper = document.createElement('div');
-              ComponentApp.mount(wrapper);
-              panelItems.appendChild(wrapper);
-
-              /* Add arsenal properties */
-              wrapper.children[0].setAttribute('arsenal-item-id', items[i].id.toString());
-
-              //categories[i].setElement(wrapper);
-            }
-          }
-        }
-      })
+      return { selectedMainCategory, selectedItemCategory, context };
     },
+
+    methods: {
+      selectItem(selectedItemElement: HTMLDivElement) {
+        const itemsContainer: HTMLDivElement = this.$refs.panelItems as HTMLDivElement;
+
+        Array.from(itemsContainer.children).forEach(itemElement => {
+          if (itemElement != selectedItemElement) {
+            itemElement.classList.remove('selected');
+          }
+        });
+      },
+
+      dragItem (evt: MouseEvent, itemElement: HTMLDivElement) {
+        const parentContainer: HTMLDivElement = this.$refs.panelItems as HTMLDivElement;
+        const itemsArray: Array<Element> = Array.from(parentContainer.children);
+        const index: number = itemsArray.indexOf(itemElement);
+        
+        /* Calculate position of item */
+        var itemPosition: number = parentContainer.getBoundingClientRect().top;
+        for (let i = 0; i < index; i++) {
+          const element = itemsArray[i];
+          
+          itemPosition += element.getBoundingClientRect().height;
+        }
+
+        /* Drag item */
+        const itemHeight: number = itemElement.getBoundingClientRect().height;
+        const mousePosition: number = itemPosition + (itemHeight / 2); // @FIXME Fix issue with mouse position when dragging
+        itemElement.classList.add('dragging');
+        itemElement.style.top = evt.clientY - mousePosition + 'px';
+
+        /* Calculate new index */
+        var newIndex = 0;
+        var elementPosition = parentContainer.getBoundingClientRect().top;
+        while (evt.clientY - mousePosition >= elementPosition && index <= itemsArray.length - 1) {
+          const element = itemsArray[newIndex];
+          elementPosition += element.getBoundingClientRect().height;
+          newIndex++;
+        }
+
+        if (newIndex === itemsArray.length - 1) {
+          parentContainer.appendChild(itemElement);
+        } else {
+          var i = index > newIndex ? newIndex : newIndex + 1;
+          parentContainer.insertBefore(itemElement, itemsArray[i]);
+        }
+
+        console.log(newIndex);
+      },
+
+      stopDragItem (evt: MouseEvent, itemElement: HTMLDivElement) {
+        itemElement.classList.remove('dragging');
+      }
+    }
   }
 </script>
