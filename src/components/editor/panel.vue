@@ -66,14 +66,15 @@
 
         /* Drag item */
         const itemHeight: number = itemElement.getBoundingClientRect().height;
-        const mousePosition: number = itemPosition + (itemHeight / 2); // @FIXME Fix issue with mouse position when dragging
+        const mousePosition: number = itemPosition + (itemHeight / 2);
         itemElement.classList.add('dragging');
         itemElement.style.top = evt.clientY - mousePosition + 'px';
 
         /* Calculate new index */
         var newIndex = 0;
+        var draggedPosition = itemElement.getBoundingClientRect().top;
         var elementPosition = parentContainer.getBoundingClientRect().top;
-        while (evt.clientY - mousePosition >= elementPosition && index <= itemsArray.length - 1) {
+        while (draggedPosition >= elementPosition && index <= itemsArray.length - 1) {
           const element = itemsArray[newIndex];
           elementPosition += element.getBoundingClientRect().height;
           newIndex++;
@@ -85,8 +86,6 @@
           var i = index > newIndex ? newIndex : newIndex + 1;
           parentContainer.insertBefore(itemElement, itemsArray[i]);
         }
-
-        console.log(newIndex);
       },
 
       stopDragItem (evt: MouseEvent, itemElement: HTMLDivElement) {

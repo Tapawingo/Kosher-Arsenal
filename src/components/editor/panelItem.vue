@@ -12,7 +12,7 @@
       <span class="align-top font-bold pt-2 pb-0 block min-h-[4rem] overflow-hidden overflow-ellipsis"> 
         {{ item.getDescription() }} 
       </span>
-      <div class="text-xs underline w-full text-center cursor-pointer">Show more</div>
+      <div class="text-xs underline w-full text-center cursor-pointer more">{{editorMode === 1 ? 'Edit' : 'Show more'}}</div>
     </div>
   </div>
 </template>
