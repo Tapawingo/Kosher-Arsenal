@@ -6,6 +6,8 @@
 
 @[~] Add, Edit and Remove modals for editing
 
+@[ ] Custom Context Menu, should be able to copy header, description, previewImage, share a link to item etc.
+
 @[ ] Create logic to save the loadout on every change (fully reactive)
 
 @[ ] Create logic to get a loadout from a database (use mongoDB)
