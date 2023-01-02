@@ -1,39 +1,79 @@
 <template>
-  <div class="modal-bg absolute w-screen h-screen flex justify-center items-center overflow-hidden">
-    <div ref="modal" class="modal absolute font-mono">
+  <div ref="modal" class="modal absolute font-mono">
       <div class="header" @mousedown="mouseDown">
+        <span>{{ headerTitle }}</span>
         <XIcon />
       </div>
       <div class="content">
         <form>
-          <TextInput headerText="Item Title" :focus="true" />
-          <TextBlockGroup headerText="Item Description" :focus="true" />
-
-          <hr />
+          <component v-for="item in modalData.items" :is="getType(item.type)" :data="item" />
         </form>
       </div>
     </div>
-  </div>
-
 </template>
 
 <script lang="ts">
+  import TextGroup from './text.vue'
+  import TextBoxGroup from './textBox.vue'
+  import CategoryPreview from './categoryPreview.vue'
+  import ImagePreview from './imagePreview.vue'
+  import ImageUpload from './imageUpload.vue'
+  import ButtonRow from './buttonRow.vue'
   import { XIcon } from '@heroicons/vue/solid'
-  import TextInput from './text.vue'
-  import TextBlockGroup from './textBlock.vue'
 
-  // @TODO Instead of this make the modal seperate from th background so i can have multiple modals at the same time
+  // @TODO Read from an array of objects to construct the modal
+  // @TODO Create a priority prop
+  // @TODO Create an image upload component
 
   export default {
     name: 'modal',
 
+    props: {
+      headerTitle: {
+        type: String,
+        required: false,
+        default: ''
+      },
+
+      modalData: {
+        type: Object,
+        required: true
+      }
+    },
+
     components: {
       XIcon,
-      TextInput,
-      TextBlockGroup
+      TextGroup,
+      TextBoxGroup,
+      CategoryPreview,
+      ImagePreview,
+      ImageUpload,
+      ButtonRow
     },
 
     methods: {
+      getType (type: string) {
+        switch (type) {
+          case 'text':
+            return TextGroup;
+
+          case 'textbox':
+            return TextBoxGroup;
+          
+          case 'image-preview':
+            return ImagePreview;
+
+          case 'image-upload':
+            return ImageUpload;
+          
+          case 'category-preview':
+            return CategoryPreview;
+
+          case 'buttonrow':
+            return ButtonRow;
+        }
+      },
+
       mouseDown (evt: MouseEvent) {
         this.$data.dragging = true;
 
@@ -71,12 +111,16 @@
     },
 
     data () {
+
+      const buttons = [{ text: 'close', style: 'failed' }, { text: 'save', style: 'success' }];
+
       return {
         dragging: false,
         previousPos: { 
           x: 0,
           y: 0
-        }
+        },
+        buttons
       }
     }
   }

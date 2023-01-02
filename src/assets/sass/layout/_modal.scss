@@ -20,6 +20,15 @@
     background-color: #555555FF;
     border-bottom: solid 1px black;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+      color: #DDDDDDFF;
+      margin-left: 0.25rem;
+      font-size: small;
+      cursor: default;
+    }
 
     svg {
       color: white;
@@ -28,7 +37,7 @@
       cursor: pointer;
 
       &:hover {
-        background-color: red;
+        background-color: tomato;
       }
     }
   }
@@ -69,6 +78,123 @@
           outline: none;
         }
       }
+
+      div.categories {
+        padding: 0.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        width: 100%;
+        min-height: 5rem;
+        background-color: #373737;
+
+        img {
+          width: 2rem;
+          height: 2rem;
+          border: solid 1px black;
+          background-color: #505050;
+          cursor: pointer;
+          
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      div.uploadbox {
+        width: 100%;
+        min-height: 5rem;
+        background-color: #373737;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: dashed 1px #999999;
+
+        svg {
+          width: 2rem;
+          color: #999999;
+          border: dashed 1px #999999;
+        }
+      }
+
+      div.previewbox {
+        width: 100%;
+        min-height: 10rem;
+        background-color: #373737;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: dashed 1px #999999;
+
+        span {
+          color: #999999;
+          font-size: small;
+        }
+
+        img {
+          max-height: 9rem;
+          color: #999999;
+          border: dashed 1px #999999;
+        }
+
+        svg {
+          max-height: 2rem;
+          color: #999999;
+          border: dashed 1px #999999;
+        }
+      }
+
+      button {
+        margin-top: 0.25rem;
+        width: 100%;
+        background-color: #373737;
+        color: #DDDDDDFF;
+
+        &:hover {
+          background-color: #505050;
+        }
+      }
+    }
+
+    .modal-buttonRow {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+
+      button.primary {
+        margin-top: 0.25rem;
+        padding: 0.25rem;;
+        background-color: #373737;
+        color: #DDDDDDFF;
+
+        &:hover {
+          background-color: #505050;
+        }
+      }
+
+      button.success {
+        margin-top: 0.25rem;
+        padding: 0.25rem;
+        padding: 0.25rem 0.75rem 0.25rem 0.75rem;
+        background-color: #336c20;
+        color: #DDDDDDFF;
+
+        &:hover {
+          background-color: #5ea048;
+        }
+      }
+      
+      button.danger {
+        margin-top: 0.25rem;
+        padding: 0.25rem;;
+        background-color: #6c2020;
+        color: #DDDDDDFF;
+
+        &:hover {
+          background-color: #a04848;
+        }
+      }
     }
 
     hr {
@@ -76,7 +202,7 @@
       border-top: solid;
       border-color: #373737;
       border-width: 0.1rem;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       margin-bottom: 0.5rem;
     }
 

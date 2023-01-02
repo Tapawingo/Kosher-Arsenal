@@ -65,6 +65,7 @@
         }
 
         /* Drag item */
+        // @TODO Animate the movement, it looks very crude atm
         const itemHeight: number = itemElement.getBoundingClientRect().height;
         const mousePosition: number = itemPosition + (itemHeight / 2);
         itemElement.classList.add('dragging');

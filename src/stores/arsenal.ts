@@ -6,7 +6,34 @@ interface loadingScreen {
   shown: boolean,
   loaded: number,
   text: string
-}
+};
+
+interface contextMenuItem {
+  type: string,
+  title?: string,
+  action: any
+};
+
+interface contextMenu {
+  shown: boolean,
+  title: string,
+  items: Array<contextMenuItem>
+};
+
+interface modalItem {
+  type: string,
+  title?: string,
+  focus?: string,
+  default?: any,
+  item?: arsenal.Item,
+  category?: arsenal.Category
+};
+
+interface modal {
+  title: string,
+  priority?: number,
+  items: Array<modalItem>
+};
 
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
@@ -17,7 +44,9 @@ export const useArsenalStore = defineStore('arsenal', {
       selectedMainItem: reactive<arsenal.Item> (new arsenal.Item()),
       selectedItemCategory: reactive<arsenal.Category> (new arsenal.Category()),
       selectedItemItem: reactive<arsenal.Item> (new arsenal.Item()),
-      loadingScreen: reactive<loadingScreen> ({ shown: false, loaded: 0, text: 'Loading...' })
+      loadingScreen: reactive<loadingScreen> ({ shown: false, loaded: 0, text: 'Loading...' }),
+      contextMenu: reactive<contextMenu> ({ shown: false, title: '', items: [] }),
+      modals: reactive<Array<modal>> ([])
     }
   },
 
@@ -49,6 +78,14 @@ export const useArsenalStore = defineStore('arsenal', {
       this.loadingScreen.text = text ? text : this.loadingScreen.text;
     },
     showLoadingScreen: function (show: boolean): void { this.loadingScreen.shown = show; },
+    updateContextMenu: function (title: string, items: Array<contextMenuItem>) {
+      this.contextMenu.title = title;
+      this.contextMenu.items = items;
+    },
+    showContextMenu: function (show: boolean) { this.contextMenu.shown = show; },
+    addModal: function (modal: modal) {
+      this.modals.push(modal);
+    },
     initArsenal: function (loadout: arsenal.Loadout, mode: number = 0): void { this.loadout = loadout; this.mode = mode; }
 
     // @TODO Create setters to set categories and items by ID in loadout (save user changes)
