@@ -86,6 +86,10 @@ export const useArsenalStore = defineStore('arsenal', {
     addModal: function (modal: modal) {
       this.modals.push(modal);
     },
+    removeModal: function (modal: modal) {
+      const index = this.modals.indexOf(modal);
+      this.modals.splice(index);
+    },
     initArsenal: function (loadout: arsenal.Loadout, mode: number = 0): void { this.loadout = loadout; this.mode = mode; }
 
     // @TODO Create setters to set categories and items by ID in loadout (save user changes)

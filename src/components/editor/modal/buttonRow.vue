@@ -1,6 +1,6 @@
 <template>
   <div class="modal-buttonRow">
-    <button v-for="button in data.default" :class="(button as any).style">{{ (button as any).text }}</button>
+    <button v-for="button in data.default" :class="(button as any).style" @click="action">{{ (button as any).text }}</button>
   </div>
 </template>
 
@@ -15,5 +15,12 @@
         required: true
       }
     },
+
+    methods: {
+      action (evt: Event) {
+        evt.preventDefault;
+        this.$props.data.action(this.$props.data);
+      }
+    }
   }
 </script>

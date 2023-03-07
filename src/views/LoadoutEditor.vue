@@ -73,11 +73,11 @@
       addModal({
         title: `Edit: ${exampleItem1.getTitle()}`,
         items: [
-          { type: 'text', title: 'Title' },
+          { type: 'textinput', title: 'Title' },
           { type: 'textbox', title: 'Description' },
           { type: 'image-preview', title: 'Image Preview', default: exampleItem1.getPreview() },
           { type: 'category-preview', title: 'Sub-Categories', default: exampleItem1.getCategories() },
-          { type: 'buttonrow', default: [{ style: 'danger', text: 'close' }, { style: 'success', text: 'save' }] }
+          { type: 'buttonrow', default: [{ style: 'danger', text: 'cancel' }, { style: 'success', text: 'save' }] }
         ]
       });
 
@@ -85,11 +85,39 @@
       addModal({
         title: `Edit: ${exampleItem2.getTitle()}`,
         items: [
-          { type: 'text', title: 'Title' },
+          { type: 'textinput', title: 'Title' },
           { type: 'textbox', title: 'Description' },
           { type: 'image-preview', title: 'Image Preview', default: exampleItem2.getPreview() },
           { type: 'category-preview', title: 'Sub-Categories', default: exampleItem2.getCategories() },
-          { type: 'buttonrow', default: [{ style: 'danger', text: 'close' }, { style: 'success', text: 'save' }] }
+          { type: 'buttonrow', default: [
+            {
+              style: 'danger',
+              text: 'cancel',
+              action: (modal: any) => {
+                addModal({
+                  title: 'Confirm',
+                  items: [
+                    { type: 'text', default: 'Are you sure?' },
+                    { 
+                      type: 'buttonRow',
+                      default: [
+                        {
+                          style: 'danger',
+                          text: 'cancel',
+                          action: () => {}
+                        }
+                      ]
+                    }
+                  ]
+                });
+              }
+            }, 
+
+            { 
+              style: 'success', 
+              text: 'save'
+            }
+          ]}
         ]
       });
     }

@@ -1,8 +1,8 @@
 <template>
   <div ref="modal" class="modal absolute font-mono">
       <div class="header" @mousedown="mouseDown">
-        <span>{{ headerTitle }}</span>
-        <XIcon />
+        <span>{{ modalData.title }}</span>
+        <XIcon @click="close"/>
       </div>
       <div class="content">
         <form>
@@ -13,6 +13,7 @@
 </template>
 
 <script lang="ts">
+  import TextInputGroup from './textInput.vue'
   import TextGroup from './text.vue'
   import TextBoxGroup from './textBox.vue'
   import CategoryPreview from './categoryPreview.vue'
@@ -20,6 +21,8 @@
   import ImageUpload from './imageUpload.vue'
   import ButtonRow from './buttonRow.vue'
   import { XIcon } from '@heroicons/vue/solid'
+  import pinia from "@/store";
+  import { useArsenalStore } from '@/stores/arsenal';
 
   // @TODO Read from an array of objects to construct the modal
   // @TODO Create a priority prop
@@ -29,12 +32,6 @@
     name: 'modal',
 
     props: {
-      headerTitle: {
-        type: String,
-        required: false,
-        default: ''
-      },
-
       modalData: {
         type: Object,
         required: true
@@ -42,18 +39,15 @@
     },
 
     components: {
-      XIcon,
-      TextGroup,
-      TextBoxGroup,
-      CategoryPreview,
-      ImagePreview,
-      ImageUpload,
-      ButtonRow
+      XIcon
     },
 
     methods: {
       getType (type: string) {
         switch (type) {
+          case 'textinput':
+            return TextInputGroup;
+
           case 'text':
             return TextGroup;
 
@@ -72,6 +66,14 @@
           case 'buttonrow':
             return ButtonRow;
         }
+      },
+
+      close () {
+        const store = useArsenalStore(pinia);
+        const { removeModal } = store;
+        const modal = this.$props.modalData as any;
+
+        removeModal(modal);
       },
 
       mouseDown (evt: MouseEvent) {

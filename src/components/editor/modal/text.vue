@@ -1,7 +1,6 @@
 <template>
   <div class="modal-group">
-    <label>{{ data.title ? data.title : '-missing title-' }}</label>
-    <input ref="input" type="text" />
+    <span>{{ data.default }}</span>
   </div>
 </template>
 
@@ -14,12 +13,6 @@
       data: {
         type: Object,
         required: true
-      }
-    },
-
-    mounted () {
-      if (this.$props.data.focus) {
-        this.$nextTick(() => (this.$refs.input as HTMLInputElement).focus());
       }
     }
   }
