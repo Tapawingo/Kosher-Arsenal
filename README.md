@@ -26,7 +26,7 @@
 
 **Kosher Arsenal** is an effort to simplify loadout creations and to better share information amongst users with similar interests. An old version is currently hosted on jsok.live and will be replaced once we have a stable release.
 
-**Kosher Arsenal** is entirely Open-Source and all contributions are welcome. Feel free to maintain your own custom version, so long as the changes you make are open to the public in accordance with the GNU General Public license (GPLv3).
+**Kosher Arsenal** is entirely Open-Source and all contributions are welcome. Feel free to maintain your own custom version, so long as the changes you make are open to the public in accordance with the GNU General Public license ([GPLv3](https://github.com/Tapawingo/Kosher-Arsenal/blob/master/LICENSE)).
 
 It should be noted that **Kosher Arsenal** was developed with airsoft impressions as it's main focus and thus, airsoft-related feature requests will take priority.
 
@@ -40,4 +40,4 @@ To contribute something to **Kosher Arsenal**, simply fork this repository and s
 Please use our [Issue Tracker](https://github.com/Tapawingo/Kosher-Arsenal/issues) to report a bug, propose a feature, or suggest changes to existing ones.
 
 # License
-**Kosher Arsenal** is licensed under the GNU General Public License (GPLv3).
+**Kosher Arsenal** is licensed under the GNU General Public License ([GPLv3](https://github.com/Tapawingo/Kosher-Arsenal/blob/master/LICENSE)).
