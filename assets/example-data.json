@@ -1,0 +1,16 @@
+{
+    "loadouts": [
+        { 
+            "id": "example", 
+            "title": "Example loadout",
+            "description": "A loadout used as an example for testing various features of Kosher Arsenal",
+            "preview": "",
+            "owner": "",
+            "collaborators": "",
+            "tags": "",
+            "visibility": "",
+            "collections": [],
+            "categories": []
+        }
+    ]
+}
