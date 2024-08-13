@@ -27,4 +27,4 @@ logs
 .vscode
 
 # project files
-.xcf
+*.xcf
