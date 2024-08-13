@@ -3,6 +3,12 @@ export enum ArsenalImageType {
   figure
 }
 
+export declare interface ArsenalPreviewImageJson {
+  type: string,
+  path: string,
+  alt: string
+}
+
 export class ArsenalPreviewImage {
   public type: ArsenalImageType = ArsenalImageType.figure;
   public path: string = '';
@@ -20,7 +26,7 @@ export class ArsenalPreviewImage {
     }
   }
 
-  public fromJSON(json: String): ArsenalPreviewImage {
+  public fromJSON(json: string): this {
     const data: Object = JSON.parse(json);
 
     Object.assign(this, data);

@@ -1,12 +1,18 @@
 import { createId } from '@paralleldrive/cuid2';
-import type { ArsenalLoadout } from './ArsenalLoadout';
+
+export declare interface LoadoutCollectionJson {
+  id: string,
+  title: string
+}
 
 export class LoadoutCollection {
   public id: string = createId();
   public title: string = '';
 
-  public constructor(title: string) {
-    this.title = title;
+  public constructor(title?: string) {
+    if (title) {
+      this.title = title;
+    }
   }
 
   public toJSON(): Object {
@@ -16,7 +22,7 @@ export class LoadoutCollection {
     }
   }
 
-  public fromJSON(json: string): LoadoutCollection {
+  public fromJSON(json: string): this {
     const data: Object = JSON.parse(json);
 
     Object.assign(this, data);

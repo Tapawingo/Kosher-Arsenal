@@ -1,8 +1,7 @@
 <template>
   <div class="arsenal">
-    <nav class="categories">
-      <ArsenalCategoriesCategory />
-      <ArsenalCategoriesCategory />
+    <nav class="categories" aria-label="categories">
+      <ArsenalCategoriesCategory v-for="category in loadout.categories" :category="category" />
     </nav>
     <div class="category-panel">
       <div class="panel">
@@ -20,37 +19,24 @@
         <div class="title">Example Category</div>
       </div>
     </div>
-    <nav class="categories">
-      <ArsenalCategoriesCategory />
+    <nav class="categories" aria-label="sub-categories">
     </nav>
   </div>
 </template>
 
 <script lang="ts" setup>
+  import type { ArsenalLoadout } from '~/classes/ArsenalLoadout';
+
   /* Instead of having separate pages for editing and viewing they will be combined */
   const route = useRoute();
   const id = route.params.id;
 
-  const { data } = await useFetch(`/api/fetchLoadout/${ id }`);
+  const loadout = useState<ArsenalLoadout>('loadout');
+  await callOnce(async () => {
+    loadout.value = await $fetch(`/api/fetchLoadout/${ id }`)
+  })
 
-  useHead({
-    title: data.title,
-    meta: [
-      { name: 'description', content: data.description }
-    ]
-  });
-
-  useSeoMeta({
-    title: data.title,
-    description: data.description,
-    ogTitle: data.title,
-    ogDescription: data.description,
-    ogImage: data.preview,
-    twitterTitle: data.title,
-    twitterDescription: data.description
-  });
-
-  console.log(data)
+  console.log(loadout.value);
 </script>
 
 <style lang="scss">

@@ -1,7 +1,7 @@
 import { createId } from '@paralleldrive/cuid2';
-import type { ArsenalPreviewImage } from './ArsenalPreviewImage';
-import type { ArsenalCategory } from './ArsenalCategory';
-import type { LoadoutCollection } from './LoadoutCollection';
+import { ArsenalPreviewImage, type ArsenalPreviewImageJson } from './ArsenalPreviewImage';
+import { ArsenalCategory, type ArsenalCategoryJson } from './ArsenalCategory';
+import { LoadoutCollection, type LoadoutCollectionJson } from './LoadoutCollection';
 
 export enum LoadoutVisibility {
   public,
@@ -11,6 +11,17 @@ export enum LoadoutVisibility {
 
 declare interface LoadoutTag {
   label: string;
+}
+
+declare interface ArsenalLoadoutJson {
+  id: string,
+  title: string,
+  description: string,
+  preview: ArsenalPreviewImageJson | ArsenalPreviewImage,
+  tags: LoadoutTag,
+  visibility: number,
+  collections: Array<LoadoutCollectionJson>,
+  categories: Array<ArsenalCategoryJson>
 }
 
 export class ArsenalLoadout {
@@ -31,7 +42,7 @@ export class ArsenalLoadout {
 
   public toJSON(): Object {
     const tags: Array<Object> = Array.from(this.tags.map((tag: LoadoutTag) => {
-      return JSON.parse(`{ "label": ${ tag.label } }`);
+      return JSON.stringify(tag);
     }));
 
     const collections = this.collections.map((collection: LoadoutCollection) => {
@@ -56,12 +67,12 @@ export class ArsenalLoadout {
     }
   }
 
-  public fromJSON(json: String): ArsenalLoadout {
-    const data: Object = JSON.parse(json);
-    const categories: Array<Object> = data.categories;
-    const collections: Array<Object> = data.collections;
+  public fromJSON(json: string): this {
+    const data: ArsenalLoadoutJson = JSON.parse(json);
+    const categories: Array<ArsenalCategoryJson> = data.categories;
+    const collections: Array<LoadoutCollectionJson> = data.collections;
 
-    data.preview = new ArsenalPreviewImage().fromJSON(data.preview);
+    data.preview = new ArsenalPreviewImage().fromJSON(JSON.stringify(data.preview));
 
     data.categories = [];
     categories.forEach((categoryData: Object) => {

@@ -1,5 +1,6 @@
 import { createId } from '@paralleldrive/cuid2';
-import type { ArsenalItem } from './ArsenalItem';
+import { ArsenalItem } from './ArsenalItem';
+import type { ArsenalItemJson } from './ArsenalItem';
 
 export enum ArsenalCategoryIcon {
   backpack = 'arsenal/icons/icon_backpack.svg',
@@ -22,9 +23,17 @@ export enum ArsenalCategoryIcon {
   vest = 'arsenal/icons/icon_vest.svg',
 }
 
+export declare interface ArsenalCategoryJson {
+  id: string,
+  position: number,
+  icon: string,
+  title: string,
+  items: Array<ArsenalItemJson | ArsenalItem>
+}
+
 export class ArsenalCategory {
-  public id: String = createId();
-  public position: Number = 0;
+  public id: string = createId();
+  public position: number = 0;
   public icon: ArsenalCategoryIcon = ArsenalCategoryIcon.unknown
   public title: string = '';
   public items: Array<ArsenalItem> = [];  
@@ -47,12 +56,12 @@ export class ArsenalCategory {
     }
   }
   
-  public fromJSON(json: String): ArsenalCategory {
-    const data: Object = JSON.parse(json);
-    const items: Array<Object> = data.items;
+  public fromJSON(json: string): this {
+    const data: ArsenalCategoryJson = JSON.parse(json);
+    const items: Array<ArsenalItemJson> = data.items as Array<ArsenalItemJson>;
 
     data.items = [];
-    items.forEach((itemData: Object) => {
+    items.forEach((itemData: ArsenalItemJson) => {
       let item = new ArsenalItem().fromJSON(JSON.stringify(itemData));
       data.items.push(item);
     });

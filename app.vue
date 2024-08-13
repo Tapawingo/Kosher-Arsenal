@@ -1,5 +1,5 @@
 <template>
-  <RouterView />
+  <NuxtPage />
 </template>
 
 <script setup lang="ts">

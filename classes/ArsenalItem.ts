@@ -1,12 +1,23 @@
 import { createId } from '@paralleldrive/cuid2';
-import type { ArsenalCategory } from "./ArsenalCategory";
-import type { ArsenalPreviewImage } from "./ArsenalPreviewImage";
+import { ArsenalCategory } from "./ArsenalCategory";
+import type { ArsenalCategoryJson } from "./ArsenalCategory";
+import { ArsenalPreviewImage } from "./ArsenalPreviewImage";
+import type { ArsenalPreviewImageJson } from "./ArsenalPreviewImage";
+
+export declare interface ArsenalItemJson {
+  id: string,
+  position: number,
+  title: string,
+  description: string,
+  preview: ArsenalPreviewImageJson | ArsenalPreviewImage,
+  categories: Array<ArsenalCategoryJson | ArsenalCategory>
+}
 
 export class ArsenalItem {
   public id: string = createId();
-  public position: Number = 0;
-  public title: String = '';
-  public description: String = '';
+  public position: number = 0;
+  public title: string = '';
+  public description: string = '';
   public preview: ArsenalPreviewImage = new ArsenalPreviewImage();
   public categories: Array<ArsenalCategory> = [];
   
@@ -31,11 +42,11 @@ export class ArsenalItem {
     }
   }
 
-  public fromJSON(json: String): ArsenalItem {
-    const data: Object = JSON.parse(json);
-    const categories: Array<Object> = data.categories;
+  public fromJSON(json: string): this {
+    const data: ArsenalItemJson = JSON.parse(json);
+    const categories: Array<ArsenalCategoryJson> = data.categories as Array<ArsenalCategoryJson>;
 
-    data.preview = new ArsenalPreviewImage().fromJSON(data.preview);
+    data.preview = new ArsenalPreviewImage().fromJSON(JSON.stringify(data.preview));
 
     data.categories = [];
     categories.forEach((categoryData: Object) => {

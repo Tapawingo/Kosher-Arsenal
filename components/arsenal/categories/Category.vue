@@ -1,11 +1,15 @@
 <template>
   <div class="category" :class="selectedClass" @click="toggleCategory()">
-    <img :src="icon" alt="" />
+    <img :src="category.icon" alt="" />
   </div>
 </template>
 
 <script lang="ts" setup>
-  const icon = ref('/arsenal/icons/icon_rifle.svg');
+import type { ArsenalCategory } from '~/classes/ArsenalCategory';
+
+  defineProps<{
+    category: ArsenalCategory
+  }>();
 
   const categorySelected = ref(false);
   const selectedClass = reactive({
