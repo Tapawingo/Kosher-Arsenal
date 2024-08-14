@@ -20,13 +20,18 @@
 
     <div class="center-panel">
       <div class="center-options">
+
         <NuxtLink to="/">
           <Icon name="material-symbols:arrow-back-2" mode="css"/><span>Return</span>
         </NuxtLink>
-        <div class="edit">
+
+        <div>
           <Icon :name="arsenalStore.mode == 0 ? 'material-symbols:edit' : 'material-symbols:visibility-rounded'" mode="css" size="15"/>
           <span>{{ arsenalStore.mode == 0 ? 'Edit' : 'Preview' }}</span>
         </div>
+
+        <div><Icon name="material-symbols:help-outline" mode="css"/>Help</div>
+
       </div>
       <ArsenalInfo />
     </div>
@@ -96,5 +101,35 @@
 
   .center-options {
     text-transform: capitalize;
+    text-align: center;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 5px auto 5px auto;
+    width: 75%;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+
+    div, a {
+      background-color: rgba(85, 85, 85, 0.6);
+      border: 1px solid rgb(0, 0, 0);
+      padding: 0.1rem;
+      user-select: none;
+      width: 50%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+
+      &:hover:not(.disabled) {
+        background-color: rgba(255, 255, 255, 0.25);
+      }
+      
+      &.disabled {
+        color: rgb(174, 174, 174);
+        cursor: auto;
+      }
+    }
   }
 </style>

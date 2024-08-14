@@ -8,6 +8,20 @@
   const arsenalStore = useArsenalStore();
 </script>
 
-<style>
+<style lang="scss">
+  .preview {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    padding: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
+    .preview-image {
+      height: 100%;
+      margin: 0;
+    }
+  }
 </style>
