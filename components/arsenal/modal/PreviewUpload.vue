@@ -10,11 +10,6 @@
         </UContainer>
       </div>
       </UFormGroup>
-
-      <!-- <UFormGroup label="Preview Type" required>
-        <USelect v-model="type" :options="types" />
-      </UFormGroup> -->
-
       <div class="button-group">
         <UButton label="Cancel" color="red" @click="isPreviewModalOpen = false"/>
         <UButton label="Upload" @click="onSubmit"/>

@@ -1,14 +1,19 @@
 <template>
   <div class="info" :class="selectedClass" @click="toggleInfo()">
     <div class="info-title">
+
       <UTooltip text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
-        <Icon name="material-symbols:edit" @click.stop=""/>
+        <Icon name="material-symbols:edit" @click.stop="isInfoModalOpen = true"/>
       </UTooltip>
+
       <div>{{ arsenalStore.loadout.title }}</div>
+
       <UTooltip text="Change Preview Image" :popper="{ placement: 'top' }" :ui="classOverride">
         <Icon name="material-symbols:add-photo-alternate" @click.stop="isPreviewModalOpen = true"/>
       </UTooltip>
+
     </div>
+
     <div class="info-content">
       <div class="info-description">{{ arsenalStore.loadout.description }}</div>
       <div class="info-tags">
@@ -19,13 +24,38 @@
   </div>
 
   <ArsenalModalPreviewUpload v-model="isPreviewModalOpen" />
+
+  <UModal v-model="isInfoModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
+    <div class="modal">
+      <UFormGroup label="Title" required>
+        <UInput v-model="newLoadoutTitle" />
+      </UFormGroup>
+
+      <UFormGroup label="Description" required>
+        <UTextarea autoresize v-model="newLoadoutDescription" />
+      </UFormGroup>
+
+      <UFormGroup label="Tags">
+        
+      </UFormGroup>
+
+      <div class="button-group">
+        <UButton label="Cancel" color="red" @click="isInfoModalOpen = false"/>
+        <UButton label="Save" @click="saveInfo" />
+      </div>
+    </div>
+  </UModal>
 </template>
 
 <script lang="ts" setup>
   const arsenalStore = useArsenalStore();
 
+  const isInfoModalOpen = ref(false);
   const isPreviewModalOpen = ref(false);
   const infoSelected = ref(false);
+  const newLoadoutTitle = ref(arsenalStore.loadout.title)
+  const newLoadoutDescription = ref(arsenalStore.loadout.description)
+  const newLoadoutTags = ref(arsenalStore.loadout.tags)
   
   const selectedClass = reactive({
     selected: infoSelected
@@ -40,6 +70,13 @@
 
   const toggleInfo = () => {
     infoSelected.value = !infoSelected.value;
+  }
+
+  const saveInfo = () => {
+    arsenalStore.loadout.title = newLoadoutTitle.value
+    arsenalStore.loadout.description = newLoadoutDescription.value
+    arsenalStore.loadout.tags = newLoadoutTags.value
+    isInfoModalOpen.value = false
   }
 </script>
 
@@ -79,9 +116,10 @@
 
         div {
           display: inline-block;
-          background-color: rgb(190, 32, 32);
-          border-radius: 4px;
-          padding: 2px;
+          background-color: rgba(37, 37, 37, 0.6);
+          border-radius: 2px;
+          font-size: 0.75rem;
+          padding: 0.2rem 0.3rem;
           margin-left: 5px;
         }
       }

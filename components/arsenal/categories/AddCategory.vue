@@ -91,7 +91,7 @@
       color: white;
     }
     
-    input, select {
+    input, select, textarea {
       background-color: rgb(24, 24, 24);
       color: white;
       border: 1px solid rgb(0, 0, 0);
