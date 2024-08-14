@@ -58,14 +58,14 @@
     selectedIcon.value = selected.value.icon
   });
 
-  const addCategory = () => {
+  const addCategory = () => { /* @TODO: Force none empty strings */
     const newCategory = new ArsenalCategory({
       title: categoryTitle.value,
       icon: selectedIcon.value
     });
     arsenalStore.addCategory(newCategory);
     isOpen.value = false;
-    toast.add({ title: 'Added Category' });
+    toast.add({ title: `Added category: "${ categoryTitle.value }"` });
   }
 
   const classOverride = {

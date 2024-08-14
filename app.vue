@@ -1,6 +1,6 @@
 <template>
   <NuxtPage />
-  <UNotifications />
+  <UNotifications class="notification" />
 </template>
 
 <script setup lang="ts">

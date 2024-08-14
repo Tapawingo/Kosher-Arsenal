@@ -1,8 +1,6 @@
 <template>
   <div v-if="!isPhone" class="arsenal">
-    <div class="preview">
-      <NuxtImg :src="arsenalStore.loadout.preview.path" fit="cover" class="preview-image" placeholder />
-    </div>
+    <ArsenalPreview />
 
     <div class="categories">
       <div>
@@ -26,7 +24,8 @@
           <Icon name="material-symbols:arrow-back-2" mode="css"/><span>Return</span>
         </NuxtLink>
         <div class="edit">
-          <Icon name="material-symbols:edit-square-outline" mode="css"/><span>Edit</span>
+          <Icon :name="arsenalStore.mode == 0 ? 'material-symbols:edit' : 'material-symbols:visibility-rounded'" mode="css" size="15"/>
+          <span>{{ arsenalStore.mode == 0 ? 'Edit' : 'Preview' }}</span>
         </div>
       </div>
       <ArsenalInfo />
@@ -54,7 +53,7 @@
   import { ArsenalMode } from '~/types/arsenal';
   import { VueDraggable } from 'vue-draggable-plus';
   
-  const { ctrl } = useMagicKeys();
+  const { ctrl } = useMagicKeys(); /* @TODO: Add explenation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
 
@@ -71,4 +70,31 @@
 
 <style lang="scss">
   @use "~/assets/styles/loadout.scss";
+
+  .notification [role=status] {
+    background-color: rgba(85, 85, 85, 0.6);
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 2px;
+    --tw-ring-opacity: 0;
+
+    * {
+      --tw-ring-opacity: 0;
+    }
+
+    div.flex {
+      padding: 0.2rem 0.3rem;
+    }
+
+    div.absolute.bottom-0 {
+      background-color: transparent;
+    }
+    
+    p, span {
+      color: white;
+    }
+  }
+
+  .center-options {
+    text-transform: capitalize;
+  }
 </style>

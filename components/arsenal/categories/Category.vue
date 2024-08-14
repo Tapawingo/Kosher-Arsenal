@@ -5,23 +5,42 @@
     </div>
   </UTooltip>
 
-  <UContextMenu v-model="isOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
+  <UContextMenu v-model="isContextMenuOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
     <div class="context-menu">
-      <div>Edit</div>
+      <div @click="isModalOpen = true">Edit</div>
       <div @click="deleteCategory">Delete</div>
     </div>
   </UContextMenu>
+
+  <UModal v-model="isModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
+    <div class="modal">
+      <UFormGroup label="Category Title" required>
+        <UInput v-model="newCategoryTitle" />
+      </UFormGroup>
+
+      <UFormGroup label="Category Icon" required>
+        <ArsenalModalIconSelect :icons="icons" v-model="newCategoryIcon"/>
+      </UFormGroup>
+
+      <div class="button-group">
+        <UButton label="Cancel" color="red" @click="isModalOpen = false"/>
+        <UButton label="Save" @click="updateCategory()" />
+      </div>
+    </div>
+  </UModal>
 </template>
 
 <script lang="ts" setup>
-  import { useMouse, useWindowScroll, useMouseInElement } from '@vueuse/core'
+  import { useMouse, useWindowScroll, useMouseInElement, useMagicKeys } from '@vueuse/core'
   import type { ArsenalCategoryJson } from '~/classes/ArsenalCategory';
   import { storeToRefs } from 'pinia'
 
+  const icons = Object.values(ArsenalCategoryIcon);
   const props = withDefaults(defineProps<{category: ArsenalCategoryJson, isSub: boolean}>(), {
     isSub: false
   });
 
+  const { ctrl } = useMagicKeys();
   const arsenalStore = useArsenalStore();
   const toast = useToast()
   const { selectedCategory, selectedItem, selectedSubItem, selectedSubCategory } = storeToRefs(arsenalStore)
@@ -29,7 +48,8 @@
   const categoryRoot = ref<HTMLDivElement | null> (null);
   const categoryState = ref(false);
   const selectedClass = reactive({
-    selected: categoryState
+    selected: categoryState,
+    draggable: ctrl
   })
 
   const classOverride = {
@@ -61,7 +81,7 @@
     }
   }
 
-  const isOpen = ref(false);
+  const isContextMenuOpen = ref(false);
   const { x, y } = useMouse();
   const { y: windowY } = useWindowScroll();
   const virtualElement = ref({ getBoundingClientRect: () => ({}) });
@@ -71,7 +91,7 @@
   onMounted(() => {
     document.addEventListener('contextmenu', () => {
       if (isOutside.value) { 
-        isOpen.value = false 
+        isContextMenuOpen.value = false 
       }; 
     });
   })
@@ -87,11 +107,11 @@
       left
     })
 
-    isOpen.value = true;
+    isContextMenuOpen.value = true;
   }
 
   const deleteCategory = () => {
-    /* Are you sure prompt */
+    /* @TODO: prompt for verification */
 
     /* Close panel */
     if (selectedCategory.value == props.category) {
@@ -101,12 +121,21 @@
     let state = arsenalStore.removeCategory(props.category.id);
     
     if (state) {
-      toast.add({ title: 'Deleted Category' });
+      toast.add({ title: `Deleted category: "${ props.category.title }"` });
     } else {
-      toast.add({ title: 'Failed to delete category' });
+      toast.add({ title: 'Failed to delete category: "${ props.category.title }"' });
     }
 
-    isOpen.value = false;
+    isContextMenuOpen.value = false;
+  }
+
+  const isModalOpen = ref(false);
+  const newCategoryTitle = ref<string>(props.category.title);
+  const newCategoryIcon = ref<string>(props.category.icon);
+  const updateCategory = () => { /* @TODO: Force none empty strings */
+    props.category.title = newCategoryTitle.value;
+    props.category.icon = newCategoryIcon.value;
+    isModalOpen.value = false;
   }
 </script>
 
@@ -126,6 +155,10 @@
 
     &.selected {
         background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    &.draggable {
+      cursor: grab;
     }
   }
 

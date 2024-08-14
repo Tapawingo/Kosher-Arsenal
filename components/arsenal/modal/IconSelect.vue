@@ -1,6 +1,6 @@
 <template>
   <div class="icon-selector" ref="containerEl">
-    <div v-for="icon in icons" class="category" :data-icon="icon" @click="select(icon, $event)">
+    <div v-for="icon in icons" class="category" :data-icon="icon" @click="select(icon)">
       <NuxtImg :src="icon" fit="cover" placeholder loading="lazy"/>
     </div>
   </div>
@@ -11,13 +11,15 @@
   const props = defineProps<{ icons: Array<string> }>();
   const model = defineModel();
 
-  const select = (icon: string, event: Event) => {
+  const select = (icon: string) => {
     if (model.value == icon) {
       model.value = undefined
     } else {
       model.value = icon;
     }
   };
+
+  select(model.value as string);
 
   watch(model, () => {
     if (!containerEl.value) return;
