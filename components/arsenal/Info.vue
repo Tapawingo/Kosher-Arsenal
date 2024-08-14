@@ -1,6 +1,14 @@
 <template>
   <div class="info" :class="selectedClass" @click="toggleInfo()">
-    <div class="info-title">{{ arsenalStore.loadout.title }}</div>
+    <div class="info-title">
+      <UTooltip text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
+        <Icon name="material-symbols:edit" @click.stop=""/>
+      </UTooltip>
+      <div>{{ arsenalStore.loadout.title }}</div>
+      <UTooltip text="Change Preview Image" :popper="{ placement: 'top' }" :ui="classOverride">
+        <Icon name="material-symbols:add-photo-alternate" @click.stop="isPreviewModalOpen = true"/>
+      </UTooltip>
+    </div>
     <div class="info-content">
       <div class="info-description">{{ arsenalStore.loadout.description }}</div>
       <div class="info-tags">
@@ -9,15 +17,26 @@
       </div>
     </div>
   </div>
+
+  <ArsenalModalPreviewUpload v-model="isPreviewModalOpen" />
 </template>
 
 <script lang="ts" setup>
   const arsenalStore = useArsenalStore();
+
+  const isPreviewModalOpen = ref(false);
   const infoSelected = ref(false);
   
   const selectedClass = reactive({
     selected: infoSelected
   })
+
+  const classOverride = {
+    background: '',
+    base: "arsenal-tooltip",
+    ring: '',
+    color: "white"
+  };
 
   const toggleInfo = () => {
     infoSelected.value = !infoSelected.value;
@@ -35,8 +54,11 @@
     width: 75%;
 
     .info-title {
-      padding: 0.1rem;
+      padding: 0.1rem 0.5rem;
       padding-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
     .info-content {
@@ -82,5 +104,9 @@
     &:hover:not(.selected) {
         background-color: rgba(255, 255, 255, 0.25);
     }
+  }
+
+  .input[type=file] {
+    cursor: pointer;
   }
 </style>

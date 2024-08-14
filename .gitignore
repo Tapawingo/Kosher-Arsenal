@@ -26,5 +26,8 @@ logs
 # Editor
 .vscode
 
+# User Data
+public/previews/*
+
 # project files
 *.xcf
