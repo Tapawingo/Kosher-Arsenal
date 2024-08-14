@@ -1,7 +1,7 @@
 <template>
   <div class="icon-selector" ref="containerEl">
     <div v-for="icon in icons" class="category" :data-icon="icon" @click="select(icon, $event)">
-      <NuxtImg :src="icon" fit="cover" placeholder/>
+      <NuxtImg :src="icon" fit="cover" placeholder loading="lazy"/>
     </div>
   </div>
 </template>

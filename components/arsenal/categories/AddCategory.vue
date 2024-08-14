@@ -10,7 +10,7 @@
       <UFormGroup label="Template">
         <UInputMenu v-model="selected" :options="templates" option-attribute="title">
           <template #option="{ option: template }">
-            <NuxtImg v-if="template.icon" :src="template.icon"/>
+            <NuxtImg v-if="template.icon" :src="template.icon" placeholder loading="lazy"/>
             <span style="height: 100%; vertical-align: middle;">{{ template.title }}</span>
           </template>
           

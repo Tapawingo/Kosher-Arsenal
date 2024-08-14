@@ -1,6 +1,6 @@
 <template>
   <UTooltip :text="category.title" :popper="{ placement: 'right' }" :ui="classOverride" :prevent="categoryState">
-    <div class="category" :class="selectedClass" @click="toggleCategory()" @contextmenu.prevent="onContextMenu">
+    <div class="category" :class="selectedClass" @click="toggleCategory()" @contextmenu.prevent="onContextMenu" ref="categoryRoot">
       <NuxtImg :src="category.icon" fit="cover" placeholder/>
     </div>
   </UTooltip>
@@ -8,23 +8,26 @@
   <UContextMenu v-model="isOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
     <div class="context-menu">
       <div>Edit</div>
-      <div>Delete</div>
+      <div @click="deleteCategory">Delete</div>
     </div>
   </UContextMenu>
 </template>
 
 <script lang="ts" setup>
-  import { useMouse, useWindowScroll } from '@vueuse/core'
+  import { ArsenalLoadout } from '~/classes/ArsenalLoadout';
+  import { useMouse, useWindowScroll, useMouseInElement } from '@vueuse/core'
   import type { ArsenalCategory } from '~/classes/ArsenalCategory';
   import { ArsenalItem } from '~/classes/ArsenalItem';
 
   const props = withDefaults(defineProps<{category: ArsenalCategory, isSub: boolean}>(), {
     isSub: false
   });
+  const loadout = useState<ArsenalLoadout>('loadout');
   const selectedCategory = useState<ArsenalCategory | undefined>(props.isSub ? 'sub-category' : 'category');
   const selectedItem = useState<ArsenalItem | undefined>('item');
   const selectedSubItem = useState<ArsenalCategory | undefined>('sub-item');
   const selectedSubCategory = useState<ArsenalCategory | undefined>('sub-category');
+  const categoryRoot = ref<HTMLDivElement | null>(null);
 
   const categoryState = ref(false);
   const selectedClass = reactive({
@@ -61,10 +64,20 @@
   }
 
   const isOpen = ref(false);
-  const { x, y } = useMouse()
-  const { y: windowY } = useWindowScroll()
+  const { x, y } = useMouse();
+  const { y: windowY } = useWindowScroll();
+  const virtualElement = ref({ getBoundingClientRect: () => ({}) });
 
-  const virtualElement = ref({ getBoundingClientRect: () => ({}) })
+  const { isOutside } = useMouseInElement(categoryRoot);
+
+  onMounted(() => {
+    document.addEventListener('contextmenu', () => { 
+      if (isOutside.value) { 
+        isOpen.value = false 
+      }; 
+    });
+  })
+
   const onContextMenu = () => {
     const top = unref(y) - unref(windowY)
     const left = unref(x)
@@ -77,6 +90,20 @@
     })
 
     isOpen.value = true;
+  }
+
+  const deleteCategory = () => {
+    /* Are you sure prompt */
+
+    /* Close panel */
+    if (selectedCategory.value == props.category) {
+      selectedCategory.value = undefined;
+    };
+
+    console.log(loadout.value);
+
+    loadout.value.removeCategory(props.category.id);
+    console.log(`deleted ${props.category.id}`);
   }
 </script>
 
@@ -106,10 +133,15 @@
     padding: 0.2rem 0.3rem;
 
     div {
+      color: rgb(184, 184, 184);
       cursor: pointer;
 
       &:last-child {
         border-top: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      &:hover {
+        color: rgb(255, 255, 255);
       }
     }
   }

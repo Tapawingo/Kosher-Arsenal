@@ -49,13 +49,13 @@
   import { useMediaQuery } from '@vueuse/core'
   import type { ArsenalItem } from '~/classes/ArsenalItem';
   import type { ArsenalCategory } from '~/classes/ArsenalCategory';
-  import type { ArsenalLoadout } from '~/classes/ArsenalLoadout';
+  import { type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   import { ArsenalMode } from '~/types/arsenal';
 
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
     
   const arsenalMode = useState<ArsenalMode>('arsenal-mode');
-  const loadout = useState<ArsenalLoadout>('loadout');
+  const loadout = useState<ArsenalLoadoutJson>('loadout');
   const category = useState<ArsenalCategory>('category');
   const item = useState<ArsenalItem>('item');
   const subCategory = useState<ArsenalCategory>('sub-category');
@@ -67,7 +67,11 @@
   const id = route.params.id;
 
   await callOnce(async () => {
-    loadout.value = await $fetch(`/api/fetchLoadout/${ id }`)
+    const loadoutJson: ArsenalLoadoutJson | undefined = await $fetch(`/api/fetchLoadout/${ id }`)
+
+    if (loadoutJson) {
+      loadout.value = loadoutJson;
+    }
   })
 </script>
 

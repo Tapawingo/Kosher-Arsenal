@@ -5,7 +5,7 @@
       <div class="info-description">{{ loadout.description }}</div>
       <div class="info-tags">
         <span>Tags:</span>
-        <div v-for="tag in loadout.tags">{{ JSON.parse(tag).label /* dirty fix */ }}</div>
+        <div v-for="tag in loadout.tags">{{ tag.label }}</div>
       </div>
     </div>
   </div>

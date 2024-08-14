@@ -37,6 +37,17 @@ export class ArsenalLoadout {
     Object.assign(this, data);
   }
 
+  public removeCategory(id: string): boolean {
+    const categoryIndex = this.categories.findIndex((category: ArsenalCategory) => { category.id === id });
+
+    if (categoryIndex == -1) {
+      return false;
+    };
+
+    this.categories.splice(categoryIndex);
+    return true;
+  }
+
   public toJSON(): Object {
     const tags: Array<Object> = Array.from(this.tags.map((tag: LoadoutTag) => {
       return JSON.stringify(tag);
