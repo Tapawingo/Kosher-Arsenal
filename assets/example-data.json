@@ -3,14 +3,17 @@
     { 
       "id": "example",
       "title": "example loadout",
-      "description": "This is an example loadout",
+      "description": "This is an example loadout used to test various features of Kosher Arsenal.",
       "owner": [],
       "collaborators": [],
-      "preview": "/assets/img/editor/preview/preview.svg",
+      "preview": {
+        "type": 0,
+        "path": "arsenal/preview/default.svg",
+        "alt": ""
+      },
       "tags": [
-        {
-          "label": "Example Tag"
-        }
+        { "label": "Example Tag 1", "type": 0 },
+        { "label": "Example Tag 2", "type": 0 }
       ],
       "visibility": 1,
       "collections": [],

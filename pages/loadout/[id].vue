@@ -1,42 +1,74 @@
 <template>
-  <div class="arsenal">
-    <nav class="categories" aria-label="categories">
-      <ArsenalCategoriesCategory v-for="category in loadout.categories" :category="category" />
-    </nav>
+  <div v-if="!isPhone" class="arsenal">
+    <div class="preview">
+      <NuxtImg :src="loadout.preview.path" fit="cover" class="preview-image" placeholder />
+    </div>
+
+    <div class="categories">
+      <ArsenalCategoriesCategory v-for="category in loadout.categories" :category="category" :is-sub="false"/>
+      <ArsenalCategoriesAddCategory v-if="arsenalMode == ArsenalMode.edit" />
+    </div>
+
     <div class="category-panel">
-      <div class="panel">
-        <div class="title">Example Category</div>
-        <ArsenalPanelItem />
-        <ArsenalPanelItem />
+      <div v-if="category" class="panel">
+        <div class="title">{{ category.title }}</div>
+        <ArsenalPanelItem v-if="category" v-for="item in category.items" :item="item" :is-sub="false"/>
       </div>
     </div>
-    <div class="preview">
-      <div class="info back">Return</div>
+
+    <div class="center-panel">
+      <div class="center-options">
+        <NuxtLink to="/">
+          <Icon name="material-symbols:arrow-back-2" mode="css"/><span>Return</span>
+        </NuxtLink>
+        <div class="edit">
+          <Icon name="material-symbols:edit-square-outline" mode="css"/><span>Edit</span>
+        </div>
+      </div>
       <ArsenalInfo />
     </div>
+
     <div class="category-panel">
-      <div class="panel">
-        <div class="title">Example Category</div>
+      <div v-if="subCategory" class="panel">
+        <div class="title">{{ subCategory.title }}</div>
+        <ArsenalPanelItem v-if="subCategory" v-for="item in subCategory.items" :item="item" :is-sub="true"/>
       </div>
     </div>
-    <nav class="categories" aria-label="sub-categories">
-    </nav>
+
+    <div class="categories">
+      <ArsenalCategoriesCategory v-if="item" v-for="category in item.categories" :category="category" :is-sub="true"/>
+    </div>
+  </div>
+  
+  <div v-if="isPhone">
+    Kosher Arsenal currently does not support mobile devices.
   </div>
 </template>
 
 <script lang="ts" setup>
+  import { useMediaQuery } from '@vueuse/core'
+  import type { ArsenalItem } from '~/classes/ArsenalItem';
+  import type { ArsenalCategory } from '~/classes/ArsenalCategory';
   import type { ArsenalLoadout } from '~/classes/ArsenalLoadout';
+  import { ArsenalMode } from '~/types/arsenal';
 
-  /* Instead of having separate pages for editing and viewing they will be combined */
+  const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
+    
+  const arsenalMode = useState<ArsenalMode>('arsenal-mode');
+  const loadout = useState<ArsenalLoadout>('loadout');
+  const category = useState<ArsenalCategory>('category');
+  const item = useState<ArsenalItem>('item');
+  const subCategory = useState<ArsenalCategory>('sub-category');
+
+  /* Temporary */
+  arsenalMode.value = ArsenalMode.edit;
+
   const route = useRoute();
   const id = route.params.id;
 
-  const loadout = useState<ArsenalLoadout>('loadout');
   await callOnce(async () => {
     loadout.value = await $fetch(`/api/fetchLoadout/${ id }`)
   })
-
-  console.log(loadout.value);
 </script>
 
 <style lang="scss">

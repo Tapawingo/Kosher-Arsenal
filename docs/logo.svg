@@ -26,11 +26,11 @@
      showguides="false"
      showgrid="true"
      inkscape:zoom="0.72604517"
-     inkscape:cx="515.80813"
-     inkscape:cy="508.9215"
+     inkscape:cx="516.49679"
+     inkscape:cy="507.54418"
      inkscape:window-width="1920"
      inkscape:window-height="1027"
-     inkscape:window-x="3832"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer2">
@@ -125,26 +125,26 @@
      inkscape:groupmode="layer"
      id="layer1">
     <circle
-       style="fill:#7a8665;stroke-width:15;fill-opacity:1;stroke:#0e0d12;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       style="fill:#7a8665;fill-opacity:1;stroke:#0e0d12;stroke-width:16.3112;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="path1"
-       cx="134.46994"
-       cy="134.10551"
-       r="109.32515" />
+       cx="134.43805"
+       cy="134.03215"
+       r="118.88167" />
     <rect
-       style="fill:#0e0d12;fill-opacity:1;stroke:none;stroke-width:8.88698;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#0e0d12;fill-opacity:1;stroke:none;stroke-width:9.66383;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect1"
-       width="10"
-       height="249.99019"
-       x="130.09692"
-       y="10.203682"
+       width="10.874138"
+       height="271.84277"
+       x="129.68277"
+       y="-0.70042098"
        ry="0" />
     <rect
-       style="fill:#0e0d12;fill-opacity:1;stroke:none;stroke-width:8.88697;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#0e0d12;fill-opacity:1;stroke:none;stroke-width:9.66381;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect1-0"
-       width="10"
-       height="249.99001"
-       x="129.31134"
-       y="-259.79495"
+       width="10.874138"
+       height="271.84259"
+       x="128.81889"
+       y="-270.7182"
        ry="0"
        transform="rotate(90)" />
   </g>
@@ -167,9 +167,10 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 195.48627,134.81133 -119.846165,0 59.923085,-103.789823 z"
-       inkscape:transform-center-y="-18.383457"
-       transform="matrix(1.0627317,0,0,1.0627317,-9.2329219,28.684173)"
-       inkscape:label="triangle_bottom1" />
+       inkscape:transform-center-y="-19.990425"
+       transform="matrix(1.1556291,0,0,1.1556291,-21.826421,19.39552)"
+       inkscape:label="triangle_bottom1"
+       inkscape:transform-center-x="1.1794886e-06" />
     <path
        sodipodi:type="star"
        style="fill:none;fill-opacity:1;stroke:#fefef0;stroke-width:10.7029;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -185,9 +186,10 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 195.48627,134.81133 -119.846165,0 59.923085,-103.789823 z"
-       inkscape:transform-center-y="-18.383456"
-       transform="matrix(1.0627317,0,0,1.0627317,-9.2332793,28.924806)"
-       inkscape:label="Triangle_top1" />
+       inkscape:transform-center-y="-19.990425"
+       transform="matrix(1.1556291,0,0,1.1556291,-21.82681,19.657187)"
+       inkscape:label="Triangle_top1"
+       inkscape:transform-center-x="2.2251545e-06" />
     <path
        sodipodi:type="star"
        style="fill:none;fill-opacity:1;stroke:#0e0d12;stroke-width:24.0815;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -203,9 +205,10 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 195.48627,134.81133 -119.846165,0 59.923085,-103.789823 z"
-       inkscape:transform-center-y="18.38345"
-       transform="matrix(-1.0627317,0,0,-1.0627317,278.90166,241.68689)"
-       inkscape:label="triangle_bottom1" />
+       inkscape:transform-center-y="19.990416"
+       transform="matrix(-1.1556291,0,0,-1.1556291,291.49509,251.01761)"
+       inkscape:label="triangle_bottom1"
+       inkscape:transform-center-x="6.3815303e-06" />
     <path
        sodipodi:type="star"
        style="fill:none;fill-opacity:1;stroke:#fefef0;stroke-width:10.7029;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -221,9 +224,9 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 195.48627,134.81133 -119.846165,0 59.923085,-103.789823 z"
-       inkscape:transform-center-x="6.6874851e-06"
-       inkscape:transform-center-y="18.383453"
-       transform="matrix(-1.0627317,0,0,-1.0627317,278.90201,241.44626)"
+       inkscape:transform-center-x="4.2484207e-06"
+       inkscape:transform-center-y="19.990423"
+       transform="matrix(-1.1556291,0,0,-1.1556291,291.49548,250.75595)"
        inkscape:label="Triangle_top1" />
   </g>
 </svg>

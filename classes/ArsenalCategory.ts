@@ -2,6 +2,13 @@ import { createId } from '@paralleldrive/cuid2';
 import { ArsenalItem } from './ArsenalItem';
 import type { ArsenalItemJson } from './ArsenalItem';
 
+/* @TODO: Add more icons:
+  - Belt
+  - Pouch
+  - Knife
+  - Utility
+  - Equipment
+ */
 export enum ArsenalCategoryIcon {
   backpack = 'arsenal/icons/icon_backpack.svg',
   binoculars = 'arsenal/icons/icon_binoculars.svg',
@@ -21,6 +28,10 @@ export enum ArsenalCategoryIcon {
   torso = 'arsenal/icons/icon_torso.svg',
   unknown = 'arsenal/icons/icon_unknown.svg',
   vest = 'arsenal/icons/icon_vest.svg',
+  first = 'arsenal/icons/icon_first.svg',
+  second = 'arsenal/icons/icon_second.svg',
+  third = 'arsenal/icons/icon_third.svg',
+  fourth = 'arsenal/icons/icon_fourth.svg',
 }
 
 export declare interface ArsenalCategoryJson {
@@ -34,7 +45,7 @@ export declare interface ArsenalCategoryJson {
 export class ArsenalCategory {
   public id: string = createId();
   public position: number = 0;
-  public icon: ArsenalCategoryIcon = ArsenalCategoryIcon.unknown
+  public icon: ArsenalCategoryIcon | string = ArsenalCategoryIcon.unknown
   public title: string = '';
   public items: Array<ArsenalItem> = [];  
 

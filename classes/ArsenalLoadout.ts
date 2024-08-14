@@ -2,6 +2,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { ArsenalPreviewImage, type ArsenalPreviewImageJson } from './ArsenalPreviewImage';
 import { ArsenalCategory, type ArsenalCategoryJson } from './ArsenalCategory';
 import { LoadoutCollection, type LoadoutCollectionJson } from './LoadoutCollection';
+import { LoadoutTag, type LoadoutTagJson } from './LoadoutTag';
 
 export enum LoadoutVisibility {
   public,
@@ -9,16 +10,12 @@ export enum LoadoutVisibility {
   private
 }
 
-declare interface LoadoutTag {
-  label: string;
-}
-
-declare interface ArsenalLoadoutJson {
+export declare interface ArsenalLoadoutJson {
   id: string,
   title: string,
   description: string,
   preview: ArsenalPreviewImageJson | ArsenalPreviewImage,
-  tags: LoadoutTag,
+  tags: Array<LoadoutTagJson>,
   visibility: number,
   collections: Array<LoadoutCollectionJson>,
   categories: Array<ArsenalCategoryJson>
@@ -71,19 +68,26 @@ export class ArsenalLoadout {
     const data: ArsenalLoadoutJson = JSON.parse(json);
     const categories: Array<ArsenalCategoryJson> = data.categories;
     const collections: Array<LoadoutCollectionJson> = data.collections;
+    const tags: Array<LoadoutTagJson> = data.tags;
 
     data.preview = new ArsenalPreviewImage().fromJSON(JSON.stringify(data.preview));
 
     data.categories = [];
-    categories.forEach((categoryData: Object) => {
+    categories.forEach((categoryData: ArsenalCategoryJson) => {
       let category = new ArsenalCategory().fromJSON(JSON.stringify(categoryData));
       data.categories.push(category);
     });
 
     data.collections = [];
-    collections.forEach((collectionData: Object) => {
+    collections.forEach((collectionData: LoadoutCollectionJson) => {
       let collection = new LoadoutCollection().fromJSON(JSON.stringify(collectionData));
       data.collections.push(collection);
+    });
+
+    data.tags = [];
+    tags.forEach((tagData: LoadoutTagJson) => {
+      let tag = new LoadoutTag().fromJSON(JSON.stringify(tagData));
+      data.tags.push(tag);
     });
 
     Object.assign(this, data);

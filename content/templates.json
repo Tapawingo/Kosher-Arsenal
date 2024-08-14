@@ -1,0 +1,22 @@
+{
+    "categories": [
+        { "title": "Primary Weapon", "icon": "arsenal/icons/icon_rifle.svg" },
+        { "title": "Secondary Weapon", "icon": "arsenal/icons/icon_handgun.svg" },
+        { "title": "Thirdiary Weapon", "icon": "arsenal/icons/icon_launcher.svg" },
+        { "title": "Handweapon", "icon": "" },
+        { "title": "Headgear", "icon": "arsenal/icons/icon_headgear.svg" },
+        { "title": "Facewear", "icon": "arsenal/icons/icon_facewear.svg" },
+        { "title": "Uniform Top", "icon": "arsenal/icons/icon_torso.svg" },
+        { "title": "Uniform Bottom", "icon": "arsenal/icons/icon_pants.svg" },
+        { "title": "Handwear", "icon": "arsenal/icons/icon_handwear.svg" },
+        { "title": "Load Bearing Equipment", "icon": "arsenal/icons/icon_vest.svg" },
+        { "title": "Footwear", "icon": "arsenal/icons/icon_footwear.svg" },
+        { "title": "Backpack", "icon": "arsenal/icons/icon_backpack.svg" },
+        { "title": "Night Vision Goggles", "icon": "arsenal/icons/icon_nvg.svg" },
+        { "title": "Communication", "icon": "arsenal/icons/icon_communication.svg" },
+        { "title": "Miscellanious", "icon": "arsenal/icons/icon_misc.svg" },
+        { "title": "First Line", "icon": "arsenal/icons/icon_first.svg" },
+        { "title": "Second Line", "icon": "arsenal/icons/icon_second.svg" },
+        { "title": "Third Line", "icon": "arsenal/icons/icon_third.svg" }
+    ]
+}

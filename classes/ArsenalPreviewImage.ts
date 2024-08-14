@@ -4,25 +4,22 @@ export enum ArsenalImageType {
 }
 
 export declare interface ArsenalPreviewImageJson {
-  type: string,
-  path: string,
-  alt: string
+  type: number,
+  path: string
 }
 
 export class ArsenalPreviewImage {
   public type: ArsenalImageType = ArsenalImageType.figure;
   public path: string = '';
-  public alt: string = 'Preview Image';
 
   public constructor(data: Partial<ArsenalPreviewImage> = {}) {
     Object.assign(this, data);
   }
 
-  public toJSON(): Object {
+  public toJSON(): ArsenalPreviewImageJson {
     return {
       type: this.type,
-      path: this.path,
-      alt: this.alt
+      path: this.path
     }
   }
 

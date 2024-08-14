@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/image": "^1.7.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "nuxt": "^3.12.4",
     "vue": "latest"
