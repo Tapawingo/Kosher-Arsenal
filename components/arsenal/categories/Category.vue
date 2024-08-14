@@ -1,7 +1,7 @@
 <template>
   <UTooltip :text="category.title" :popper="{ placement: 'right' }" :ui="classOverride" :prevent="categoryState">
     <div class="category" :class="selectedClass" @click="toggleCategory()" @contextmenu.prevent="onContextMenu" ref="categoryRoot">
-      <NuxtImg :src="category.icon" fit="cover" placeholder/>
+      <NuxtImg :src="category.icon" fit="cover" placeholder draggable="false"/>
     </div>
   </UTooltip>
 

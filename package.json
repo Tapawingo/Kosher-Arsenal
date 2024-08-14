@@ -14,7 +14,9 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@pinia/nuxt": "^0.5.3",
     "nuxt": "^3.12.4",
-    "vue": "latest"
+    "vue": "latest",
+    "vue-draggable-plus": "^0.5.3",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@nuxt/ui": "^2.18.4",

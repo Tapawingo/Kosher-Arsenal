@@ -5,7 +5,11 @@
     </div>
 
     <div class="categories">
-      <ArsenalCategoriesCategory v-for="category in arsenalStore.getCategories" :category="category" :is-sub="false"/>
+      <div>
+        <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <ArsenalCategoriesCategory v-for="category in arsenalStore.loadout.categories" :category="category" :is-sub="false" :key="category.position"/>
+        </VueDraggable>
+      </div>
       <ArsenalCategoriesAddCategory v-if="arsenalStore.mode == ArsenalMode.edit" />
     </div>
 
@@ -46,13 +50,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { useMediaQuery } from '@vueuse/core'
+  import { useMediaQuery, useMagicKeys } from '@vueuse/core'
   import { ArsenalMode } from '~/types/arsenal';
-
+  import { VueDraggable } from 'vue-draggable-plus';
+  
+  const { ctrl } = useMagicKeys();
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
-    
   const arsenalStore = useArsenalStore();
-
 
   /* Temporary */
   arsenalStore.setMode(ArsenalMode.edit);

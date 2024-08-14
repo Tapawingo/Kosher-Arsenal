@@ -16,7 +16,7 @@ export const useArsenalStore = defineStore('arsenal', {
     }
   },
   getters: {
-    getCategories: (state) => {
+    getCategories: (state): Array<ArsenalCategoryJson> => {
       const categories = state.loadout.categories;
       categories.sort((a: ArsenalCategoryJson, b: ArsenalCategoryJson) => {
         return a.position - b.position;
@@ -39,7 +39,8 @@ export const useArsenalStore = defineStore('arsenal', {
     setSelectedSubItem (item: ArsenalItem): void { this.selectedSubItem = item },
 
     addCategory (category: ArsenalCategory): void {
-      this.loadout.categories.push(category);
+      const index = this.loadout.categories.push(category) - 1;
+      category.position = index;
     },
 
     removeCategory (categoryID: string): boolean {
