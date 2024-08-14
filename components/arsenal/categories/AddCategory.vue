@@ -38,12 +38,9 @@
 
 <script lang="ts" setup>
   import templatesJson from '~/content/templates.json'
-  import { ArsenalCategoryIcon } from '~/classes/ArsenalCategory'
-  import type { ArsenalLoadout } from '~/classes/ArsenalLoadout';
-  import type { ArsenalItem } from '~/classes/ArsenalItem';
-  import { ArsenalCategory } from '~/classes/ArsenalCategory';
+  import { ArsenalCategory, ArsenalCategoryIcon } from '~/classes/ArsenalCategory'
 
-  const loadout = useState<ArsenalLoadout | ArsenalItem>('loadout');
+  const arsenalStore = useArsenalStore();
   const toast = useToast()
 
   const icons = Object.values(ArsenalCategoryIcon);
@@ -66,7 +63,7 @@
       title: categoryTitle.value,
       icon: selectedIcon.value
     });
-    loadout.value.categories.push(newCategory);
+    arsenalStore.addCategory(newCategory);
     isOpen.value = false;
     toast.add({ title: 'Added Category' });
   }

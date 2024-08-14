@@ -1,21 +1,20 @@
 <template>
   <div class="info" :class="selectedClass" @click="toggleInfo()">
-    <div class="info-title">{{ loadout.title }}</div>
+    <div class="info-title">{{ arsenalStore.loadout.title }}</div>
     <div class="info-content">
-      <div class="info-description">{{ loadout.description }}</div>
+      <div class="info-description">{{ arsenalStore.loadout.description }}</div>
       <div class="info-tags">
         <span>Tags:</span>
-        <div v-for="tag in loadout.tags">{{ tag.label }}</div>
+        <div v-for="tag in arsenalStore.loadout.tags">{{ tag.label }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type { ArsenalLoadout } from '~/classes/ArsenalLoadout';
-
-  const loadout = useState<ArsenalLoadout>('loadout');
+  const arsenalStore = useArsenalStore();
   const infoSelected = ref(false);
+  
   const selectedClass = reactive({
     selected: infoSelected
   })

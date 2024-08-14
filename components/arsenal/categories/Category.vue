@@ -14,21 +14,19 @@
 </template>
 
 <script lang="ts" setup>
-  import { ArsenalLoadout } from '~/classes/ArsenalLoadout';
   import { useMouse, useWindowScroll, useMouseInElement } from '@vueuse/core'
-  import type { ArsenalCategory } from '~/classes/ArsenalCategory';
-  import { ArsenalItem } from '~/classes/ArsenalItem';
+  import type { ArsenalCategoryJson } from '~/classes/ArsenalCategory';
+  import { storeToRefs } from 'pinia'
 
-  const props = withDefaults(defineProps<{category: ArsenalCategory, isSub: boolean}>(), {
+  const props = withDefaults(defineProps<{category: ArsenalCategoryJson, isSub: boolean}>(), {
     isSub: false
   });
-  const loadout = useState<ArsenalLoadout>('loadout');
-  const selectedCategory = useState<ArsenalCategory | undefined>(props.isSub ? 'sub-category' : 'category');
-  const selectedItem = useState<ArsenalItem | undefined>('item');
-  const selectedSubItem = useState<ArsenalCategory | undefined>('sub-item');
-  const selectedSubCategory = useState<ArsenalCategory | undefined>('sub-category');
-  const categoryRoot = ref<HTMLDivElement | null>(null);
 
+  const arsenalStore = useArsenalStore();
+  const toast = useToast()
+  const { selectedCategory, selectedItem, selectedSubItem, selectedSubCategory } = storeToRefs(arsenalStore)
+  
+  const categoryRoot = ref<HTMLDivElement | null> (null);
   const categoryState = ref(false);
   const selectedClass = reactive({
     selected: categoryState
@@ -41,25 +39,25 @@
     color: "white"
   };
 
-  watch(selectedCategory, (newCategory: ArsenalCategory | undefined) => {
-    if (!newCategory) return;
+  watch(selectedCategory, () => {
+    if (!selectedCategory.value) return;
 
-    if (newCategory != props.category) {
+    if (selectedCategory.value != props.category) {
       categoryState.value = false;
     } else if (!props.isSub) {
-      selectedItem.value = undefined;
-      selectedSubCategory.value = undefined;
+      selectedItem.value = null;
+      selectedSubCategory.value = null;
     }
   })
 
   const toggleCategory = () => {
     categoryState.value = !categoryState.value;
-    selectedCategory.value = categoryState.value ? props.category : undefined;
+    selectedCategory.value = categoryState.value ? props.category : null;
 
     if (!props.isSub && !categoryState.value) {
-      selectedItem.value = undefined;
-      selectedSubItem.value = undefined;
-      selectedSubCategory.value = undefined;
+      selectedItem.value = null;
+      selectedSubItem.value = null;
+      selectedSubCategory.value = null;
     }
   }
 
@@ -71,7 +69,7 @@
   const { isOutside } = useMouseInElement(categoryRoot);
 
   onMounted(() => {
-    document.addEventListener('contextmenu', () => { 
+    document.addEventListener('contextmenu', () => {
       if (isOutside.value) { 
         isOpen.value = false 
       }; 
@@ -97,13 +95,18 @@
 
     /* Close panel */
     if (selectedCategory.value == props.category) {
-      selectedCategory.value = undefined;
+      selectedCategory.value = null;
     };
 
-    console.log(loadout.value);
+    let state = arsenalStore.removeCategory(props.category.id);
+    
+    if (state) {
+      toast.add({ title: 'Deleted Category' });
+    } else {
+      toast.add({ title: 'Failed to delete category' });
+    }
 
-    loadout.value.removeCategory(props.category.id);
-    console.log(`deleted ${props.category.id}`);
+    isOpen.value = false;
   }
 </script>
 

@@ -15,7 +15,7 @@ export class LoadoutCollection {
     }
   }
 
-  public toJSON(): Object {
+  public toJSON(): LoadoutCollectionJson {
     return {
       id: this.id,
       title: this.title

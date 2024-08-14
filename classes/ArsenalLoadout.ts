@@ -37,31 +37,20 @@ export class ArsenalLoadout {
     Object.assign(this, data);
   }
 
-  public removeCategory(id: string): boolean {
-    const categoryIndex = this.categories.findIndex((category: ArsenalCategory) => { category.id === id });
-
-    if (categoryIndex == -1) {
-      return false;
-    };
-
-    this.categories.splice(categoryIndex);
-    return true;
-  }
-
-  public toJSON(): Object {
-    const tags: Array<Object> = Array.from(this.tags.map((tag: LoadoutTag) => {
-      return JSON.stringify(tag);
+  public toJSON(): ArsenalLoadoutJson {
+    const tags: Array<LoadoutTagJson> = Array.from(this.tags.map((tag: LoadoutTag) => {
+      return tag.toJSON();
     }));
 
-    const collections = this.collections.map((collection: LoadoutCollection) => {
+    const collections: Array<LoadoutCollectionJson> = this.collections.map((collection: LoadoutCollection) => {
       return collection.toJSON()
     });
 
-    const categories: Array<Object> = this.categories.map((category: ArsenalCategory) => {
+    const categories: Array<ArsenalCategoryJson> = this.categories.map((category: ArsenalCategory) => {
       return category.toJSON();
     });
 
-    const preview: Object = this.preview.toJSON();
+    const preview: ArsenalPreviewImageJson = this.preview.toJSON();
 
     return {
       id: this.id,

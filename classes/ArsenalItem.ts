@@ -25,12 +25,12 @@ export class ArsenalItem {
     Object.assign(this, data);
   }
 
-  public toJSON(): Object {
-    const categories: Array<Object> = this.categories.map((category: ArsenalCategory) => {
+  public toJSON(): ArsenalItemJson {
+    const categories: Array<ArsenalCategoryJson> = this.categories.map((category: ArsenalCategory) => {
       return category.toJSON();
     });
 
-    const preview: Object = this.preview.toJSON();
+    const preview: ArsenalPreviewImageJson = this.preview.toJSON();
 
     return {
       id: this.id,

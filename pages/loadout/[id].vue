@@ -1,18 +1,18 @@
 <template>
   <div v-if="!isPhone" class="arsenal">
     <div class="preview">
-      <NuxtImg :src="loadout.preview.path" fit="cover" class="preview-image" placeholder />
+      <NuxtImg :src="arsenalStore.loadout.preview.path" fit="cover" class="preview-image" placeholder />
     </div>
 
     <div class="categories">
-      <ArsenalCategoriesCategory v-for="category in loadout.categories" :category="category" :is-sub="false"/>
-      <ArsenalCategoriesAddCategory v-if="arsenalMode == ArsenalMode.edit" />
+      <ArsenalCategoriesCategory v-for="category in arsenalStore.getCategories" :category="category" :is-sub="false"/>
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.mode == ArsenalMode.edit" />
     </div>
 
     <div class="category-panel">
-      <div v-if="category" class="panel">
-        <div class="title">{{ category.title }}</div>
-        <ArsenalPanelItem v-if="category" v-for="item in category.items" :item="item" :is-sub="false"/>
+      <div v-if="arsenalStore.selectedCategory" class="panel">
+        <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
+        <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item" :is-sub="false"/>
       </div>
     </div>
 
@@ -29,14 +29,14 @@
     </div>
 
     <div class="category-panel">
-      <div v-if="subCategory" class="panel">
-        <div class="title">{{ subCategory.title }}</div>
-        <ArsenalPanelItem v-if="subCategory" v-for="item in subCategory.items" :item="item" :is-sub="true"/>
+      <div v-if="arsenalStore.selectedSubCategory" class="panel">
+        <div class="title">{{ arsenalStore.selectedSubCategory.title }}</div>
+        <ArsenalPanelItem v-if="arsenalStore.selectedSubCategory" v-for="item in arsenalStore.selectedSubCategory.items" :item="item" :is-sub="true"/>
       </div>
     </div>
 
     <div class="categories">
-      <ArsenalCategoriesCategory v-if="item" v-for="category in item.categories" :category="category" :is-sub="true"/>
+      <ArsenalCategoriesCategory v-if="arsenalStore.selectedItem" v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
     </div>
   </div>
   
@@ -47,31 +47,21 @@
 
 <script lang="ts" setup>
   import { useMediaQuery } from '@vueuse/core'
-  import type { ArsenalItem } from '~/classes/ArsenalItem';
-  import type { ArsenalCategory } from '~/classes/ArsenalCategory';
-  import { type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   import { ArsenalMode } from '~/types/arsenal';
 
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
     
-  const arsenalMode = useState<ArsenalMode>('arsenal-mode');
-  const loadout = useState<ArsenalLoadoutJson>('loadout');
-  const category = useState<ArsenalCategory>('category');
-  const item = useState<ArsenalItem>('item');
-  const subCategory = useState<ArsenalCategory>('sub-category');
+  const arsenalStore = useArsenalStore();
+
 
   /* Temporary */
-  arsenalMode.value = ArsenalMode.edit;
+  arsenalStore.setMode(ArsenalMode.edit);
 
   const route = useRoute();
   const id = route.params.id;
 
   await callOnce(async () => {
-    const loadoutJson: ArsenalLoadoutJson | undefined = await $fetch(`/api/fetchLoadout/${ id }`)
-
-    if (loadoutJson) {
-      loadout.value = loadoutJson;
-    }
+    arsenalStore.fetchLoadout(id as string);
   })
 </script>
 

@@ -6,36 +6,37 @@
 </template>
 
 <script lang="ts" setup>
-  import { ArsenalItem } from '~/classes/ArsenalItem';
+  import { type ArsenalItemJson } from '~/classes/ArsenalItem';
+  import { storeToRefs } from 'pinia'
   
-  const props = withDefaults(defineProps<{item: ArsenalItem, isSub: boolean}>(), {
+  const props = withDefaults(defineProps<{item: ArsenalItemJson, isSub: boolean}>(), {
     isSub: false
   });
 
-  const selectedItem = useState<ArsenalItem | undefined>(props.isSub ? 'sub-item' : 'item');
-  const selectedSubCategory = useState<ArsenalItem | undefined>('sub-category');
+  const arsenalStore = useArsenalStore();
+  const { selectedItem, selectedSubCategory } = storeToRefs(arsenalStore)
 
   const itemState = ref(false);
   const selectedClass = reactive({
     selected: itemState
   })
 
-  watch(selectedItem, (newItem: ArsenalItem | undefined) => {
-    if (!newItem) return;
+  watch(selectedItem, () => {
+    if (!selectedItem.value) return;
 
-    if (newItem != props.item) {
+    if (selectedItem.value != props.item) {
       itemState.value = false;
     } else if (!props.isSub) {
-      selectedSubCategory.value = undefined;
+      selectedSubCategory.value = null;
     }
   })
 
   const toggleItem = () => {
     itemState.value = !itemState.value;
-    selectedItem.value = itemState.value ? props.item : undefined;
+    selectedItem.value = itemState.value ? props.item : null;
 
     if (!props.isSub && !itemState.value) {
-      selectedSubCategory.value = undefined;
+      selectedSubCategory.value = null;
     }
   }
 </script>

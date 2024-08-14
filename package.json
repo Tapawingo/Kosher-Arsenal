@@ -12,11 +12,15 @@
   "dependencies": {
     "@nuxt/image": "^1.7.0",
     "@paralleldrive/cuid2": "^2.2.2",
+    "@pinia/nuxt": "^0.5.3",
     "nuxt": "^3.12.4",
     "vue": "latest"
   },
   "devDependencies": {
     "@nuxt/ui": "^2.18.4",
     "sass": "^1.77.8"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

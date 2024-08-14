@@ -11,5 +11,5 @@ export default defineNuxtConfig({
   imports: {
     dirs: ['classes']
   },
-  modules: ['@nuxt/ui', "@nuxt/image"],
+  modules: ['@nuxt/ui', "@nuxt/image", "@pinia/nuxt"],
 })
