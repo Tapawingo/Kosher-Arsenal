@@ -1,7 +1,7 @@
 <template>
   <div class="item" :class="selectedClass" @click="toggleItem()">
     <div class="item-title">{{ item.title }}</div>
-    <div class="item-content">{{ item.description }}</div>
+    <div class="item-content" @click.stop>{{ item.description }}</div>
   </div>
 </template>
 
@@ -14,29 +14,29 @@
   });
 
   const arsenalStore = useArsenalStore();
-  const { selectedItem, selectedSubCategory } = storeToRefs(arsenalStore)
+  const { selectedItem, selectedSubItem } = storeToRefs(arsenalStore)
 
   const itemState = ref(false);
   const selectedClass = reactive({
     selected: itemState
   })
 
-  watch(selectedItem, () => {
-    if (!selectedItem.value) return;
-
-    if (selectedItem.value != props.item) {
+  watch(props.isSub ? selectedSubItem : selectedItem, () => {
+    if (!props.isSub && selectedItem.value != props.item) {
       itemState.value = false;
-    } else if (!props.isSub) {
-      selectedSubCategory.value = null;
+      arsenalStore.setSelectedSubCategory(null);
+    } else if (props.isSub && selectedSubItem.value != props.item) {
+      itemState.value = false;
     }
   })
 
   const toggleItem = () => {
     itemState.value = !itemState.value;
-    selectedItem.value = itemState.value ? props.item : null;
 
-    if (!props.isSub && !itemState.value) {
-      selectedSubCategory.value = null;
+    if (props.isSub) {
+      arsenalStore.setSelectedSubItem(itemState.value ? props.item : null);
+    } else {
+      arsenalStore.setSelectedItem(itemState.value ? props.item : null);
     }
   }
 </script>
@@ -53,11 +53,14 @@
     }
     
     .item-content {
+      background-color: rgba(79, 79, 79, 0.6);
       transition: 0.25s linear height;
-      padding: 0.2rem;
+      padding: 0rem 0.2rem;
       padding-bottom: 0;
       font-size: 0.75rem;
       overflow: hidden;
+      cursor: auto;
+      text-overflow: ellipsis;
       height: 0px;
     }
 
@@ -66,8 +69,8 @@
     }
 
     &.selected .item-content {
-      padding: 0.2rem;
-      height: 4rem;
+      padding: 0.5rem;
+      height: 6rem;
     }
   }
 </style>

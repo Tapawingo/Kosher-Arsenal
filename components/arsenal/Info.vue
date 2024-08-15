@@ -53,9 +53,9 @@
   const isInfoModalOpen = ref(false);
   const isPreviewModalOpen = ref(false);
   const infoSelected = ref(false);
-  const newLoadoutTitle = ref(arsenalStore.loadout.title)
-  const newLoadoutDescription = ref(arsenalStore.loadout.description)
-  const newLoadoutTags = ref(arsenalStore.loadout.tags)
+  const newLoadoutTitle = ref(arsenalStore.loadout.title);
+  const newLoadoutDescription = ref(arsenalStore.loadout.description);
+  const newLoadoutTags = ref(arsenalStore.loadout.tags); /* @TODO: Create Tag editor */
   
   const selectedClass = reactive({
     selected: infoSelected
@@ -73,10 +73,10 @@
   }
 
   const saveInfo = () => {
-    arsenalStore.loadout.title = newLoadoutTitle.value
-    arsenalStore.loadout.description = newLoadoutDescription.value
-    arsenalStore.loadout.tags = newLoadoutTags.value
-    isInfoModalOpen.value = false
+    arsenalStore.loadout.title = newLoadoutTitle.value;
+    arsenalStore.loadout.description = newLoadoutDescription.value;
+    arsenalStore.loadout.tags = newLoadoutTags.value;
+    isInfoModalOpen.value = false;
   }
 </script>
 

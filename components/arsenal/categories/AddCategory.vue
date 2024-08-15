@@ -1,5 +1,5 @@
 <template>
-  <UTooltip text="Add Category" :popper="{ placement: 'right' }" :ui="classOverride">
+  <UTooltip :text="isSub ? 'Add Subcategory' : 'Add Category'" :popper="{ placement: 'right' }" :ui="classOverride">
     <div class="category" @click="isOpen = true">
       <NuxtImg :src="icon" fit="cover" placeholder/>
     </div>
@@ -40,6 +40,10 @@
   import templatesJson from '~/content/templates.json'
   import { ArsenalCategory, ArsenalCategoryIcon } from '~/classes/ArsenalCategory'
 
+  const props = withDefaults(defineProps<{isSub: boolean}>(), {
+    isSub: false
+  });
+
   const arsenalStore = useArsenalStore();
   const toast = useToast()
 
@@ -63,9 +67,15 @@
       title: categoryTitle.value,
       icon: selectedIcon.value
     });
-    arsenalStore.addCategory(newCategory);
+
+    if (props.isSub) {
+      arsenalStore.addSubCategory(newCategory);
+      toast.add({ title: `Added subcategory: "${ categoryTitle.value }"` });
+    } else {
+      arsenalStore.addCategory(newCategory);
+      toast.add({ title: `Added category: "${ categoryTitle.value }"` });
+    }
     isOpen.value = false;
-    toast.add({ title: `Added category: "${ categoryTitle.value }"` });
   }
 
   const classOverride = {

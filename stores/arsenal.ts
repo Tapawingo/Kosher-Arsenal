@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ArsenalLoadout, type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
-import { ArsenalItem, type ArsenalItemJson } from '~/classes/ArsenalItem';
-import { ArsenalCategory, type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
+import { type ArsenalItemJson } from '~/classes/ArsenalItem';
+import { type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
 import { ArsenalMode } from '~/types/arsenal';
 
 export const useArsenalStore = defineStore('arsenal', {
@@ -33,18 +33,53 @@ export const useArsenalStore = defineStore('arsenal', {
         this.loadout = loadoutJson;
       };
     },
-    setSelectedCategory (category: ArsenalCategory): void { this.selectedCategory = category },
-    setSelectedSubCategory (category: ArsenalCategory): void { this.selectedSubCategory = category },
-    setSelectedItem (item: ArsenalItem): void { this.selectedItem = item },
-    setSelectedSubItem (item: ArsenalItem): void { this.selectedSubItem = item },
+    setSelectedCategory (category: ArsenalCategoryJson | null): void { 
+      this.selectedCategory = category;
+      this.selectedItem = null;
+      this.selectedSubCategory = null;
+      this.selectedSubItem = null;
+    },
+    setSelectedSubCategory (category: ArsenalCategoryJson | null): void { 
+      this.selectedSubCategory = category;
+      this.selectedSubItem = null;
+    },
+    setSelectedItem (item: ArsenalItemJson | null): void { 
+      this.selectedItem = item;
+      this.selectedSubCategory = null;
+      this.selectedSubItem = null;
+    },
+    setSelectedSubItem (item: ArsenalItemJson | null): void { 
+      this.selectedSubItem = item
+    },
 
-    addCategory (category: ArsenalCategory): void {
+    addCategory (category: ArsenalCategoryJson): void {
       const index = this.loadout.categories.push(category) - 1;
+      category.position = index;
+    },
+
+    addSubCategory (category: ArsenalCategoryJson): void {
+      if (!this.selectedItem) return;
+      const index = this.selectedItem.categories.push(category) - 1;
       category.position = index;
     },
 
     removeCategory (categoryID: string): boolean {
       const categoryIndex = this.loadout.categories.findIndex((category: ArsenalCategoryJson) => { 
+        return category.id === categoryID
+      });
+  
+      if (categoryIndex == -1) {
+        return false;
+      };
+  
+      this.loadout.categories.splice(categoryIndex, 1);
+      return true;
+    },
+
+    removeSubCategory (categoryID: string): boolean {
+      if (!this.selectedItem) return false;
+
+      const categoryIndex = this.selectedItem.categories.findIndex((category: ArsenalCategoryJson) => { 
         return category.id === categoryID
       });
   

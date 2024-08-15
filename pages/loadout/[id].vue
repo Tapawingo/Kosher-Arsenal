@@ -15,6 +15,7 @@
       <div v-if="arsenalStore.selectedCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
         <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item" :is-sub="false"/>
+        <ArsenalPanelAddItem v-if="arsenalStore.selectedCategory && arsenalStore.mode == ArsenalMode.edit" />
       </div>
     </div>
 
@@ -40,11 +41,17 @@
       <div v-if="arsenalStore.selectedSubCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedSubCategory.title }}</div>
         <ArsenalPanelItem v-if="arsenalStore.selectedSubCategory" v-for="item in arsenalStore.selectedSubCategory.items" :item="item" :is-sub="true"/>
+        <ArsenalPanelAddItem v-if="arsenalStore.selectedSubCategory && arsenalStore.mode == ArsenalMode.edit" />
       </div>
     </div>
 
     <div class="categories">
-      <ArsenalCategoriesCategory v-if="arsenalStore.selectedItem" v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
+      <div>
+        <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <ArsenalCategoriesCategory v-if="arsenalStore.selectedItem" v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
+        </VueDraggable>
+      </div>
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.mode == ArsenalMode.edit" :is-sub="true"/>
     </div>
   </div>
   

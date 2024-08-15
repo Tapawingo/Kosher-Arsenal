@@ -59,25 +59,24 @@
     color: "white"
   };
 
-  watch(selectedCategory, () => {
+  watch(props.isSub ? selectedSubCategory : selectedCategory, () => {
     if (!selectedCategory.value) return;
 
-    if (selectedCategory.value != props.category) {
+    if (!props.isSub && selectedCategory.value != props.category) {
       categoryState.value = false;
-    } else if (!props.isSub) {
-      selectedItem.value = null;
-      selectedSubCategory.value = null;
+      arsenalStore.setSelectedItem(null);
+    } else if (props.isSub && selectedSubCategory.value != props.category) {
+      categoryState.value = false;
     }
   })
 
   const toggleCategory = () => {
     categoryState.value = !categoryState.value;
-    selectedCategory.value = categoryState.value ? props.category : null;
 
-    if (!props.isSub && !categoryState.value) {
-      selectedItem.value = null;
-      selectedSubItem.value = null;
-      selectedSubCategory.value = null;
+    if (props.isSub) {
+      arsenalStore.setSelectedSubCategory(categoryState.value ? props.category : null);
+    } else {
+      arsenalStore.setSelectedCategory(categoryState.value ? props.category : null);
     }
   }
 
