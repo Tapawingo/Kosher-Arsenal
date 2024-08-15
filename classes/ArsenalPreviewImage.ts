@@ -1,6 +1,8 @@
 export enum ArsenalImageType {
   background,
-  figure
+  figure,
+  popout,
+  icon
 }
 
 export declare interface ArsenalPreviewImageJson {

@@ -40,7 +40,7 @@
   import templatesJson from '~/content/templates.json'
   import { ArsenalCategory, ArsenalCategoryIcon } from '~/classes/ArsenalCategory'
 
-  const props = withDefaults(defineProps<{isSub: boolean}>(), {
+  const props = withDefaults(defineProps<{isSub?: boolean}>(), {
     isSub: false
   });
 
@@ -69,12 +69,13 @@
     });
 
     if (props.isSub) {
-      arsenalStore.addSubCategory(newCategory);
-      toast.add({ title: `Added subcategory: "${ categoryTitle.value }"` });
+      let state = arsenalStore.addSubCategory(newCategory);
+      toast.add({ title: `${ state ? 'Added' : 'Failed to add' } subcategory: "${ categoryTitle.value }"` });
     } else {
-      arsenalStore.addCategory(newCategory);
-      toast.add({ title: `Added category: "${ categoryTitle.value }"` });
+      let state = arsenalStore.addCategory(newCategory);
+      toast.add({ title: `${ state ? 'Added' : 'Failed to add' } category: "${ categoryTitle.value }"` });
     }
+    
     isOpen.value = false;
   }
 

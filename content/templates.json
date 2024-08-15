@@ -16,7 +16,8 @@
         { "title": "Binoculars", "icon": "arsenal/icons/icon_binoculars.svg" },
         { "title": "Night Vision Goggles", "icon": "arsenal/icons/icon_nvg.svg" },
         { "title": "Communication", "icon": "arsenal/icons/icon_communication.svg" },
-        { "title": "Miscellanious", "icon": "arsenal/icons/icon_misc.svg" },
+        { "title": "Watch", "icon": "arsenal/icons/icon_watch.svg" },
+        { "title": "Miscellaneous", "icon": "arsenal/icons/icon_misc.svg" },
         { "title": "First Line", "icon": "arsenal/icons/icon_first.svg" },
         { "title": "Second Line", "icon": "arsenal/icons/icon_second.svg" },
         { "title": "Third Line", "icon": "arsenal/icons/icon_third.svg" }
@@ -24,6 +25,14 @@
 
     "subCategories": [
         { "title": "Modification", "icon": "arsenal/icons/icon_modification.svg" },
-        { "title": "Miscellanious", "icon": "arsenal/icons/icon_misc.svg" }
+        { "title": "Camo", "icon": "arsenal/icons/icon_camo.svg" },
+        { "title": "Patches", "icon": "arsenal/icons/icon_patch.svg" },
+        { "title": "Miscellaneous", "icon": "arsenal/icons/icon_misc.svg" },
+        { "title": "Pouches", "icon": "arsenal/icons/icon_pouch.svg" },
+        { "title": "Magazines", "icon": "arsenal/icons/icon_magazines.svg" },
+        { "title": "Grenades", "icon": "arsenal/icons/icon_grenade.svg" },
+        { "title": "Magazine", "icon": "arsenal/icons/icon_magazine.svg" },
+        { "title": "Sling", "icon": "arsenal/icons/icon_sling.svg" },
+        { "title": "Paint", "icon": "arsenal/icons/icon_paint.svg" }
     ]
 }

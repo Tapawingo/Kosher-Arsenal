@@ -4,6 +4,8 @@
 </template>
 
 <script setup lang="ts">
+  /* @TODO: Fix hydration issues (https://ryanclements.dev/posts/fixing-nuxt-hydration-mismatches-in-the-real-world) */
+  /* @TODO: Run tests for web vitals (https://web.dev/articles/vitals#tools_to_measure_and_report_core_web_vitals) */
 
   useHead({
     title: 'Kosher Arsenal',

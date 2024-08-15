@@ -2,15 +2,19 @@
   <div class="info" :class="selectedClass" @click="toggleInfo()">
     <div class="info-title">
 
-      <UTooltip text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
-        <Icon name="material-symbols:edit" @click.stop="isInfoModalOpen = true"/>
-      </UTooltip>
+      <div>
+        <UTooltip v-if="arsenalStore.mode == ArsenalMode.edit" text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
+          <Icon name="material-symbols:edit" @click.stop="isInfoModalOpen = true"/>
+        </UTooltip>
+      </div>
 
       <div>{{ arsenalStore.loadout.title }}</div>
-
-      <UTooltip text="Change Preview Image" :popper="{ placement: 'top' }" :ui="classOverride">
-        <Icon name="material-symbols:add-photo-alternate" @click.stop="isPreviewModalOpen = true"/>
-      </UTooltip>
+      
+      <div>
+        <UTooltip v-if="arsenalStore.mode == ArsenalMode.edit" text="Change Preview Image" :popper="{ placement: 'top' }" :ui="classOverride">
+          <Icon name="material-symbols:add-photo-alternate" @click.stop="isPreviewModalOpen = true"/>
+        </UTooltip>
+      </div>
 
     </div>
 
@@ -48,6 +52,8 @@
 </template>
 
 <script lang="ts" setup>
+import { ArsenalMode } from '~/stores/arsenal';
+
   const arsenalStore = useArsenalStore();
 
   const isInfoModalOpen = ref(false);
@@ -136,7 +142,7 @@
 
     &.selected .info-content {
         padding: 0.2rem;
-        max-height: 5rem;
+        max-height: 10rem;
     }
 
     &:hover:not(.selected) {

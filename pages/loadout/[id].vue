@@ -10,17 +10,17 @@
     <div class="categories">
       <div>
         <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
-          <ArsenalCategoriesCategory v-for="category in arsenalStore.loadout.categories" :category="category" :is-sub="false" :key="category.position"/>
+          <ArsenalCategoriesCategory v-for="category in arsenalStore.loadout.categories" :category="category" :key="category.position"/>
         </VueDraggable>
       </div>
-      <ArsenalCategoriesAddCategory v-if="arsenalStore.mode == ArsenalMode.edit" />
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.mode == arsenalModes.edit" />
     </div>
 
     <div class="category-panel">
       <div v-if="arsenalStore.selectedCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
-        <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item" :is-sub="false"/>
-        <ArsenalPanelAddItem v-if="arsenalStore.selectedCategory && arsenalStore.mode == ArsenalMode.edit" />
+        <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item"/>
+        <ArsenalPanelAddItem v-if="arsenalStore.selectedCategory && arsenalStore.mode == arsenalModes.edit" />
       </div>
     </div>
 
@@ -31,12 +31,19 @@
           <Icon name="material-symbols:arrow-back-2" mode="css"/><span>Return</span>
         </NuxtLink>
 
-        <div>
-          <Icon :name="arsenalStore.mode == 0 ? 'material-symbols:edit' : 'material-symbols:visibility-rounded'" mode="css" size="15"/>
-          <span>{{ arsenalStore.mode == 0 ? 'Edit' : 'Preview' }}</span>
-        </div>
+        <USelectMenu class="arsenal-select" :options="arsenalModeSelect" v-model="selectedArsenalMode" :ui="{option: { active: 'active' }}">
+          <template #option="{ option: mode }">
+            <Icon :name="mode.icon" mode="css" size="15"/>
+            <span >{{ mode.label }}</span>
+          </template>
 
-        <div><Icon name="material-symbols:help-outline" mode="css"/>Help</div>
+          <template #label>
+            <Icon :name="selectedArsenalMode.icon" class="leading"/>
+            <span >{{ selectedArsenalMode.label }}</span>
+          </template>
+        </USelectMenu>
+
+        <div class="arsenal-button"><Icon name="material-symbols:help-outline" mode="css"/>Help</div>
 
       </div>
       <ArsenalInfo />
@@ -45,18 +52,18 @@
     <div class="category-panel">
       <div v-if="arsenalStore.selectedSubCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedSubCategory.title }}</div>
-        <ArsenalPanelItem v-if="arsenalStore.selectedSubCategory" v-for="item in arsenalStore.selectedSubCategory.items" :item="item" :is-sub="true"/>
-        <ArsenalPanelAddItem v-if="arsenalStore.selectedSubCategory && arsenalStore.mode == ArsenalMode.edit" />
+        <ArsenalPanelItem v-if="arsenalStore.selectedSubCategory" v-for="item in arsenalStore.selectedSubCategory.items" :item="item" is-sub/>
+        <ArsenalPanelAddItem v-if="arsenalStore.selectedSubCategory && arsenalStore.mode == arsenalModes.edit" is-sub/>
       </div>
     </div>
 
     <div class="categories">
       <div>
-        <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
-          <ArsenalCategoriesCategory v-if="arsenalStore.selectedItem" v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
+        <VueDraggable v-if="arsenalStore.selectedItem" v-model="arsenalStore.selectedItem.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <ArsenalCategoriesCategory v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
         </VueDraggable>
       </div>
-      <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.mode == ArsenalMode.edit" :is-sub="true"/>
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.mode == arsenalModes.edit" is-sub/>
     </div>
   </div>
   
@@ -67,16 +74,25 @@
 
 <script lang="ts" setup>
   import { useMediaQuery, useMagicKeys } from '@vueuse/core'
-  import { ArsenalMode } from '~/types/arsenal';
   import { VueDraggable } from 'vue-draggable-plus';
-  import { ArsenalStates } from '~/stores/arsenal';
+  import { ArsenalMode, ArsenalStates } from '~/stores/arsenal';
   
   const { ctrl } = useMagicKeys(); /* @TODO: Add explenation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
 
-  /* Temporary */
-  arsenalStore.setMode(ArsenalMode.edit);
+  const arsenalModes = ref(ArsenalMode);
+  const arsenalModeSelect = ref([
+    { label: 'Preview', icon: 'material-symbols:visibility-rounded', mode: ArsenalMode.view },
+    { label: 'Buylist', icon: 'material-symbols:check-box', mode: ArsenalMode.buylist },
+    { label: 'Edit', icon: 'material-symbols:edit', mode: ArsenalMode.edit }
+  ])
+  const selectedArsenalMode = ref(arsenalModeSelect.value[2]);
+  arsenalStore.setMode(selectedArsenalMode.value.mode);
+
+  watch(selectedArsenalMode, () => {
+    arsenalStore.setMode(selectedArsenalMode.value.mode)
+  })
 
   const route = useRoute();
   const id = route.params.id;
@@ -123,10 +139,10 @@
     justify-content: center;
     gap: 0.5rem;
 
-    div, a {
+    .arsenal-button, .arsenal-select, a {
       background-color: rgba(85, 85, 85, 0.6);
       border: 1px solid rgb(0, 0, 0);
-      padding: 0.1rem;
+      padding: 0rem;
       user-select: none;
       width: 50%;
 
@@ -135,7 +151,7 @@
       align-items: center;
       gap: 5px;
 
-      &:hover:not(.disabled) {
+      &:hover:not(.disabled):not(.arsenal-select) {
         background-color: rgba(255, 255, 255, 0.25);
       }
       
@@ -144,6 +160,54 @@
         cursor: auto;
       }
 
+    }
+  }
+
+  .arsenal-select {
+    div[role=button] {
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      --tw-ring-inset: none;
+
+      &:hover {
+          background-color: rgba(255, 255, 255, 0.25);
+        }
+
+      button {
+        background-color: transparent;
+        --tw-ring-inset: none;
+        justify-content: center;
+        cursor: pointer;
+
+        span {
+          color: white;
+        }
+      }
+    }
+
+    ul[role=listbox] {
+      --tw-ring-inset: none;
+      background-color: rgba(85, 85, 85, 0.6);
+      border: 1px solid rgb(0, 0, 0);
+      border-radius: 2px;
+
+      li {
+        border-radius: 2px;
+        cursor: pointer;
+
+        span {
+          color: white;
+        }
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        &.bg-gray-100 {
+          background-color: rgba(255, 255, 255, 0.25);
+        }
+      }
     }
   }
 

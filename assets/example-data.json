@@ -1,4 +1,7 @@
 {
+  "itemPresets": [
+    { "title": "Colt Model 653", "description": "The Colt Model 653 / M653 / CAR-15...", "preview": { "type": 2, "path": "previews/m653_preview.png" } }
+  ],
   "loadouts": [
     { 
       "id": "example",
@@ -8,8 +11,7 @@
       "collaborators": [],
       "preview": {
         "type": 0,
-        "path": "arsenal/preview/default.svg",
-        "alt": ""
+        "path": "arsenal/preview/default.svg"
       },
       "tags": [
         { "label": "Example Tag 1", "type": 0 },
@@ -29,7 +31,10 @@
               "position": 1,
               "title": "Example Item 1",
               "description": "This is example item 1. It has a very long description so i can see what happens when the string is too long. It should just terminate the string in elippsies. When this happnes there should be a 'show more' button that opens a modal with the entire description in it. This string still isn't quite long enough so i'm gonna keep on typing until it reaches terminal length.",
-              "preview": "",
+              "preview": {
+                "type": 2,
+                "path": "https://0isznc85bj26dve98q0gl0q.blob.core.windows.net/hybris/images/700Wx700H/96a1_listing0012.png"
+              },
               "categories": [
                 {
                   "id": 0,
@@ -42,7 +47,10 @@
                       "position": 0,
                       "title": "Example Sub Item 1",
                       "description": "This is example sub item 1",
-                      "preview": "",
+                      "preview": {
+                        "type": 2,
+                        "path": "https://0isznc85bj26dve98q0gl0q.blob.core.windows.net/hybris/images/700Wx700H/96a1_listing0012.png"
+                      },
                       "categories": []
                     },
                     {
@@ -62,7 +70,10 @@
               "position": 1,
               "title": "Example Item 2",
               "description": "This is example item 2",
-              "preview": "https://cdn.britannica.com/70/123170-050-D7AAF458/AK-47.jpg",
+              "preview": {
+                "type": 2,
+                "path": "https://crimefictionbook.com/wp-content/uploads/2015/04/ar15a4_700w.png"
+              },
               "categories": [
                 {
                   "id": 0,

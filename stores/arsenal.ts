@@ -2,7 +2,12 @@ import { defineStore } from 'pinia'
 import { ArsenalLoadout, type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
 import { type ArsenalItemJson } from '~/classes/ArsenalItem';
 import { type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
-import { ArsenalMode } from '~/types/arsenal';
+
+export enum ArsenalMode {
+  view,
+  edit,
+  buylist
+}
 
 export enum ArsenalStates {
   loading,
@@ -69,15 +74,20 @@ export const useArsenalStore = defineStore('arsenal', {
       this.selectedSubItem = item
     },
 
-    addCategory (category: ArsenalCategoryJson): void {
+    addCategory (category: ArsenalCategoryJson): boolean {
       const index = this.loadout.categories.push(category) - 1;
       category.position = index;
+
+      return true;
     },
 
-    addSubCategory (category: ArsenalCategoryJson): void {
-      if (!this.selectedItem) return;
+    addSubCategory (category: ArsenalCategoryJson): boolean {
+      if (!this.selectedItem) return false;
+
       const index = this.selectedItem.categories.push(category) - 1;
       category.position = index;
+
+      return true;
     },
 
     removeCategory (categoryID: string): boolean {
@@ -104,7 +114,55 @@ export const useArsenalStore = defineStore('arsenal', {
         return false;
       };
   
-      this.loadout.categories.splice(categoryIndex, 1);
+      this.selectedItem.categories.splice(categoryIndex, 1);
+      return true;
+    },
+
+    addItem (item: ArsenalItemJson): boolean {
+      if (!this.selectedCategory) return false;
+
+      const index = this.selectedCategory.items.push(item) - 1;
+      item.position = index;
+
+      return true;
+    },
+
+    addSubItem (item: ArsenalItemJson): boolean {
+      if (!this.selectedSubCategory) return false;
+
+      const index = this.selectedSubCategory.items.push(item) - 1;
+      item.position = index;
+
+      return true;
+    },
+
+    removeItem (itemID: string): boolean {
+      if (!this.selectedCategory) return false;
+
+      const itemIndex = this.selectedCategory.items.findIndex((item: ArsenalItemJson) => { 
+        return item.id === itemID
+      });
+  
+      if (itemIndex == -1) {
+        return false;
+      };
+  
+      this.selectedCategory.items.splice(itemIndex, 1);
+      return true;
+    },
+
+    removeSubItem (itemID: string): boolean {
+      if (!this.selectedSubCategory) return false;
+
+      const itemIndex = this.selectedSubCategory.items.findIndex((item: ArsenalItemJson) => { 
+        return item.id === itemID
+      });
+  
+      if (itemIndex == -1) {
+        return false;
+      };
+  
+      this.selectedSubCategory.items.splice(itemIndex, 1);
       return true;
     }
   }

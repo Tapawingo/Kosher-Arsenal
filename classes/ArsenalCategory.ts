@@ -4,17 +4,12 @@ import type { ArsenalItemJson } from './ArsenalItem';
 
 /* Add more icons:
   - Utility
-  - grenades
   - Equipment
-
+  - map
+  
   sub icons
-  - Pouch
   - Stock
   - Pistol Grip
-  - Magazine
-  - Optic
-  - Rail
-  - Muzzle
  */
 export enum ArsenalCategoryIcon {
   primary = 'arsenal/icons/icon_rifle.svg',
@@ -32,15 +27,27 @@ export enum ArsenalCategoryIcon {
   backpack = 'arsenal/icons/icon_backpack.svg',
   communication = 'arsenal/icons/icon_communication.svg',
   nvg = 'arsenal/icons/icon_nvg.svg',
+  watch = 'arsenal/icons/icon_watch.svg',
   binoculars = 'arsenal/icons/icon_binoculars.svg',
   miscellaneous = 'arsenal/icons/icon_misc.svg',
   modification = 'arsenal/icons/icon_modification.svg',
+  camo = 'arsenal/icons/icon_camo.svg',
+  pouch = 'arsenal/icons/icon_pouch.svg',
+  magazines = 'arsenal/icons/icon_magazines.svg',
+  magazine = 'arsenal/icons/icon_magazine.svg',
+  grip = 'arsenal/icons/icon_grip.svg',
+  optic = 'arsenal/icons/icon_optic.svg',
+  laser = 'arsenal/icons/icon_laser.svg',
+  muzzle = 'arsenal/icons/icon_muzzle.svg',
+  sling = 'arsenal/icons/icon_sling.svg',
+  paint = 'arsenal/icons/icon_paint.svg',
   plus = 'arsenal/icons/icon_plus.svg',
   unknown = 'arsenal/icons/icon_unknown.svg',
   first = 'arsenal/icons/icon_first.svg',
   second = 'arsenal/icons/icon_second.svg',
   third = 'arsenal/icons/icon_third.svg',
   fourth = 'arsenal/icons/icon_fourth.svg',
+  patch = 'arsenal/icons/icon_patch.svg',
 }
 
 export declare interface ArsenalCategoryJson {

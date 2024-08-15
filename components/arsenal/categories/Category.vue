@@ -36,7 +36,7 @@
   import { storeToRefs } from 'pinia'
 
   const icons = Object.values(ArsenalCategoryIcon);
-  const props = withDefaults(defineProps<{category: ArsenalCategoryJson, isSub: boolean}>(), {
+  const props = withDefaults(defineProps<{category: ArsenalCategoryJson, isSub?: boolean}>(), {
     isSub: false
   });
 
@@ -96,6 +96,8 @@
   })
 
   const onContextMenu = () => {
+    if (arsenalStore.mode != ArsenalMode.edit) return;
+    
     const top = unref(y) - unref(windowY)
     const left = unref(x)
 
@@ -117,7 +119,12 @@
       selectedCategory.value = null;
     };
 
-    let state = arsenalStore.removeCategory(props.category.id);
+    let state = false;
+    if (!props.isSub) {
+      state = arsenalStore.removeCategory(props.category.id);
+    } else {
+      state = arsenalStore.removeSubCategory(props.category.id);
+    }
     
     if (state) {
       toast.add({ title: `Deleted category: "${ props.category.title }"` });

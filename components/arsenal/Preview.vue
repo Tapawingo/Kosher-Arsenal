@@ -1,6 +1,8 @@
 <template>
   <div class="preview" ref="previewRoot">
-    <NuxtImg :src="arsenalStore.loadout.preview.path" fit="cover" class="preview-image" placeholder />
+    <ClientOnly>
+      <NuxtImg :src="arsenalStore.loadout.preview.path" fit="cover" class="preview-image" placeholder />
+    </ClientOnly>
   </div>
 </template>
 
