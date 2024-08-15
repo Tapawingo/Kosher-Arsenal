@@ -1,5 +1,5 @@
 {
-    "categories": [
+    "mainCategories": [
         { "title": "Primary Weapon", "icon": "arsenal/icons/icon_rifle.svg" },
         { "title": "Secondary Weapon", "icon": "arsenal/icons/icon_handgun.svg" },
         { "title": "Thirdiary Weapon", "icon": "arsenal/icons/icon_launcher.svg" },
@@ -20,5 +20,10 @@
         { "title": "First Line", "icon": "arsenal/icons/icon_first.svg" },
         { "title": "Second Line", "icon": "arsenal/icons/icon_second.svg" },
         { "title": "Third Line", "icon": "arsenal/icons/icon_third.svg" }
+    ],
+
+    "subCategories": [
+        { "title": "Modification", "icon": "arsenal/icons/icon_modification.svg" },
+        { "title": "Miscellanious", "icon": "arsenal/icons/icon_misc.svg" }
     ]
 }

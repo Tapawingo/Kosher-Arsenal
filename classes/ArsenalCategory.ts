@@ -3,11 +3,18 @@ import { ArsenalItem } from './ArsenalItem';
 import type { ArsenalItemJson } from './ArsenalItem';
 
 /* Add more icons:
-  - Belt
-  - Pouch
-  - Knife
   - Utility
+  - grenades
   - Equipment
+
+  sub icons
+  - Pouch
+  - Stock
+  - Pistol Grip
+  - Magazine
+  - Optic
+  - Rail
+  - Muzzle
  */
 export enum ArsenalCategoryIcon {
   primary = 'arsenal/icons/icon_rifle.svg',

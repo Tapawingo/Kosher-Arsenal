@@ -1,5 +1,10 @@
 <template>
   <div v-if="!isPhone" class="arsenal">
+    <div v-if="arsenalStore.arsenalState == ArsenalStates.loading" class="arsenal-loading">
+      <Icon name="i-heroicons:arrow-path-20-solid" />
+      <div>Loading</div>
+    </div>
+
     <ArsenalPreview />
 
     <div class="categories">
@@ -64,6 +69,7 @@
   import { useMediaQuery, useMagicKeys } from '@vueuse/core'
   import { ArsenalMode } from '~/types/arsenal';
   import { VueDraggable } from 'vue-draggable-plus';
+  import { ArsenalStates } from '~/stores/arsenal';
   
   const { ctrl } = useMagicKeys(); /* @TODO: Add explenation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
@@ -137,6 +143,25 @@
         color: rgb(174, 174, 174);
         cursor: auto;
       }
+
+    }
+  }
+
+  .arsenal-loading {
+    position: absolute;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(48, 48, 48, 0.75);
+
+    span.iconify {
+      animation: spin 1s linear infinite;
+      scale: 1;
     }
   }
 </style>

@@ -51,7 +51,7 @@
   const icon = 'arsenal/icons/icon_plus.svg';
 
   const isOpen = ref(false);
-  const templates = templatesJson.categories;
+  const templates = props.isSub ? templatesJson.subCategories : templatesJson.mainCategories;
 
   const selected = ref(templates[0]);
   const categoryTitle = ref(selected.value.title);
