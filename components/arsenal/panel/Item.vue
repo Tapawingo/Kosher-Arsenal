@@ -10,10 +10,10 @@
       <span>{{ item.title }}</span>
 
       <div class="buylist-content" v-if="arsenalStore.mode == ArsenalMode.buylist">
-        <UTooltip class="item-tooltip buylist-store" text="Go to Store" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemStore">
+        <UTooltip class="tooltip buylist-store" text="Go to Store" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemStore">
           <Icon name="material-symbols:storefront" @click.stop />
         </UTooltip>
-        <UTooltip class="item-tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemPrice">
+        <UTooltip class="tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemPrice">
           {{ newItemPrice }}
         </UTooltip>
       </div>
@@ -78,43 +78,23 @@
   });
 
   const { ctrl } = useMagicKeys();
+  const toast = useToast();
   const arsenalStore = useArsenalStore();
   const { selectedItem, selectedSubItem } = storeToRefs(arsenalStore)
 
+  /* Edit Modal Refs */
   const isEditOpen = ref(false);
   const newItemTitle = ref(props.item.title);
   const newItemDescription = ref(props.item.description);
   const newItemPreview = ref(props.item.preview);
   
-  const isBuylistModalOpen = ref(false);
-  const buylistEditMode = ref<'store' | 'price'>('store');
-  const itemChecked = ref(false);
-  const newItemStore = ref<string | undefined>();
-  const newItemPrice = ref<number | undefined>();
-  const ItemRoot = ref<HTMLDivElement | null>(null);
-  
+  /* Item select state */
   const itemState = ref(false);
   const selectedClass = reactive({
     selected: itemState,
     "sub-item": props.isSub,
     draggable: ctrl
   })
-
-  const buylistItem = arsenalStore.getBuylistItem(props.item.id);
-  if (buylistItem) {
-    newItemStore.value = buylistItem.storeLink;
-    newItemPrice.value = buylistItem.price.price;
-    itemChecked.value = buylistItem.purchased;
-  };
-
-  const classOverride = {
-    background: '',
-    base: "arsenal-tooltip",
-    ring: '',
-    color: "white"
-  };
-
-  const toast = useToast()
 
   watch(props.isSub ? selectedSubItem : selectedItem, () => {
     if (!props.isSub && selectedItem.value != props.item) {
@@ -135,6 +115,33 @@
     }
   }
 
+  /* Override tooltip styles */
+  const classOverride = {
+    background: '',
+    base: "arsenal-tooltip",
+    ring: '',
+    color: "white"
+  };
+
+  /* Set buylist data */ /* @TODO: this needs to be computed (as to prevent unessecary queries) */
+  const isBuylistModalOpen = ref(false);
+  const buylistEditMode = ref<'store' | 'price'>('store');
+  const itemChecked = ref(false);
+  const newItemStore = ref<string | undefined>();
+  const newItemPrice = ref<number | undefined>();
+
+  if (arsenalStore.mode == ArsenalMode.buylist) {
+    const buylistItem = arsenalStore.getBuylistItem(props.item.id);
+
+    if (buylistItem) {
+      newItemStore.value = buylistItem.storeLink;
+      newItemPrice.value = buylistItem.price.price;
+      itemChecked.value = buylistItem.purchased;
+    };
+  }
+
+  /* Override Context Menu */
+  const ItemRoot = ref<HTMLDivElement | null>(null);
   const isContextMenuOpen = ref(false);
   const { x, y } = useMouse();
   const { y: windowY } = useWindowScroll();
@@ -164,6 +171,7 @@
     isContextMenuOpen.value = true;
   }
 
+  /* Delete Item */
   const deleteItem = () => {
     /* @TODO: prompt for verification */
 
@@ -172,22 +180,19 @@
       selectedItem.value = null;
     };
 
+    /* Remove item from loadout */
     let state = false;
     if (!props.isSub) {
       state = arsenalStore.removeItem(props.item.id);
     } else {
       state = arsenalStore.removeSubItem(props.item.id);
     }
-    
-    if (state) {
-      toast.add({ title: `Deleted item: "${ props.item.title }"` });
-    } else {
-      toast.add({ title: `Failed to delete item: "${ props.item.title }"` });
-    }
 
+    toast.add({ title: `${ state ? 'Deleted' : 'Failed to delete' } ${ props.isSub ? 'subitem' : 'item' }: "${ props.item.title }"` });
     isContextMenuOpen.value = false;
   }
 
+  /* Edit Item */
   const onEditSubmit = async () => {
     props.item.title = newItemTitle.value;
     props.item.description = newItemDescription.value;
