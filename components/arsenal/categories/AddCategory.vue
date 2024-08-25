@@ -5,8 +5,8 @@
     </div>
   </UTooltip>
 
-  <UModal v-model="isOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="modal">
+  <UModal v-model="isOpen" class="arsenal-modal">
+    <div class="arsenal-modal-body">
       <UFormGroup label="Template">
         <UInputMenu v-model="selected" :options="templates" option-attribute="title">
           <template #option="{ option: template }">
@@ -88,60 +88,11 @@
 </script>
 
 <style lang="scss">
-  .modal {
-    background-color: rgb(9, 9, 9);
-    color: white;
-    border: 1px solid rgb(0, 0, 0);
-    border-radius: 5px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    label {
-      color: white;
-    }
-    
-    input, select, textarea {
-      background-color: rgb(24, 24, 24);
-      color: white;
-      border: 1px solid rgb(0, 0, 0);
-      --tw-ring-inset: none;
-
-      &:focus {
-        border: none;
-      }
-    }
-
+  .arsenal-modal-body {
     img.leading {
       background-color: rgba(85, 85, 85, 0.6);
       border: 1px solid rgb(0, 0, 0);
       width: 1.5rem;
-    }
-
-    ul[role=listbox] {
-      background-color: rgb(24, 24, 24);
-      border: 1px solid rgb(0, 0, 0);
-      --tw-ring-inset: none;
-      
-      li {
-        color: white;
-
-        img {
-          background-color: rgba(85, 85, 85, 0.6);
-          border: 1px solid rgb(0, 0, 0);
-          width: 1.5rem;
-        }
-
-        &:hover {
-          background-color: rgb(43, 43, 43);
-        }
-      }
-    }
-
-    .button-group {
-      display: flex;
-      justify-content: space-between;
     }
   }
 </style>

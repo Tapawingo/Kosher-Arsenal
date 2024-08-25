@@ -1,5 +1,5 @@
 <template>
   <div>
-    <NuxtLink to="loadout/example">Open Viewer/Editor</NuxtLink>
+    <NuxtLink to="loadout/example" noPrefetch>Open Viewer/Editor</NuxtLink>
   </div>
 </template>

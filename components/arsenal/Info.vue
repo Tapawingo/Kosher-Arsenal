@@ -29,8 +29,8 @@
 
   <ArsenalModalPreviewUpload v-model="isPreviewModalOpen" />
 
-  <UModal v-model="isInfoModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="modal">
+  <UModal class="arsenal-modal" v-model="isInfoModalOpen">
+    <div class="arsenal-modal-body">
       <UFormGroup label="Title" required>
         <UInput v-model="newLoadoutTitle" />
       </UFormGroup>

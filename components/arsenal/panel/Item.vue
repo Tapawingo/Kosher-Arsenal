@@ -1,74 +1,69 @@
 <template>
   <div class="item" :class="selectedClass" @click="toggleItem()" @contextmenu.prevent="onContextMenu" ref="ItemRoot">
-    <div class="item-title">
-      <div v-if="arsenalStore.mode == ArsenalMode.buylist" class="item-checkbox" @click.stop>
+    <div class="title">
+
+      <div v-if="arsenalStore.mode == ArsenalMode.buylist" class="checkbox" @click.stop>
         <input type="checkbox"/>
-        <span class="item-checkbox-checkmark"></span>
+        <span class="checkbox-checkmark"></span>
       </div>
-      <div>{{ item.title }}</div>
+
+      <span>{{ item.title }}</span>
+
+      <div class="buylist-content" v-if="arsenalStore.mode == ArsenalMode.buylist">
+        <UTooltip class="item-tooltip buylist-store" text="Go to Store" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemStore">
+          <Icon name="material-symbols:storefront" @click.stop />
+        </UTooltip>
+        <UTooltip class="item-tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemPrice">
+          {{ newItemPrice }}
+        </UTooltip>
+      </div>
+
     </div>
-    <div v-if="item.preview.path" class="item-preview">
+    <div v-if="item.preview.path" class="preview">
       <NuxtImg :src="item.preview.path" />
     </div>
-    <div class="item-content" @click.stop>{{ item.description }}</div>
+    <div class="body" @click.stop>{{ item.description }}</div>
   </div>
 
   <UContextMenu v-model="isContextMenuOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
-    <div class="context-menu">
-      <div @click="isModalOpen = true">Edit</div>
+    <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.edit">
+      <div @click="isEditOpen = true">Edit</div>
       <div @click="deleteItem">Delete</div>
+    </div>
+    <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.buylist">
+      <div @click="buylistEditMode = 'store'; isBuylistModalOpen = true">Edit Store</div>
+      <div @click="buylistEditMode = 'price'; isBuylistModalOpen = true">Edit Price</div>
     </div>
   </UContextMenu>
 
-  <UModal v-model="isModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
+  <ArsenalModalItem
+    submit-label="Update"
+    v-model:is-open="isEditOpen" 
+    v-model:title="newItemTitle" 
+    v-model:description="newItemDescription" 
+    v-model:preview="newItemPreview"
+    @submit="onEditSubmit"
+  />
+
+  <UModal v-model="isBuylistModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
     <div class="modal">
-      <UFormGroup label="Item Title" required>
-        <UInput v-model="newItemTitle" />
+      <UFormGroup label="Store Link" v-if="buylistEditMode == 'store'">
+        <UInput type="url" v-model="newItemStore" />
       </UFormGroup>
 
-      <UFormGroup label="Description" required>
-        <UTextarea autoresize v-model="newItemDescription" />
+      <UFormGroup label="Price" required v-if="buylistEditMode == 'price'">
+        <UInput type="number" v-model="newItemPrice" />
       </UFormGroup>
 
-      <UFormGroup label="Image">
-        <div class="item-preview-upload">
-        <input type="file" @change="onFileChange" @input="handleFileInput" accept="image/*">
-        <UContainer class="item-preview-upload-preview">
-          <div class="panel">
-            <div class="item faded">
-              <div class="item-title">
-                <div>Example Item 1</div>
-              </div>
-            </div>
-            <div class="item">
-              <div class="item-title">
-                <div>{{ newItemTitle }}</div>
-              </div>
-              <div v-if="newItemPreviewPath" class="fake-item-preview">
-                <NuxtImg :src="newItemPreviewPath" />
-              </div>
-            </div>
-            <div class="item faded">
-              <div class="item-title">
-                <div>Example Item 2</div>
-              </div>
-            </div>
-          </div>
-        </UContainer>
-      </div>
-      </UFormGroup>
-
-      <div class="button-group">
-        <UButton label="Cancel" color="red" @click="isModalOpen = false"/>
-        <UButton label="Add" @click="updateItem" />
+      <div class="button-group" style="justify-content: flex-end">
+        <UButton label="close" color="red" @click="isBuylistModalOpen = false"/>
       </div>
     </div>
   </UModal>
 </template>
 
 <script lang="ts" setup>
-  const { handleFileInput, files } = useFileStorage()
-  import { useMouse, useWindowScroll, useMouseInElement } from '@vueuse/core'
+  import { useMouse, useWindowScroll, useMouseInElement, useMagicKeys } from '@vueuse/core'
   import { type ArsenalItemJson } from '~/classes/ArsenalItem';
   import { storeToRefs } from 'pinia'
   import { ArsenalMode } from '~/stores/arsenal';
@@ -82,20 +77,42 @@
     isSub: false
   });
 
+  const { ctrl } = useMagicKeys();
   const arsenalStore = useArsenalStore();
   const { selectedItem, selectedSubItem } = storeToRefs(arsenalStore)
 
-  const itemState = ref(false);
-  const isModalOpen = ref(false);
-  const itemChecked = ref(false);
+  const isEditOpen = ref(false);
   const newItemTitle = ref(props.item.title);
   const newItemDescription = ref(props.item.description);
-  const newItemPreviewPath = ref(props.item.preview.path);
+  const newItemPreview = ref(props.item.preview);
+  
+  const isBuylistModalOpen = ref(false);
+  const buylistEditMode = ref<'store' | 'price'>('store');
+  const itemChecked = ref(false);
+  const newItemStore = ref<string | undefined>();
+  const newItemPrice = ref<number | undefined>();
   const ItemRoot = ref<HTMLDivElement | null>(null);
+  
+  const itemState = ref(false);
   const selectedClass = reactive({
     selected: itemState,
-    "sub-item": props.isSub
+    "sub-item": props.isSub,
+    draggable: ctrl
   })
+
+  const buylistItem = arsenalStore.getBuylistItem(props.item.id);
+  if (buylistItem) {
+    newItemStore.value = buylistItem.storeLink;
+    newItemPrice.value = buylistItem.price.price;
+    itemChecked.value = buylistItem.purchased;
+  };
+
+  const classOverride = {
+    background: '',
+    base: "arsenal-tooltip",
+    ring: '',
+    color: "white"
+  };
 
   const toast = useToast()
 
@@ -134,8 +151,6 @@
   })
 
   const onContextMenu = () => {
-    if (arsenalStore.mode != ArsenalMode.edit) return;
-
     const top = unref(y) - unref(windowY)
     const left = unref(x)
 
@@ -173,182 +188,14 @@
     isContextMenuOpen.value = false;
   }
 
-  const onFileChange = (event: any) => {
-    console.log('file change')
-    const file = event.target.files[0]
-    console.log(file)
-    if (!file) return false;
-    if (!file.type.match('image.*')) return false;
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      newItemPreviewPath.value = event.target?.result as string
-    }
-
-    reader.readAsDataURL(file)
-  }
-
-  const updateItem = async () => {
-    let previewImage = ``;
-    if (files.value.length > 0) {
-      let filename = await $fetch('/api/uploadPreview', {
-          method: 'POST',
-          body: {
-              files: files.value
-          }
-      })
-      previewImage = `previews/${ filename }`;
-    }
-
+  const onEditSubmit = async () => {
     props.item.title = newItemTitle.value;
     props.item.description = newItemDescription.value;
-    props.item.preview = new ArsenalPreviewImage({ path: `previews/${ previewImage }` }).toJSON();
-
-    isModalOpen.value = false;
+    props.item.preview = newItemPreview.value;
+ 
   };
 </script>
 
 <style lang="scss">
-  .item {
-    background-color: rgba(85, 85, 85, 0.6);
-    margin-bottom: 1px;
-    cursor: pointer;
-    user-select: none;
-    position: relative;
-    overflow: visible;
-    
-    .item-title {
-      text-overflow: ellipsis;
-      padding: 1.25rem 0.5rem 1.25rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      height: 4rem;
-    }
-    
-    .item-content {
-      background-color: rgba(79, 79, 79, 0.6);
-      transition: 0.25s linear height;
-      padding: 0rem 0.2rem;
-      padding-bottom: 0;
-      font-size: 0.75rem;
-      overflow: hidden;
-      cursor: auto;
-      text-overflow: ellipsis;
-      height: 0px;
-    }
-
-    .item-preview {
-      position: absolute;
-      top: 0;
-      background-color: rgba(79, 79, 79, 0.6);
-      border: 1px solid black;
-      border-radius: 0px 3px 3px 0px;
-      border-left: none;
-      transition-property: width, height, opacity;
-      transition-duration: 0.25s;
-      transition-timing-function: linear;
-      opacity: 0;
-      height: 4rem;
-      width: 4rem;
-      left: 100%;
-
-      img {
-        object-fit: contain;
-        transition-property: height;
-        transition-duration: 0.25s;
-        transition-timing-function: linear;
-        height: 4rem;
-        width: 10rem;
-      }
-    }
-      
-    &.sub-item .item-preview {
-      border-right: none;
-      border-left: 1px solid black;
-      border-radius: 3px 0px 0px 3px;
-      left: auto;
-      right: 100%;
-    }
-
-    &:hover .item-preview {
-      opacity: 1;
-    }
-
-    &.selected .item-preview {
-      width: 10rem;
-      height: 10rem;
-      opacity: 1;
-
-      img {
-        height: 10rem;
-        width: 10rem;
-      }
-    }
-
-    &.selected .item-title {
-      background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    &.selected .item-content {
-      padding: 0.5rem;
-      height: 6rem;
-    }
-  }
-
-  .item-checkbox {
-    position: relative;
-    display: block;
-    width: 1.5rem;
-    height: 1.5rem;
-    user-select: none;
-
-    input[type=checkbox] {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-      height: 0;
-      width: 0;
-    }
-
-    input[type=checkbox]:checked ~ .item-checkbox-checkmark {
-      background-color: #2196F3;
-    }
-
-    input[type=checkbox]:checked ~ .item-checkbox-checkmark:after {
-      display: block;
-    }
-
-    .item-checkbox-checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 1.5rem;
-      height: 1.5rem;
-      border-radius: 3px;
-      border: 1px solid black;
-      background-color: transparent;
-
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.25);
-      }
-
-      &:after {
-        content: "";
-        position: absolute;
-        display: none;
-
-        left: 9px;
-        top: 5px;
-        width: 5px;
-        height: 10px;
-        border: solid white;
-        border-width: 0 3px 3px 0;
-        -webkit-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        transform: rotate(45deg);
-      }
-    }
-  }
-  
+  @import "@/assets/styles/item.scss";
 </style>

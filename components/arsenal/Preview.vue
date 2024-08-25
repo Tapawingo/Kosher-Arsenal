@@ -11,7 +11,7 @@
 </script>
 
 <style lang="scss">
-  .preview {
+  .arsenal > .preview {
     position: absolute;
     z-index: -1;
     width: 100%;

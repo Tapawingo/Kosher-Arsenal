@@ -1,0 +1,166 @@
+@import "globals";
+
+.item-tooltip {
+    width: 100%;
+    display: block;
+}
+
+.arsenal .item, .preview-container .item {
+    background-color: rgba(85, 85, 85, 0.6);
+    margin-bottom: 1px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: visible;
+
+    .title {
+        padding: 1.25rem 0.5rem 1.25rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        height: 4rem;
+
+        & > span {
+            width: 65%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .buylist-content {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            width: 25%;
+
+            span {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    &.selected .title {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    & > .body {
+        background-color: rgba(79, 79, 79, 0.6);
+        transition: 0.25s linear height;
+        padding: 0rem 0.2rem;
+        padding-bottom: 0;
+        font-size: 0.75rem;
+        overflow-y: scroll;
+        cursor: auto;
+        height: 0px;
+
+        @include scrollbar(0.3rem);
+    }
+
+    &.selected .body {
+        padding: 0.5rem;
+        height: 6rem;
+    }
+
+    & > .preview {
+        position: absolute;
+        top: 0;
+        background-color: rgba(79, 79, 79, 0.6);
+        border: 1px solid black;
+        border-radius: 0px 3px 3px 0px;
+        border-left: none;
+        transition-property: width, height, opacity;
+        transition-duration: 0.25s;
+        transition-timing-function: linear;
+        opacity: 0;
+        height: 4rem;
+        width: 4rem;
+        left: 100%;
+
+        img {
+            object-fit: contain;
+            transition-property: height;
+            transition-duration: 0.25s;
+            transition-timing-function: linear;
+            height: 4rem;
+            width: 10rem;
+        }
+    }
+    
+    &.sub-item .preview {
+        border-right: none;
+        border-left: 1px solid black;
+        border-radius: 3px 0px 0px 3px;
+        left: auto;
+        right: 100%;
+    }
+
+    &:hover .preview {
+        opacity: 1;
+    }
+
+    &.selected .preview {
+        width: 10rem;
+        height: 10rem;
+        opacity: 1;
+
+        img {
+        height: 10rem;
+        width: 10rem;
+        }
+    }
+}
+
+.item .checkbox {
+    position: relative;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    user-select: none;
+
+    input[type=checkbox] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    input[type=checkbox]:checked ~ .checkbox-checkmark {
+        background-color: #2196F3;
+    }
+
+    input[type=checkbox]:checked ~ .checkbox-checkmark:after {
+        display: block;
+    }
+
+    .checkbox-checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 3px;
+        border: 1px solid black;
+        background-color: transparent;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        &:after {
+            content: "";
+            position: absolute;
+            display: none;
+
+            left: 9px;
+            top: 5px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    }
+}

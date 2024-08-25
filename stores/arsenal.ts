@@ -15,6 +15,17 @@ export enum ArsenalStates {
   error
 }
 
+declare interface ItemPrice {
+  price: number;
+  currency: string;
+}
+declare interface BuyListItem {
+  itemID: string;
+  purchased: boolean;
+  storeLink: string;
+  price: ItemPrice;
+}
+
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
     return {
@@ -24,7 +35,8 @@ export const useArsenalStore = defineStore('arsenal', {
       selectedCategory: ref<ArsenalCategoryJson | null> (null),
       selectedItem: ref<ArsenalItemJson | null> (null),
       selectedSubCategory: ref<ArsenalCategoryJson | null> (null),
-      selectedSubItem: ref<ArsenalItemJson | null> (null)
+      selectedSubItem: ref<ArsenalItemJson | null> (null),
+      buyListItems: ref<Array<BuyListItem>> ([])
     }
   },
   getters: {
@@ -164,6 +176,16 @@ export const useArsenalStore = defineStore('arsenal', {
   
       this.selectedSubCategory.items.splice(itemIndex, 1);
       return true;
+    },
+
+    getBuylistItem (itemID: string): BuyListItem | void {
+      const itemIndex = this.buyListItems.findIndex((item: BuyListItem) => { 
+        return item.itemID === itemID
+      });
+
+      if (itemIndex) {
+        return this.buyListItems[itemIndex];
+      }
     }
   }
 })

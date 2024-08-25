@@ -5,6 +5,8 @@
       <div>Loading</div>
     </div>
 
+    <div class="background"></div>
+
     <ArsenalPreview />
 
     <div class="categories">
@@ -19,7 +21,11 @@
     <div class="category-panel">
       <div v-if="arsenalStore.selectedCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
-        <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item"/>
+        <div>
+          <VueDraggable v-model="arsenalStore.selectedCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+            <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item" :key="item.position"/>
+          </VueDraggable>
+        </div>
         <ArsenalPanelAddItem v-if="arsenalStore.selectedCategory && arsenalStore.mode == arsenalModes.edit" />
       </div>
     </div>
@@ -77,14 +83,14 @@
   import { VueDraggable } from 'vue-draggable-plus';
   import { ArsenalMode, ArsenalStates } from '~/stores/arsenal';
   
-  const { ctrl } = useMagicKeys(); /* @TODO: Add explenation for moving by holding ctrl */
+  const { ctrl } = useMagicKeys(); /* @TODO: Add explanation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
 
   const arsenalModes = ref(ArsenalMode);
   const arsenalModeSelect = ref([
     { label: 'Preview', icon: 'material-symbols:visibility-rounded', mode: ArsenalMode.view },
-    { label: 'Buylist', icon: 'material-symbols:check-box', mode: ArsenalMode.buylist },
+    { label: 'Buylist (WIP)', icon: 'material-symbols:check-box', mode: ArsenalMode.buylist },
     { label: 'Edit', icon: 'material-symbols:edit', mode: ArsenalMode.edit }
   ])
   const selectedArsenalMode = ref(arsenalModeSelect.value[2]);
@@ -103,7 +109,8 @@
 </script>
 
 <style lang="scss">
-  @use "~/assets/styles/loadout.scss";
+  @use "@/assets/styles/loadout.scss";
+  @use "@/assets/styles/modal.scss";
 
   .notification [role=status] {
     background-color: rgba(85, 85, 85, 0.6);

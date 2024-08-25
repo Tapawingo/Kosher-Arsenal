@@ -13,13 +13,26 @@ body {
     margin: 0px;
     width: 100vw;
     height: 100vh;
-    background-size: 40px 40px;
-    background-image: radial-gradient(circle, #1c1917 1px, rgba(0, 0, 0, 0) 1px);
-    background-color: rgb(168, 162, 158);
+    background-color: #1c1917;
+}
+
+.draggable {
+    cursor: grab;
 }
 
 .arsenal {
     height: 100vh;
+
+    .background {
+        position: absolute;
+        z-index: -2;
+        margin: 0px;
+        width: 100vw;
+        height: 100vh;
+        background-size: 40px 40px;
+        background-image: radial-gradient(circle, #1c1917 1px, rgba(0, 0, 0, 0) 1px);
+        background-color: rgb(168, 162, 158);
+    }
     
     &::after {
         content: "";
@@ -60,7 +73,7 @@ body {
         border: 1px solid rgb(0, 0, 0);
         height: 100%;
 
-        .title {
+        & > .title {
             padding: 0.15rem;
             background-color: rgba(23, 23, 23, 0.6);
             font-weight: 500;

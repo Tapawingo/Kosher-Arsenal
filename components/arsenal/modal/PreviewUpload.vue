@@ -1,6 +1,6 @@
 <template>
-  <UModal v-model="isPreviewModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="modal">
+  <UModal class="arsenal-modal" v-model="isPreviewModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
+    <div class="arsenal-modal-body">
       <UFormGroup label="Upload Image" required>
         <div class="preview-upload">
         <input type="file" @change="onFileChange" @input="handleFileInput" accept="image/*">
