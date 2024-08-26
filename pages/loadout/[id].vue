@@ -86,7 +86,8 @@
   const { ctrl } = useMagicKeys(); /* @TODO: Add explanation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
-
+  
+  /* State management for Kosher Arsenal */
   const arsenalModes = ref(ArsenalMode);
   const arsenalModeSelect = ref([
     { label: 'Preview', icon: 'material-symbols:visibility-rounded', mode: ArsenalMode.view },
@@ -100,11 +101,55 @@
     arsenalStore.setMode(selectedArsenalMode.value.mode)
   })
 
+  /* Attempt to load a loadout */
   const route = useRoute();
   const id = route.params.id;
 
   await callOnce(async () => {
     arsenalStore.fetchLoadout(id as string);
+  })
+
+  /* SEO Site Meta */
+  const getSEOTitle = () => { 
+    if (arsenalStore.arsenalState == ArsenalStates.ready) {
+      return arsenalStore.loadout.title
+    }
+
+    return 'Kosher Arsenal'
+  };
+
+  const getSEODescription = () => {
+    if (arsenalStore.arsenalState == ArsenalStates.ready) {
+      return arsenalStore.loadout.description
+    }
+
+    return 'Kosher Arsenal is a tool to visualize and/or organize loadouts, firearms or any other category users see fit.'
+  };
+
+  const getSEOImage = () => {
+    if (arsenalStore.arsenalState == ArsenalStates.ready) {
+      return arsenalStore.loadout.preview.path
+    }
+
+    return '@/public/logo-alternate-long.svg'
+  };
+
+  useSeoMeta({
+    title: getSEOTitle,
+    description: getSEODescription,
+    applicationName: 'Kosher Arsenal',
+    author: 'JSOK',
+    
+    ogTitle: getSEOTitle,
+    ogDescription: getSEODescription,
+    ogImage: getSEOImage,
+    ogImageAlt: 'Kosher Arsenal',
+    ogUrl: '',
+
+    twitterCard: 'app',
+    twitterTitle: getSEOTitle,
+    twitterDescription: getSEODescription,
+    twitterImage: getSEOImage,
   })
 </script>
 

@@ -197,7 +197,6 @@
     props.item.title = newItemTitle.value;
     props.item.description = newItemDescription.value;
     props.item.preview = newItemPreview.value;
- 
   };
 </script>
 

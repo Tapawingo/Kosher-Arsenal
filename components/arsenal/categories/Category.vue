@@ -12,22 +12,14 @@
     </div>
   </UContextMenu>
 
-  <UModal v-model="isModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="modal">
-      <UFormGroup label="Category Title" required>
-        <UInput v-model="newCategoryTitle" />
-      </UFormGroup>
-
-      <UFormGroup label="Category Icon" required>
-        <ArsenalModalIconSelect :icons="icons" v-model="newCategoryIcon"/>
-      </UFormGroup>
-
-      <div class="button-group">
-        <UButton label="Cancel" color="red" @click="isModalOpen = false"/>
-        <UButton label="Save" @click="updateCategory()" />
-      </div>
-    </div>
-  </UModal>
+  <ArsenalModalCategory
+    v-model:isOpen="isModalOpen"
+    v-model:title="newCategoryTitle"
+    v-model:icon="newCategoryIcon"
+    :is-sub="props.isSub"
+    :show-templates="false"
+    @submit="updateCategory"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -35,7 +27,6 @@
   import type { ArsenalCategoryJson } from '~/classes/ArsenalCategory';
   import { storeToRefs } from 'pinia'
 
-  const icons = Object.values(ArsenalCategoryIcon);
   const props = withDefaults(defineProps<{category: ArsenalCategoryJson, isSub?: boolean}>(), {
     isSub: false
   });
@@ -43,7 +34,7 @@
   const { ctrl } = useMagicKeys();
   const arsenalStore = useArsenalStore();
   const toast = useToast()
-  const { selectedCategory, selectedItem, selectedSubItem, selectedSubCategory } = storeToRefs(arsenalStore)
+  const { selectedCategory, selectedSubCategory } = storeToRefs(arsenalStore)
   
   const categoryRoot = ref<HTMLDivElement | null> (null);
   const categoryState = ref(false);
@@ -80,6 +71,7 @@
     }
   }
 
+  /* Override context menu */
   const isContextMenuOpen = ref(false);
   const { x, y } = useMouse();
   const { y: windowY } = useWindowScroll();
@@ -111,6 +103,7 @@
     isContextMenuOpen.value = true;
   }
 
+  /* Delete Category */
   const deleteCategory = () => {
     /* @TODO: prompt for verification */
 
@@ -135,13 +128,13 @@
     isContextMenuOpen.value = false;
   }
 
+  /* Update modal */
   const isModalOpen = ref(false);
   const newCategoryTitle = ref<string>(props.category.title);
   const newCategoryIcon = ref<string>(props.category.icon);
   const updateCategory = () => { /* @TODO: Force none empty strings */
     props.category.title = newCategoryTitle.value;
     props.category.icon = newCategoryIcon.value;
-    isModalOpen.value = false;
   }
 </script>
 
@@ -161,10 +154,6 @@
 
     &.selected {
         background-color: rgba(255, 255, 255, 0.25);
-    }
-
-    &.draggable {
-      cursor: grab;
     }
   }
 

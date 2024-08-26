@@ -9,17 +9,15 @@
 <script lang="ts" setup>
   const containerEl = ref<HTMLDivElement | null>(null)
   const props = defineProps<{ icons: Array<string> }>();
-  const model = defineModel();
+  const model = defineModel({ type: String, default: '' });
 
   const select = (icon: string) => {
     if (model.value == icon) {
-      model.value = undefined
+      model.value = ''
     } else {
       model.value = icon;
     }
   };
-
-  select(model.value as string);
 
   watch(model, () => {
     if (!containerEl.value) return;
@@ -32,13 +30,17 @@
       };
     };
   })
+
+  onMounted(() => {
+    select(model.value);
+  })
 </script>
 
 <style lang="scss">
   .icon-selector {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
+    gap: 0.36rem;
     padding: 0.3rem;
     background-color: rgb(24, 24, 24);
 

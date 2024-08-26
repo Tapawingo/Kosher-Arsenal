@@ -1,82 +1,50 @@
 <template>
   <UTooltip :text="isSub ? 'Add Subcategory' : 'Add Category'" :popper="{ placement: 'right' }" :ui="classOverride">
-    <div class="category" @click="isOpen = true">
+    <div class="category" @click="isModalOpen = true">
       <NuxtImg :src="icon" fit="cover" placeholder/>
     </div>
   </UTooltip>
 
-  <UModal v-model="isOpen" class="arsenal-modal">
-    <div class="arsenal-modal-body">
-      <UFormGroup label="Template">
-        <UInputMenu v-model="selected" :options="templates" option-attribute="title">
-          <template #option="{ option: template }">
-            <NuxtImg v-if="template.icon" :src="template.icon" placeholder loading="lazy"/>
-            <span style="height: 100%; vertical-align: middle;">{{ template.title }}</span>
-          </template>
-          
-          <template #leading>
-            <NuxtImg v-if="selected.icon" :src="selected.icon" class="leading"/>
-          </template>
-        </UInputMenu>
-      </UFormGroup>
-
-      <UFormGroup label="Category Title" required>
-        <UInput v-model="categoryTitle" />
-      </UFormGroup>
-
-      <UFormGroup label="Category Icon" required>
-        <ArsenalModalIconSelect :icons="icons" v-model="selectedIcon"/>
-      </UFormGroup>
-
-      <div class="button-group">
-        <UButton label="Cancel" color="red" @click="isOpen = false"/>
-        <UButton label="Add" @click="addCategory()" />
-      </div>
-    </div>
-  </UModal>
+  <ArsenalModalCategory
+    v-model:isOpen="isModalOpen"
+    v-model:title="categoryTitle"
+    v-model:icon="categoryIcon"
+    :is-sub="props.isSub"
+    @submit="addCategory"
+  />
 </template>
 
 <script lang="ts" setup>
-  import templatesJson from '~/content/templates.json'
-  import { ArsenalCategory, ArsenalCategoryIcon } from '~/classes/ArsenalCategory'
+  import { ArsenalCategory } from '~/classes/ArsenalCategory'
 
-  const props = withDefaults(defineProps<{isSub?: boolean}>(), {
+  const props = withDefaults(defineProps<{
+    isSub?: boolean
+  }>(), {
     isSub: false
   });
 
   const arsenalStore = useArsenalStore();
   const toast = useToast()
-
-  const icons = Object.values(ArsenalCategoryIcon);
   const icon = 'arsenal/icons/icon_plus.svg';
 
-  const isOpen = ref(false);
-  const templates = props.isSub ? templatesJson.subCategories : templatesJson.mainCategories;
+  const isModalOpen = ref<boolean>(false);
+  const categoryTitle = ref<string>('');
+  const categoryIcon = ref<string>('')
 
-  const selected = ref(templates[0]);
-  const categoryTitle = ref(selected.value.title);
-  const selectedIcon = ref<undefined | string>(selected.value.icon);
-
-  watch(selected, () => {
-    categoryTitle.value = selected.value.title
-    selectedIcon.value = selected.value.icon
-  });
-
-  const addCategory = () => { /* @TODO: Force none empty strings */
+  const addCategory = () => {
     const newCategory = new ArsenalCategory({
       title: categoryTitle.value,
-      icon: selectedIcon.value
+      icon: categoryIcon.value
     });
 
+    let state = false;
     if (props.isSub) {
-      let state = arsenalStore.addSubCategory(newCategory);
-      toast.add({ title: `${ state ? 'Added' : 'Failed to add' } subcategory: "${ categoryTitle.value }"` });
+      state = arsenalStore.addSubCategory(newCategory);
     } else {
-      let state = arsenalStore.addCategory(newCategory);
-      toast.add({ title: `${ state ? 'Added' : 'Failed to add' } category: "${ categoryTitle.value }"` });
+      state = arsenalStore.addCategory(newCategory);
     }
-    
-    isOpen.value = false;
+
+    toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subcategory' : 'category' }: "${ categoryTitle.value }"` });
   }
 
   const classOverride = {
