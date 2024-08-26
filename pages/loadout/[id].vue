@@ -24,8 +24,8 @@
       <div v-if="arsenalStore.selectedCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
         <div>
-          <VueDraggable v-model="arsenalStore.selectedCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
-            <ArsenalPanelItem v-if="arsenalStore.selectedCategory" v-for="item in arsenalStore.selectedCategory.items" :item="item" :key="item.position"/>
+          <VueDraggable v-if="arsenalStore.selectedCategory" v-model="arsenalStore.selectedCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+            <ArsenalPanelItem v-for="item in arsenalStore.selectedCategory.items" :item="item" :key="item.position"/>
           </VueDraggable>
         </div>
         <ArsenalPanelAddItem v-if="arsenalStore.selectedCategory && arsenalStore.mode == arsenalModes.edit" />
@@ -60,7 +60,11 @@
     <div class="category-panel">
       <div v-if="arsenalStore.selectedSubCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedSubCategory.title }}</div>
-        <ArsenalPanelItem v-if="arsenalStore.selectedSubCategory" v-for="item in arsenalStore.selectedSubCategory.items" :item="item" is-sub/>
+        <div>
+          <VueDraggable v-if="arsenalStore.selectedSubCategory" v-model="arsenalStore.selectedSubCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+            <ArsenalPanelItem v-for="item in arsenalStore.selectedSubCategory.items" :item="item" :key="item.position" is-sub/>
+          </VueDraggable>
+        </div>
         <ArsenalPanelAddItem v-if="arsenalStore.selectedSubCategory && arsenalStore.mode == arsenalModes.edit" is-sub/>
       </div>
     </div>
@@ -68,7 +72,7 @@
     <div class="categories">
       <div>
         <VueDraggable v-if="arsenalStore.selectedItem" v-model="arsenalStore.selectedItem.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
-          <ArsenalCategoriesCategory v-for="category in arsenalStore.selectedItem.categories" :category="category" :is-sub="true"/>
+          <ArsenalCategoriesCategory v-for="category in arsenalStore.selectedItem.categories" :category="category" :key="category.position" is-sub />
         </VueDraggable>
       </div>
       <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.mode == arsenalModes.edit" is-sub/>

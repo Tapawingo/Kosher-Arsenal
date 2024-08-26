@@ -29,7 +29,7 @@
           "items": [
             {
               "id": 0,
-              "position": 1,
+              "position": 0,
               "title": "Example Item 1",
               "description": "This is example item 1. It has a very long description so i can see what happens when the string is too long. It should just terminate the string in elippsies. When this happnes there should be a 'show more' button that opens a modal with the entire description in it. This string still isn't quite long enough so i'm gonna keep on typing until it reaches terminal length.",
               "preview": {
