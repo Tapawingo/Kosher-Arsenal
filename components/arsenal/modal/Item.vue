@@ -117,6 +117,7 @@
   /* Update preview with the image path on modal open */
   watch(isOpen, () => {
     if (isOpen) {
+      itemPreset.value.title = itemTitle.value;
       itemPreviewView.value = itemPreview.value.path;
     };
   })
