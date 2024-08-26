@@ -70,8 +70,6 @@
 
   /* @TODO: https://ui.nuxt.com/components/select-menu#creatable */
   /* @TODO: Quantity selection as item type */
-  /* @TODO: Buylist Store link (icon on right) */
-  /* @TODO: Buylist Price (right of store link) */
   
   const props = withDefaults(defineProps<{item: ArsenalItemJson, isSub?: boolean}>(), {
     isSub: false
@@ -123,7 +121,9 @@
     color: "white"
   };
 
-  /* Set buylist data */ /* @TODO: this needs to be computed (as to prevent unessecary queries) */
+  /* Set buylist data */
+  // API for currency conversion:
+  // https://www.exchangerate-api.com/docs/free
   const isBuylistModalOpen = ref(false);
   const buylistEditMode = ref<'store' | 'price'>('store');
   const itemChecked = ref(false);
