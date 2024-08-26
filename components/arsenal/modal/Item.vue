@@ -4,9 +4,10 @@
       <UFormGroup label="Item Title" required>
         <USelectMenu 
           v-model="itemPreset" 
-          searchable 
-          creatable 
-          searchable-placeholder="Title..." 
+          searchable
+          creatable
+          searchable-placeholder="Title..."
+          :search-attributes="['title', 'alias']"
           :options="itemPresets ? itemPresets : []"
           option-attribute="title"
           @change="onTitleChange"
@@ -60,8 +61,6 @@
   const { data: itemPresets } = useFetch<Array<Object>>('/api/getItemPresets', {
     lazy: true
   })
-
-  /* @TODO: Fix Item Preset Selection */
 
   const props = withDefaults(defineProps<{ submitLabel?: string }>(), { submitLabel: 'Add' });
   const emit = defineEmits(['submit']);
