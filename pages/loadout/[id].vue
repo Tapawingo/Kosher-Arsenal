@@ -9,6 +9,8 @@
 
     <ArsenalPreview />
 
+    <UiConfirmationBox />
+
     <div class="categories">
       <div>
         <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">

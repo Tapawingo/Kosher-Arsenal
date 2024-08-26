@@ -21,7 +21,7 @@
         color: white;
     }
 
-    input, select, textarea, button {
+    input, select, textarea, [role=button] button {
         background-color: rgb(24, 24, 24);
         color: white;
         border: 1px solid rgb(0, 0, 0);
@@ -51,6 +51,10 @@
     
             &:hover {
                 background-color: rgb(43, 43, 43);
+            }
+
+            &.bg-gray-100 {
+                background-color: rgba(85, 85, 85, 0.6) !important;
             }
         }
     }

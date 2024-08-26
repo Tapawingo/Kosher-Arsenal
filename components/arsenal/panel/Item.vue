@@ -79,6 +79,7 @@
 
   const { ctrl } = useMagicKeys();
   const toast = useToast();
+  const confirmationBox = useConfirmationBox();
   const arsenalStore = useArsenalStore();
   const { selectedItem, selectedSubItem } = storeToRefs(arsenalStore)
 
@@ -173,23 +174,30 @@
 
   /* Delete Item */
   const deleteItem = () => {
-    /* @TODO: prompt for verification */
-
-    /* Close panel */
-    if (selectedItem.value == props.item) {
-      selectedItem.value = null;
-    };
-
-    /* Remove item from loadout */
-    let state = false;
-    if (!props.isSub) {
-      state = arsenalStore.removeItem(props.item.id);
-    } else {
-      state = arsenalStore.removeSubItem(props.item.id);
-    }
-
-    toast.add({ title: `${ state ? 'Deleted' : 'Failed to delete' } ${ props.isSub ? 'subitem' : 'item' }: "${ props.item.title }"` });
-    isContextMenuOpen.value = false;
+    
+    confirmationBox.open({
+      title: 'Delete Item',
+      description: `Are you sure you want to delete "${ props.item.title }"?`,
+      submitLabel: 'Yes',
+      cancelLabel: 'No',
+      submitCallback: () => {
+        /* Close panel */
+        if (selectedItem.value == props.item) {
+          selectedItem.value = null;
+        };
+    
+        /* Remove item from loadout */
+        let state = false;
+        if (!props.isSub) {
+          state = arsenalStore.removeItem(props.item.id);
+        } else {
+          state = arsenalStore.removeSubItem(props.item.id);
+        }
+    
+        toast.add({ title: `${ state ? 'Deleted' : 'Failed to delete' } ${ props.isSub ? 'subitem' : 'item' }: "${ props.item.title }"` });
+        isContextMenuOpen.value = false;
+      }
+    })
   }
 
   /* Edit Item */

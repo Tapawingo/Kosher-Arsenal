@@ -33,6 +33,7 @@
 
   const { ctrl } = useMagicKeys();
   const arsenalStore = useArsenalStore();
+  const confirmationBox = useConfirmationBox();
   const toast = useToast()
   const { selectedCategory, selectedSubCategory } = storeToRefs(arsenalStore)
   
@@ -105,25 +106,31 @@
 
   /* Delete Category */
   const deleteCategory = () => {
-    /* @TODO: prompt for verification */
-
-    /* Close panel */
-    if (selectedCategory.value == props.category) {
-      selectedCategory.value = null;
-    };
-
-    let state = false;
-    if (!props.isSub) {
-      state = arsenalStore.removeCategory(props.category.id);
-    } else {
-      state = arsenalStore.removeSubCategory(props.category.id);
-    }
+    confirmationBox.open({
+      title: 'Delete Category',
+      description: `Are you sure you want to delete "${ props.category.title }"?`,
+      submitLabel: 'Yes',
+      cancelLabel: 'No',
+      submitCallback: () => {
+        /* Close panel */
+        if (selectedCategory.value == props.category) {
+          selectedCategory.value = null;
+        };
     
-    if (state) {
-      toast.add({ title: `Deleted category: "${ props.category.title }"` });
-    } else {
-      toast.add({ title: 'Failed to delete category: "${ props.category.title }"' });
-    }
+        let state = false;
+        if (!props.isSub) {
+          state = arsenalStore.removeCategory(props.category.id);
+        } else {
+          state = arsenalStore.removeSubCategory(props.category.id);
+        }
+        
+        if (state) {
+          toast.add({ title: `Deleted category: "${ props.category.title }"` });
+        } else {
+          toast.add({ title: 'Failed to delete category: "${ props.category.title }"' });
+        }
+      }
+    })
 
     isContextMenuOpen.value = false;
   }
