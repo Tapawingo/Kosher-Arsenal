@@ -1,6 +1,6 @@
 {
   "itemPresets": [
-    { "title": "Colt Model 653", "description": "The Colt Model 653 / M653 / CAR-15...", "preview": { "type": 2, "path": "previews/m653_preview.png" } }
+    { "title": "Colt Model 653", "description": "The Colt Model 653 / M653 / CAR-15...", "preview": { "type": 2, "path": "example_m653_preview.webp" } }
   ],
   "loadouts": [
     { 

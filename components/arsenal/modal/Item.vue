@@ -3,12 +3,13 @@
     <div class="arsenal-modal-body">
       <UFormGroup label="Item Title" required>
         <USelectMenu 
-          v-model="itemTitle" 
+          v-model="itemPreset" 
           searchable 
           creatable 
           searchable-placeholder="Title..." 
           :options="itemPresets ? itemPresets : []"
           option-attribute="title"
+          @change="onTitleChange"
         />
       </UFormGroup>
 
@@ -68,7 +69,18 @@
   const itemTitle = defineModel('title', { required: false, default: '' });
   const itemDescription = defineModel('description', { required: false, default: '' });
   const itemPreview = defineModel<ArsenalPreviewImageJson>('preview', { required: false, default: { type: 0, path: '' } });
+  const itemPreset = ref({ title: '', description: '', preview: { type: 0, path: '' } })
   const itemPreviewView = ref<string>('');
+
+  /* Load preset if selected */
+  const onTitleChange = () => {
+    if (itemPreset.value.title) itemTitle.value = itemPreset.value.title;
+    if (itemPreset.value.description) itemDescription.value = itemPreset.value.description;
+    if (itemPreset.value.preview) {
+      itemPreview.value = itemPreset.value.preview;
+      itemPreviewView.value = itemPreset.value.preview.path;
+    };
+  }
 
   /* Change the preview image with the newly uploaded image */
   const onFileChange = (event: any) => {
@@ -96,7 +108,7 @@
       })
       previewImage = `previews/${ filename }`;
     }
-
+    
     itemPreview.value = new ArsenalPreviewImage({ path: previewImage });
     isOpen.value = false;
 
