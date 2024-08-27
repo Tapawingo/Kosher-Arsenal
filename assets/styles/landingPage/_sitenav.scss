@@ -1,0 +1,134 @@
+@import "../globals";
+
+/* Used for color vars */
+
+header.sitenav {    
+    margin: 0;
+    padding: 0rem 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid black;
+
+    img {
+        max-height: 2.8rem;
+        width: 10%;
+    }
+
+    nav {
+        height: 2.8rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        width: 25%;
+
+        a {
+            border: 1px solid black;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.2rem;
+            height: 100%;
+
+            &.active {
+                color: white;
+                background-color: black;
+            }
+
+            &:hover:not(.active) {
+                color: white;
+                background-color: black;
+            }
+        }
+    }
+
+    .search-container {
+        width: 35%;
+        height: 2.8rem;
+
+        input {
+            background-color: transparent;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.2rem;
+            border: 1px solid black;
+            height: 100%;
+        }
+    }
+
+    .user-container {
+        display: flex;
+        padding: 1rem;
+        gap: 1rem;
+        width: 20%;
+
+        button {
+            border: 1px solid black;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.2rem;
+            height: 100%;
+
+            &:hover {
+                color: white;
+                background-color: black;
+            }
+        }
+    }
+
+    .settings-container {
+        width: 10%;
+        height: 2.8rem;
+        display: flex;
+        gap: 1rem;
+
+        button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid black;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.2rem;
+            height: 100%;
+
+            &:hover {
+                color: white;
+                background-color: black;
+            }
+
+        }
+    }
+}
+
+/* Dark theme */
+.dark-theme header.sitenav {    
+    border-bottom: 1px solid rgb(34,39,43);
+
+    nav {
+        a {
+            border: 1px solid rgb(222,228,234);
+
+            &.active {
+                color: black;
+                background-color: rgb(222,228,234);
+            }
+
+            &:hover:not(.active) {
+                color: black;
+                background-color: rgb(222,228,234);
+            }
+        }
+    }
+
+    .search-container {
+        input {
+            border: 1px solid rgb(222,228,234);
+        }
+    }
+
+    button {
+        border: 1px solid rgb(222,228,234);
+
+        &:hover {
+            color: black;
+            background-color: rgb(222,228,234);
+        }
+    }
+}

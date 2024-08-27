@@ -1,4 +1,13 @@
 $main-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono";
 $font-color: white;
 
-@import 'mixins.scss'
+@import 'mixins.scss';
+
+div.app-container {
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+}

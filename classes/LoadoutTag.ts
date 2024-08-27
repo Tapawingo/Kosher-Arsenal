@@ -6,11 +6,13 @@ export enum LoadoutTagType {
 export declare interface LoadoutTagJson {
   label: string;
   type: number;
+  loadouts: Array<string>;
 }
 
 export class LoadoutTag {
   public label: string = '';
   public type: LoadoutTagType = LoadoutTagType.text;
+  public loadouts: Array<string> = [];
 
   public constructor(label?: string) {
     if (label) {
@@ -21,7 +23,8 @@ export class LoadoutTag {
   public toJSON(): LoadoutTagJson {
     return {
       label: this.label,
-      type: this.type
+      type: this.type,
+      loadouts: this.loadouts
     }
   }
 
