@@ -33,7 +33,12 @@ header.sitenav {
                 background-color: black;
             }
 
-            &:hover:not(.active) {
+            &.disabled {
+                opacity: 0.25;
+                cursor: auto;
+            }
+
+            &:hover:not(.active, .disabled) {
                 color: white;
                 background-color: black;
             }

@@ -1,20 +1,20 @@
 <template>
   <header class="sitenav">
-    <NuxtImg :src="userSettings.themeIsDarkmode() ? '/logo_white.svg' : '/logo.svg'" />
+    <NuxtImg :src="authStore.themeIsDarkmode() ? '/logo_white.svg' : '/logo.svg'" />
     <nav>
       <NuxtLink active-class="active" to="/">Loadouts</NuxtLink>
-      <NuxtLink active-class="active" to="/geardb">Gear Database</NuxtLink>
-      <NuxtLink active-class="active" to="/refs">Reference Images</NuxtLink>
+      <NuxtLink class="disabled" active-class="active">Gear Database</NuxtLink>
+      <NuxtLink class="disabled" active-class="active">Reference Images</NuxtLink>
     </nav>
     <div class="search-container">
       <input type="search" placeholder="Search..." />
     </div>
     <div class="user-container">
-      <button>Login</button>
-      <button>Register</button>
+      <button class="disabled">Login</button>
+      <button class="disabled">Register</button>
     </div>
     <div class="settings-container">
-      <button @click="userSettings.toggleTheme()">
+      <button @click="authStore.toggleTheme()">
         <Icon name="material-symbols:dark-mode" />
       </button>
       <button>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-  const userSettings = useUserSettingsStore();
+  const authStore = useAuthStore();
 </script>
 
 <style lang="scss">
