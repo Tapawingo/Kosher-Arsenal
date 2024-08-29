@@ -1,0 +1,69 @@
+.arsenal {
+    color: $foreground;
+    height: 100vh;
+
+    * {
+        transition: background-color 0s, border-color 0s;
+    }
+
+    .background {
+        position: absolute;
+        z-index: -2;
+        margin: 0px;
+        width: 100vw;
+        height: 100vh;
+        background-size: 40px 40px;
+        background-image: radial-gradient(circle, $arsenal-grid-color 1px, rgba(0, 0, 0, 0) 1px);
+        background-color: $arsenal-background-color;
+    }
+
+    .arsenal-tooltip {
+        background-color: $background;
+        border-radius: 2px;
+        font-size: 0.75rem;
+        outline: none;
+        border: none;
+    }
+
+    .categories, .category-panel, .center-panel {
+        height: 100%;
+        float: left;
+    }
+    
+    .categories {
+        width: 2.75%;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+    
+    .category-panel {
+        width: 20%;
+        padding: 5px 0px 5px 0px;
+        
+        .panel {
+            background-color: $background;
+            border: 1px solid $border-color;
+            height: 100%;
+    
+            & > .title {
+                padding: 0.15rem;
+                background-color: $background-200;
+                font-weight: 500;
+                font-size: 1.3rem;
+                text-align: center;
+            }
+        }
+    }
+    
+    .center-panel {
+        width: 54.5%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+}

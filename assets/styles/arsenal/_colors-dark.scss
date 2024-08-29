@@ -1,0 +1,21 @@
+$arsenal-background-color: rgb(168, 162, 158);
+$arsenal-grid-color: rgb(28, 25, 23);
+
+$background: rgba(85, 85, 85, 0.6);
+$background-100: rgba(79, 79, 79, 0.6);
+$background-200: rgba(23, 23, 23, 0.6);
+$foreground: white;
+
+$active-background: rgba(255, 255, 255, 0.25);
+$active-foreground: $foreground;
+
+$disabled-background: $background;
+$disabled-foreground: rgb(214, 214, 214);
+
+$border-color: black;
+$active-border-color: black;
+$disabled-border-color: rgb(214, 214, 214);
+
+$modal-background: rgb(9, 9, 9);
+$modal-input-background: rgb(24, 24, 24);
+$active-modal-input-background: rgb(24, 24, 24);

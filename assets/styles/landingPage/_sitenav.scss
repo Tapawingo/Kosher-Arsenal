@@ -1,14 +1,16 @@
-@import "../globals";
-
 /* Used for color vars */
 
-header.sitenav {    
+header.sitenav {
+    position: fixed;
+    width: 100%;
     margin: 0;
     padding: 0rem 0.25rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-bottom: 1px solid black;
+    background-color: $background ;
+    border-bottom: 1px solid $border-color;
+    transition: background-color 0.5s;
 
     img {
         max-height: 2.8rem;
@@ -23,24 +25,26 @@ header.sitenav {
         width: 25%;
 
         a {
-            border: 1px solid black;
+            border: 1px solid $border-color;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;
             height: 100%;
 
             &.active {
-                color: white;
-                background-color: black;
+                background-color: $active-background;
+                color: $active-foreground;
             }
 
             &.disabled {
-                opacity: 0.25;
+                border-color: $disabled-border-color;
+                background-color: $disabled-background;
+                color: $disabled-foreground;
                 cursor: auto;
             }
 
             &:hover:not(.active, .disabled) {
-                color: white;
-                background-color: black;
+                background-color: $active-background;
+                color: $active-foreground;
             }
         }
     }
@@ -54,7 +58,7 @@ header.sitenav {
             width: 100%;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;
-            border: 1px solid black;
+            border: 1px solid $border-color;
             height: 100%;
         }
     }
@@ -66,14 +70,14 @@ header.sitenav {
         width: 20%;
 
         button {
-            border: 1px solid black;
+            border: 1px solid $border-color;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;
             height: 100%;
 
             &:hover {
-                color: white;
-                background-color: black;
+                color: $active-foreground;
+                background-color: $active-background;
             }
         }
     }
@@ -88,52 +92,16 @@ header.sitenav {
             display: flex;
             justify-content: center;
             align-items: center;
-            border: 1px solid black;
+            border: 1px solid $border-color;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;
             height: 100%;
 
             &:hover {
-                color: white;
-                background-color: black;
+                background-color: $active-background;
+                color: $active-foreground;
             }
 
-        }
-    }
-}
-
-/* Dark theme */
-.dark-theme header.sitenav {    
-    border-bottom: 1px solid rgb(34,39,43);
-
-    nav {
-        a {
-            border: 1px solid rgb(222,228,234);
-
-            &.active {
-                color: black;
-                background-color: rgb(222,228,234);
-            }
-
-            &:hover:not(.active) {
-                color: black;
-                background-color: rgb(222,228,234);
-            }
-        }
-    }
-
-    .search-container {
-        input {
-            border: 1px solid rgb(222,228,234);
-        }
-    }
-
-    button {
-        border: 1px solid rgb(222,228,234);
-
-        &:hover {
-            color: black;
-            background-color: rgb(222,228,234);
         }
     }
 }

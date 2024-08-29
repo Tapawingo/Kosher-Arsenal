@@ -1,5 +1,6 @@
 <template>
-  <div class="app-container" :class="{ 'dark-theme': userSettings.themeIsDarkmode() }">
+  <div class="app-container">
+    <NuxtLoadingIndicator />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -8,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+  import { usePreferredDark } from '@vueuse/core';
   /* @TODO: Fix hydration issues (https://ryanclements.dev/posts/fixing-nuxt-hydration-mismatches-in-the-real-world) */
   /* @TODO: Run tests for web vitals (https://web.dev/articles/vitals#tools_to_measure_and_report_core_web_vitals) */
 
@@ -20,13 +22,17 @@
       { name: 'viewport', content: "width=device-width, initial-scale=1.0" }
     ],
     htmlAttrs: {
-      lang: 'en'
+      lang: 'en',
+      class: () => { 
+        if (userSettings.themeIsDarkmode()) return 'dark-theme';
+        if (!userSettings.themeIsDarkmode()) return 'light-theme';
+      }
     },
   link: [
     {
       rel: 'icon',
       type: 'image/png',
-      href: '/favicon.ico'
+      href: () => { return usePreferredDark() ? '/favicon.ico' : '/favicon_dark.ico' }
     }
   ]
   });

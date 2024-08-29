@@ -1,0 +1,12 @@
+$background: rgb(16, 18, 20);
+$foreground: white;
+
+$active-background: rgb(222, 228, 234);
+$active-foreground: black;
+
+$disabled-background: $background;
+$disabled-foreground: rgb(68, 68, 68);
+
+$border-color: rgb(68, 68, 68);
+$active-border-color: $active-background;
+$disabled-border-color: rgb(68, 68, 68);

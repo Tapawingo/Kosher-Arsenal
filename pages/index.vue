@@ -21,5 +21,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/assets/styles/landingPage/main";
+  @use "@/assets/styles/landingPage/main";
 </style>

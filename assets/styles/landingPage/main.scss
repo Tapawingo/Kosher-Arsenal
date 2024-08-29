@@ -1,0 +1,31 @@
+@import "../globals";
+
+.app-container {
+    transition: background-color 0.5s;
+}
+
+html:not(.dark-theme) {
+    @import "colors-light";
+
+    font-family: $main-font, 'Courier New', Courier, monospace;
+    background-color: $background;
+    color: $foreground;
+
+    @import "sitenav";
+    @import "loadouts-page";
+}
+
+html.dark-theme {
+    @import "colors-dark";
+
+    font-family: $main-font, 'Courier New', Courier, monospace;
+    background-color: $background;
+    color: $foreground;
+
+    @import "sitenav";
+    @import "loadouts-page";
+}
+
+* {
+    box-sizing: border-box;
+}

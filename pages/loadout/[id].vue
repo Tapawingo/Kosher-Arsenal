@@ -11,6 +11,8 @@
 
     <UiConfirmationBox />
 
+    <ArsenalModalHelp v-model:is-open="helpIsOpen" />
+
     <div class="categories">
       <div>
         <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
@@ -51,7 +53,10 @@
           </template>
         </USelectMenu>
 
-        <div class="arsenal-button"><Icon name="material-symbols:help-outline" mode="css"/>Help</div>
+        <div class="arsenal-button" @click="helpIsOpen = true">
+          <Icon name="material-symbols:help-outline" mode="css"/>
+          Help
+        </div>
 
       </div>
       <ArsenalInfo />
@@ -92,6 +97,9 @@
   const { ctrl } = useMagicKeys(); /* @TODO: Add explanation for moving by holding ctrl */
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
+
+  /* Help button */
+  const helpIsOpen = ref(false);
   
   /* State management for Kosher Arsenal */
   const arsenalModes = ref(ArsenalMode);
@@ -160,8 +168,7 @@
 </script>
 
 <style lang="scss">
-  @use "@/assets/styles/loadout.scss";
-  @use "@/assets/styles/modal.scss";
+  @use "@/assets/styles/arsenal/main";
 
   .notification [role=status] {
     background-color: rgba(85, 85, 85, 0.6);

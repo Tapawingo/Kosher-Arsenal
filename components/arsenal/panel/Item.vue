@@ -209,5 +209,5 @@
 </script>
 
 <style lang="scss">
-  @import "@/assets/styles/item.scss";
+  
 </style>

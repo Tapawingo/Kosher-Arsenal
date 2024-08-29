@@ -12,6 +12,7 @@
           </div>
           <h1> {{ loadout.title }} </h1>
           <p>{{ loadout.description }}</p>
+          <NuxtLink :to="`loadout/${ loadout.id }`">View</NuxtLink>
         </div>
       </div>
     </div>

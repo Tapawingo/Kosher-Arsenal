@@ -23,15 +23,9 @@
     </div>
   </header>
 
-  <div>
-    <slot />
-  </div>
+  <slot />
 </template>
 
 <script lang="ts" setup>
   const authStore = useAuthStore();
 </script>
-
-<style lang="scss">
-  
-</style>

@@ -1,0 +1,35 @@
+@import "../globals";
+
+html:not(.dark-theme) {
+    @import "colors-light";
+
+    font-family: $main-font, 'Courier New', Courier, monospace;
+
+    @import "arsenal";
+    @import "modal";
+    @import "item";
+}
+
+html.dark-theme {
+    @import "colors-dark";
+
+    font-family: $main-font, 'Courier New', Courier, monospace;
+
+    @import "arsenal";
+    @import "modal";
+    @import "item";
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+.draggable {
+    cursor: grab !important;
+}
