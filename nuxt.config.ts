@@ -11,7 +11,12 @@ export default defineNuxtConfig({
   imports: {
     dirs: ['classes']
   },
-  modules: ['@nuxt/ui', "@nuxt/image", "@pinia/nuxt", 'nuxt-file-storage'],
+  modules: [
+    '@nuxt/ui',
+    "@nuxt/image",
+    "@pinia/nuxt",
+    'nuxt-file-storage',
+  ],
 
   fileStorage: {
     mount: 'public'

@@ -1,9 +1,13 @@
 <template>
   <UModal class="arsenal-modal" v-model="isOpen">
     <div class="arsenal-modal-body">
-      <UFormGroup :label="`${ currentMode } Help`">
-        <ContentDoc />
-      </UFormGroup>
+      <div class="help-titlebar">
+        <span><Icon name="material-symbols:help-outline" /> Help</span>
+      </div>
+        <UDivider />
+        <ArsenalHelpPreview v-if="arsenalStore.mode === ArsenalMode.view" />
+        <ArsenalHelpBuylist v-if="arsenalStore.mode === ArsenalMode.buylist" />
+        <ArsenalHelpEdit v-if="arsenalStore.mode === ArsenalMode.edit" />
     </div>
   </UModal>
 </template>
@@ -11,12 +15,18 @@
 <script lang="ts" setup>
   const arsenalStore = useArsenalStore();
 
-  const currentMode = computed(() => {
-    if (arsenalStore.mode === ArsenalMode.view) return 'Preview';
-    if (arsenalStore.mode === ArsenalMode.buylist) return 'Buylist';
-    if (arsenalStore.mode === ArsenalMode.edit) return 'Edit';
-  });
-
   const isOpen = defineModel('isOpen', { type: Boolean, default: true });
-
 </script>
+
+<style lang="scss">
+  .arsenal-modal-body .help-titlebar {
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+  }
+</style>
