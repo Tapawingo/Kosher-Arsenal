@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^1.7.0",
+    "@nuxthub/core": "^0.7.7",
     "@paralleldrive/cuid2": "^2.2.2",
     "@pinia/nuxt": "^0.5.3",
     "nuxt": "^3.12.4",
@@ -21,7 +22,8 @@
   "devDependencies": {
     "@nuxt/ui": "^2.18.4",
     "nuxt-file-storage": "^0.2.7",
-    "sass": "^1.77.8"
+    "sass": "^1.77.8",
+    "wrangler": "^3.72.3"
   },
   "overrides": {
     "vue": "latest"
