@@ -70,7 +70,7 @@ header.sitenav {
         gap: 1rem;
         width: 20%;
 
-        a {
+        a, button {
             border: 1px solid $border-color;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;
@@ -80,6 +80,13 @@ header.sitenav {
                 color: $active-foreground;
                 background-color: $active-background;
             }
+        }
+
+        span.user {
+            border: 1px solid $border-color;
+            border-radius: 0.2rem;
+            padding: 0.5rem 0.75rem;
+            height: 100%;
         }
     }
 

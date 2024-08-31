@@ -1,5 +1,4 @@
 import { Argon2id } from 'oslo/password';
-import { db } from '../../utils/userDB';
 import { generateId } from 'lucia';
 
 interface IBody {
@@ -10,6 +9,7 @@ interface IBody {
 }
 
 export default eventHandler(async (event) => {
+  const db = hubDatabase();
   const { data: body } = await readBody<IBody>(event);
   
   const username = body.username;

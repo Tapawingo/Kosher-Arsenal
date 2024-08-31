@@ -12,8 +12,8 @@
     <div class="user-container">
       <NuxtLink v-if="!user" to="/signin">Login</NuxtLink>
       <NuxtLink v-if="!user" to="/signup">Register</NuxtLink>
-      {{ user?.username }}
-      <NuxtLink v-if="user" @click="signout">Logout</NuxtLink>
+      <span class="user">{{ user?.username }}</span>
+      <button v-if="user" @click="signout">Logout</button>
     </div>
     <div class="settings-container">
       <button @click="authStore.toggleTheme()">

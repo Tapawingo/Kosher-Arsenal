@@ -23,19 +23,6 @@ export declare interface ArsenalLoadoutJson {
   categories: Array<ArsenalCategoryJson>
 }
 
-export declare interface LoadoutsTable {
-  id: string,
-  title: string,
-  description: string,
-  owner: string,
-  collaborators: string,
-  preview: string,
-  tags: string,
-  visibility: number,
-  collections: string,
-  categories: string
-};
-
 export class ArsenalLoadout {
   public id: string = createId();
   public title: string = '';
@@ -111,7 +98,7 @@ export class ArsenalLoadout {
     return this;
   }
 
-  public fromDB(results: LoadoutsTable): this {
+  public fromDB(results: DatabaseLoadout): this {
     let dbTags = JSON.parse(results.tags);
     let dbCollections = JSON.parse(results.collections);
     let dbCategories = JSON.parse(results.categories);

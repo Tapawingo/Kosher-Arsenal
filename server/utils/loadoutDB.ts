@@ -1,4 +1,4 @@
-export const db = hubDatabase();
+const db = hubDatabase();
 
 /* Create loadout table */
 db.prepare(`CREATE TABLE IF NOT EXISTS loadouts (

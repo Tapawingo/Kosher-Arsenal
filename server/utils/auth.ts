@@ -1,8 +1,9 @@
 import { Lucia } from 'lucia';
 import { D1Adapter } from '@lucia-auth/adapter-sqlite';
-import { db } from './userDB';
 
 import type { DatabaseUser } from './userDB';
+
+const db = hubDatabase();
 
 const adapter = new D1Adapter(db, {
   user: "user",

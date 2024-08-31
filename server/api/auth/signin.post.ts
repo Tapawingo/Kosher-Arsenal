@@ -1,5 +1,4 @@
 import { Argon2id } from 'oslo/password';
-import { db } from '../../utils/userDB';
 
 import type { DatabaseUser } from '../../utils/userDB';
 
@@ -11,6 +10,7 @@ interface IBody {
 }
 
 export default defineEventHandler(async (event) => {
+  const db = hubDatabase();
   const { data: body } = await readBody<IBody>(event);
   
   const username = body.username;
