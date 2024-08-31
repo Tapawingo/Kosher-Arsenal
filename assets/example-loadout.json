@@ -1,0 +1,183 @@
+{
+    "id": "example",
+    "title": "example loadout",
+    "description": "This is an example loadout used to test various features of Kosher Arsenal.",
+    "owner": "",
+    "collaborators": [],
+    "preview": {
+    "type": 0,
+    "path": "arsenal/preview/default.svg"
+    },
+    "tags": [
+    { "label": "Example Tag 1", "type": 0, "loadouts": [] },
+    { "label": "Example Tag 2", "type": 0, "loadouts": [] }
+    ],
+    "visibility": 1,
+    "collections": [],
+    "categories": [
+    {
+        "id": 0,
+        "position": 0,
+        "icon": "/arsenal/icons/icon_handgun.svg",
+        "title": "Example category 1",
+        "items": [
+        {
+            "id": 0,
+            "position": 0,
+            "title": "Example Item 1",
+            "description": "This is example item 1. It has a very long description so i can see what happens when the string is too long. It should just terminate the string in elippsies. When this happnes there should be a 'show more' button that opens a modal with the entire description in it. This string still isn't quite long enough so i'm gonna keep on typing until it reaches terminal length.",
+            "preview": {
+            "type": 2,
+            "path": "https://0isznc85bj26dve98q0gl0q.blob.core.windows.net/hybris/images/700Wx700H/96a1_listing0012.png"
+            },
+            "categories": [
+            {
+                "id": 0,
+                "position": 0,
+                "icon": "/arsenal/icons/icon_rifle.svg",
+                "title": "Example sub category 1",
+                "items": [
+                {
+                    "id": 1,
+                    "position": 0,
+                    "title": "Example Sub Item 1",
+                    "description": "This is example sub item 1",
+                    "preview": {
+                    "type": 2,
+                    "path": "https://0isznc85bj26dve98q0gl0q.blob.core.windows.net/hybris/images/700Wx700H/96a1_listing0012.png"
+                    },
+                    "categories": []
+                },
+                {
+                    "id": 2,
+                    "position": 1,
+                    "title": "Example Sub Item 2",
+                    "description": "This is example sub item 2",
+                    "preview": "",
+                    "categories": []
+                }
+                ]
+            }
+            ]
+        },
+        {
+            "id": 1,
+            "position": 1,
+            "title": "Example Item 2",
+            "description": "This is example item 2",
+            "preview": {
+            "type": 2,
+            "path": "https://crimefictionbook.com/wp-content/uploads/2015/04/ar15a4_700w.png"
+            },
+            "categories": [
+            {
+                "id": 0,
+                "position": 0,
+                "icon": "/arsenal/icons/icon_unknown.svg",
+                "title": "Example sub category 2",
+                "items": [
+                {
+                    "id": 1,
+                    "position": 0,
+                    "title": "Example Sub Item 1",
+                    "description": "This is example sub item 1",
+                    "preview": "",
+                    "categories": []
+                },
+                {
+                    "id": 2,
+                    "position": 1,
+                    "title": "Example Sub Item 2",
+                    "description": "This is example sub item 2",
+                    "preview": "",
+                    "categories": []
+                }
+                ]
+            },
+            {
+                "id": 1,
+                "position": 0,
+                "icon": "/arsenal/icons/icon_unknown.svg",
+                "title": "Example sub category 3",
+                "items": [
+                {
+                    "id": 1,
+                    "position": 0,
+                    "title": "Example Sub Item 3",
+                    "description": "This is example sub item 3",
+                    "preview": "",
+                    "categories": []
+                }
+                ]
+            }
+            ]
+        },
+        {
+            "id": 2,
+            "position": 2,
+            "title": "Example Item 3",
+            "description": "This is example item 3",
+            "preview": "",
+            "categories": []
+        },
+        {
+            "id": 3,
+            "position": 3,
+            "title": "Example Item 4",
+            "description": "This is example item 4",
+            "preview": "",
+            "categories": []
+        },
+        {
+            "id": 4,
+            "position": 4,
+            "title": "Example Item 5",
+            "description": "This is example item 5",
+            "preview": "",
+            "categories": []
+        }
+        ]
+    },
+    {
+        "id": 1,
+        "position": 1,
+        "icon": "/arsenal/icons/icon_unknown.svg",
+        "title": "Example category 2",
+        "items": [
+        {
+            "id": 0,
+            "position": 1,
+            "title": "[✓] Example Item 6",
+            "description": "This is example item 6",
+            "preview": "",
+            "categories": [
+            {
+                "id": 0,
+                "position": 0,
+                "icon": "/arsenal/icons/icon_unknown.svg",
+                "title": "Example sub category 4",
+                "items": [
+                {
+                    "id": 1,
+                    "position": 0,
+                    "title": "Example Sub Item 4",
+                    "description": "This is example sub item 4",
+                    "preview": "",
+                    "categories": []
+                },
+                {
+                    "id": 2,
+                    "position": 1,
+                    "title": "Example Sub Item 5",
+                    "description": "This is example sub item 5",
+                    "preview": "",
+                    "categories": []
+                }
+                ]
+            }
+            ]
+        }
+        ]
+    }
+    ]
+}

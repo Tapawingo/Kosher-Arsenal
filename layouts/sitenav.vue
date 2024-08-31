@@ -10,8 +10,10 @@
       <input type="search" placeholder="Search..." />
     </div>
     <div class="user-container">
-      <button class="disabled">Login</button>
-      <button class="disabled">Register</button>
+      <NuxtLink v-if="!user" to="/signin">Login</NuxtLink>
+      <NuxtLink v-if="!user" to="/signup">Register</NuxtLink>
+      {{ user?.username }}
+      <NuxtLink v-if="user" @click="signout">Logout</NuxtLink>
     </div>
     <div class="settings-container">
       <button @click="authStore.toggleTheme()">
@@ -28,4 +30,14 @@
 
 <script lang="ts" setup>
   const authStore = useAuthStore();
+
+  const user = useUser();
+
+  const signout = async () => {
+    await useFetch("/api/auth/signout", {
+      method: "POST"
+    });
+    
+    reloadNuxtApp();
+  }
 </script>

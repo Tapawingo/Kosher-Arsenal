@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@pinia/nuxt",
     'nuxt-file-storage',
-    '@nuxthub/core',
+    '@nuxthub/core'
   ],
 
   hub: {
@@ -27,5 +27,5 @@ export default defineNuxtConfig({
 
   fileStorage: {
     mount: 'public'
-  },
+  }
 })

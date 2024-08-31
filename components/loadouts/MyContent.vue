@@ -1,7 +1,14 @@
 <template>
   <div class="section">
+
     <h1>My loadouts</h1>
     <div class="body">
+      <div class="loadout-new">
+        <span class="plus-icon">+</span>
+        <span>NEW</span>
+        <span>LOADOUT</span>
+      </div>
+
       <div class="loadout" v-for="loadout in myLoadouts">
         <div class="preview">
           <NuxtImg :src="loadout.preview.path" />
@@ -12,7 +19,7 @@
           </div>
           <h1> {{ loadout.title }} </h1>
           <p>{{ loadout.description }}</p>
-          <NuxtLink :to="`loadout/${ loadout.id }`">View</NuxtLink>
+          <NuxtLink :to="`loadout/${ loadout.id }`" noPrefetch>View</NuxtLink>
         </div>
       </div>
     </div>
@@ -32,10 +39,13 @@
 <script lang="ts" setup>
   import type { LoadoutCollectionJson } from '~/classes/LoadoutCollection';
 
+  const toast = useToast();
+  const user = useUser();
+
   const myCollections = ref<Array<LoadoutCollectionJson>>([]);
-  const { data: myLoadouts } = await useFetch('/api/fetchLoadouts');
+  const { data: myLoadouts, error } = await useFetch(`/api/loadout/loadouts/${ user.value?.id }`);
+
+  if (error.value) {
+    toast.add({ title: "Error", description: error.value.message, color: "red" });
+  };
 </script>
-
-<style>
-
-</style>

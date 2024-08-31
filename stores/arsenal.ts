@@ -54,7 +54,7 @@ export const useArsenalStore = defineStore('arsenal', {
 
     async fetchLoadout (loadoutID: string) { 
       this.arsenalState = ArsenalStates.loading;
-      const loadoutJson: ArsenalLoadoutJson | undefined = await $fetch(`/api/fetchLoadout/${ loadoutID }`)
+      const loadoutJson: ArsenalLoadoutJson | undefined = await $fetch(`/api/loadout/${ loadoutID }`)
 
       if (loadoutJson) {
         this.loadout = loadoutJson;

@@ -94,7 +94,7 @@
   import { VueDraggable } from 'vue-draggable-plus';
   import { ArsenalMode, ArsenalStates } from '~/stores/arsenal';
   
-  const { ctrl } = useMagicKeys(); /* @TODO: Add explanation for moving by holding ctrl */
+  const { ctrl } = useMagicKeys();
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
 
@@ -119,7 +119,7 @@
   const route = useRoute();
   const id = route.params.id;
 
-  await callOnce(async () => {
+  onMounted(async () => {
     arsenalStore.fetchLoadout(id as string);
   })
 

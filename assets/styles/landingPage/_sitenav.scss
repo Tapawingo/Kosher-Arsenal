@@ -11,6 +11,7 @@ header.sitenav {
     background-color: $background ;
     border-bottom: 1px solid $border-color;
     transition: background-color 0.5s;
+    min-height: 4.625rem;
 
     img {
         max-height: 2.8rem;
@@ -69,7 +70,7 @@ header.sitenav {
         gap: 1rem;
         width: 20%;
 
-        button {
+        a {
             border: 1px solid $border-color;
             padding: 0.5rem 0.75rem;
             border-radius: 0.2rem;

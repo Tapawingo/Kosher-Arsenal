@@ -13,9 +13,22 @@
 </template>
 
 <script lang="ts" setup>
+  import { useMagicKeys, whenever } from '@vueuse/core'
+
   const arsenalStore = useArsenalStore();
 
   const isOpen = defineModel('isOpen', { type: Boolean, default: true });
+
+  
+  /* prevent default for F1 and open this modal */
+  onMounted(() => {
+    window.addEventListener("keydown",function (e) {
+      if (e.key === "F1") { 
+          e.preventDefault();
+          isOpen.value = true;
+      }
+    })
+  })
 </script>
 
 <style lang="scss">

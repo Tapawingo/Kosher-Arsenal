@@ -14,12 +14,27 @@ export declare interface ArsenalLoadoutJson {
   id: string,
   title: string,
   description: string,
+  owner: string,
+  collaborators: Array<string>,
   preview: ArsenalPreviewImageJson | ArsenalPreviewImage,
   tags: Array<LoadoutTagJson>,
   visibility: number,
   collections: Array<LoadoutCollectionJson>,
   categories: Array<ArsenalCategoryJson>
 }
+
+export declare interface LoadoutsTable {
+  id: string,
+  title: string,
+  description: string,
+  owner: string,
+  collaborators: string,
+  preview: string,
+  tags: string,
+  visibility: number,
+  collections: string,
+  categories: string
+};
 
 export class ArsenalLoadout {
   public id: string = createId();
@@ -56,6 +71,8 @@ export class ArsenalLoadout {
       id: this.id,
       title: this.title,
       description: this.description,
+      owner: this.owner,
+      collaborators: this.collaborators,
       preview: preview,
       tags: tags,
       visibility: this.visibility,
@@ -91,6 +108,48 @@ export class ArsenalLoadout {
     });
 
     Object.assign(this, data);
+    return this;
+  }
+
+  public fromDB(results: LoadoutsTable): this {
+    let dbTags = JSON.parse(results.tags);
+    let dbCollections = JSON.parse(results.collections);
+    let dbCategories = JSON.parse(results.categories);
+
+    let collaborators = JSON.parse(results.collaborators);
+    let preview = new ArsenalPreviewImage().fromJSON(results.preview);
+
+    let collections: Array<LoadoutCollection> = [];
+    dbCollections.forEach((collectionData: LoadoutCollectionJson) => {
+      let collection = new LoadoutCollection().fromJSON(JSON.stringify(collectionData));
+      collections.push(collection);
+    });
+
+    let tags: Array<LoadoutTag> = [];
+    dbTags.forEach((tagData: LoadoutTagJson) => {
+      let tag = new LoadoutTag().fromJSON(JSON.stringify(tagData));
+      tags.push(tag);
+    });
+
+    let categories: Array<ArsenalCategory> = [];
+    dbCategories.forEach((categoryData: ArsenalCategoryJson) => {
+      let category = new ArsenalCategory().fromJSON(JSON.stringify(categoryData));
+      categories.push(category);
+    });
+
+    Object.assign(this, {
+      id: results.id,
+      title: results.title,
+      description: results.description,
+      owner: results.owner,
+      collaborators: collaborators,
+      preview: preview,
+      tags: tags,
+      visibility: results.visibility,
+      collections: collections,
+      categories: categories
+    });
+
     return this;
   }
 }
