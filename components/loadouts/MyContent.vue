@@ -1,43 +1,45 @@
 <template>
   <loadoutsModalNewLoadout v-model:isOpen="isNewLoadoutOpen" />
 
-  <div class="section">
-
-    <h1>My loadouts</h1>
-    <div class="body reversed">
-      <div class="loadout" v-for="loadout in myLoadouts">
-        <div class="preview">
-          <NuxtImg :src="loadout.preview.path" />
-        </div>
-        <div class="meta">
-          <div class="tags">
-            <div v-for="tag in loadout.tags">{{ tag.label }}</div>
+  <div>
+    <div class="section">
+  
+      <h1>My loadouts</h1>
+      <div class="body reversed">
+        <div class="loadout" v-for="loadout in myLoadouts">
+          <div class="preview">
+            <NuxtImg :src="loadout.preview.path" />
           </div>
-          <h1> {{ loadout.title }} </h1>
-          <p>{{ loadout.description }}</p>
-          <div class="actions">
-            <button @click="viewLoadout(loadout.id)">View</button>
-            <UDropdown :popper="{ placement: 'bottom-start' }" :items="loadoutActions">
-              <UButton class="dropdown" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid" @click="selectedLoadout = loadout"/>
-            </UDropdown>
+          <div class="meta">
+            <div class="tags">
+              <div v-for="tag in loadout.tags">{{ tag.label }}</div>
+            </div>
+            <h1> {{ loadout.title }} </h1>
+            <p>{{ loadout.description }}</p>
+            <div class="actions">
+              <button @click="viewLoadout(loadout.id)">View</button>
+              <UDropdown :popper="{ placement: 'bottom-start' }" :items="loadoutActions">
+                <UButton class="dropdown" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid" @click="selectedLoadout = loadout"/>
+              </UDropdown>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="loadout-new" @click="isNewLoadoutOpen = true">
-        <span class="plus-icon">+</span>
-        <span>NEW</span>
-        <span>LOADOUT</span>
+  
+        <div class="loadout-new" @click="isNewLoadoutOpen = true">
+          <span class="plus-icon">+</span>
+          <span>NEW</span>
+          <span>LOADOUT</span>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="section discover">
-    <h2>My collections</h2>
-    <div class="body">
-      <div class="tag" v-for="collection in myCollections">
-        <h2>{{ collection.title }}</h2>
-        <span>{{ collection.loadouts.length }} Loadouts</span>
+  
+    <div class="section discover">
+      <h2>My collections</h2>
+      <div class="body">
+        <div class="tag" v-for="collection in myCollections">
+          <h2>{{ collection.title }}</h2>
+          <span>{{ collection.loadouts.length }} Loadouts</span>
+        </div>
       </div>
     </div>
   </div>

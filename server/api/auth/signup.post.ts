@@ -9,6 +9,7 @@ interface IBody {
 }
 
 export default eventHandler(async (event) => {
+  const lucia = event.context.lucia;
   const db = hubDatabase();
   const { data: body } = await readBody<IBody>(event);
   

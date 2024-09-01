@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event): Promise<void> => {
+  const lucia = event.context.lucia;
   const db = hubDatabase();
   const { id: loadoutId } = getRouterParams(event);
 

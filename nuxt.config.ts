@@ -16,7 +16,8 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@pinia/nuxt",
     'nuxt-file-storage',
-    '@nuxthub/core'
+    '@nuxthub/core',
+    'nitro-cloudflare-dev'
   ],
 
   hub: {

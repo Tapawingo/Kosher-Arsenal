@@ -1,8 +1,8 @@
 import { Lucia } from 'lucia';
 import { D1Adapter } from '@lucia-auth/adapter-sqlite';
+import { DatabaseUser } from './userDB';
 
 import type { D1Database } from '@nuxthub/core';
-import type { DatabaseUser } from './userDB';
 
 export function initializeLucia(D1: D1Database) {
   const adapter = new D1Adapter(D1, {

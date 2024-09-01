@@ -1,6 +1,6 @@
 import { ArsenalLoadout, ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
+import { DatabaseLoadout } from '~/server/utils/loadoutDB';
 
-import type { DatabaseLoadout } from '~/server/utils/loadoutDB';
 
 export default defineEventHandler(async (event): Promise<ArsenalLoadoutJson | null> => {
   const db = hubDatabase();

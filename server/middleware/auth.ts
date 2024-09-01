@@ -19,13 +19,13 @@ export default defineEventHandler(async (event) => {
   }
 
   // Initialize auth (Lucia)
-  const { DB } = event.context.cloudflare.env
+  const { DB } = event.context.cloudflare.env;
 
   if (!lucia) {
-    lucia = initializeLucia(DB)
+    lucia = initializeLucia(DB);
   }
 
-  event.context.lucia = lucia
+  event.context.lucia = lucia;
 
   // Set session and user
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     return
   }
 
-  const { session, user } = await lucia.validateSession(sessionId)
+  const { session, user } = await lucia.validateSession(sessionId);
   if (session && session.fresh) {
     appendResponseHeader(
       event,
