@@ -1,4 +1,4 @@
-import { Argon2id } from 'oslo/password';
+import { WebCryptoHash } from '~/server/utils/webCrypto';
 import { generateId } from 'lucia';
 
 interface IBody {
@@ -37,12 +37,13 @@ export default eventHandler(async (event) => {
     })
   }
 
-  const hashedPassword = await new Argon2id().hash(password);
+  const salt = generateId(13);
+  const hashedPassword = await new WebCryptoHash().hash(password, salt);
   const userId = generateId(15);
 
   try {
-    await db.prepare('INSERT INTO user (id, username, password) VALUES(?, ?, ?)')
-      .bind(userId, username, hashedPassword).run();
+    await db.prepare('INSERT INTO user (id, username, password, salt) VALUES(?, ?, ?, ?)')
+      .bind(userId, username, hashedPassword, salt).run();
     
       const session = await lucia.createSession(userId, {});
       appendHeader(event,

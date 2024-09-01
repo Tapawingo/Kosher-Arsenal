@@ -1,4 +1,4 @@
-import { Argon2id } from 'oslo/password';
+import { WebCryptoHash } from '../../utils/webCrypto';
 
 import type { DatabaseUser } from '../../utils/userDB';
 
@@ -48,9 +48,10 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const validPassword = await new Argon2id().verify(
+    const validPassword = await new WebCryptoHash().verify(
       existingUser.password,
-      password
+      password,
+      existingUser.salt
     );
 
     if (!validPassword) {

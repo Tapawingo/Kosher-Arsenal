@@ -4,7 +4,8 @@ const db = hubDatabase();
 db.prepare(`CREATE TABLE IF NOT EXISTS user (
   id TEXT NOT NULL PRIMARY KEY,
   username TEXT NOT NULL UNIQUE,
-  password TEXT NOT NULL
+  password TEXT NOT NULL,
+  salt TEXT NOT NULL
 )`).run();
 
 /* Create session table */
@@ -20,4 +21,5 @@ export interface DatabaseUser {
   id: string;
   username: string;
   password: string;
+  salt: string;
 };
