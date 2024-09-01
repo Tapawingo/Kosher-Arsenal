@@ -1,0 +1,117 @@
+[
+    { "name": "Blank", "categories": [] },
+    { "name": "Gear Lines", "categories": [
+        {
+            "position": 0,
+            "icon": "/arsenal/icons/icon_torso.svg",
+            "title": "Clothes"
+        },
+        {
+            "position": 1,
+            "icon": "/arsenal/icons/icon_headgear.svg",
+            "title": "Headgear"
+        },
+        {
+            "position": 2,
+            "icon": "/arsenal/icons/icon_first.svg",
+            "title": "First Line"
+        },
+        {
+            "position": 3,
+            "icon": "/arsenal/icons/icon_second.svg",
+            "title": "Second Line"
+        },
+        {
+            "position": 4,
+            "icon": "/arsenal/icons/icon_third.svg",
+            "title": "Third Line"
+        },
+        {
+            "position": 5,
+            "icon": "/arsenal/icons/icon_misc.svg",
+            "title": "Equipment"
+        },
+        {
+            "position": 6,
+            "icon": "/arsenal/icons/icon_rifle.svg",
+            "title": "Firearms"
+        }
+    ] },
+    { "name": "Arsenal", "categories": [
+        {
+            "position": 0,
+            "icon": "arsenal/icons/icon_rifle.svg",
+            "title": "Primary Weapon"
+        },
+        {
+            "position": 1,
+            "icon": "arsenal/icons/icon_handgun.svg",
+            "title": "Secondary Weapon"
+        },
+        {
+            "position": 2,
+            "icon": "arsenal/icons/icon_launcher.svg",
+            "title": "Thirdiary Weapon"
+        },
+        {
+            "position": 3,
+            "icon": "arsenal/icons/icon_handweapon.svg",
+            "title": "Handweapon"
+        },
+        {
+            "position": 4,
+            "icon": "arsenal/icons/icon_headgear.svg",
+            "title": "Headgear"
+        },
+        {
+            "position": 5,
+            "icon": "arsenal/icons/icon_facewear.svg",
+            "title": "Facewear"
+        },
+        {
+            "position": 6,
+            "icon": "arsenal/icons/icon_torso.svg",
+            "title": "Uniform Top"
+        },
+        {
+            "position": 7,
+            "icon": "arsenal/icons/icon_handwear.svg",
+            "title": "Handwear"
+        },
+        {
+            "position": 8,
+            "icon": "arsenal/icons/icon_vest.svg",
+            "title": "Load Bearing Equipment"
+        },
+        {
+            "position": 9,
+            "icon": "arsenal/icons/icon_belt.svg",
+            "title": "Belt"
+        },
+        {
+            "position": 10,
+            "icon": "arsenal/icons/icon_pants.svg",
+            "title": "Uniform Bottom"
+        },
+        {
+            "position": 11,
+            "icon": "arsenal/icons/icon_footwear.svg",
+            "title": "Footwear"
+        },
+        {
+            "position": 12,
+            "icon": "arsenal/icons/icon_backpack.svg",
+            "title": "Backpack"
+        },
+        {
+            "position": 13,
+            "icon": "arsenal/icons/icon_nvg.svg",
+            "title": "Night Vision Goggles"
+        },
+        {
+            "position": 14,
+            "icon": "arsenal/icons/icon_communication.svg",
+            "title": "Communication"
+        }
+    ] }
+]

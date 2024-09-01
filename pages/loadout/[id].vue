@@ -108,8 +108,7 @@
     { label: 'Buylist (WIP)', icon: 'material-symbols:check-box', mode: ArsenalMode.buylist },
     { label: 'Edit', icon: 'material-symbols:edit', mode: ArsenalMode.edit }
   ])
-  const selectedArsenalMode = ref(arsenalModeSelect.value[2]);
-  arsenalStore.setMode(selectedArsenalMode.value.mode);
+  const selectedArsenalMode = ref(arsenalModeSelect.value[arsenalStore.mode]);
 
   watch(selectedArsenalMode, () => {
     arsenalStore.setMode(selectedArsenalMode.value.mode)

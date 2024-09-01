@@ -12,6 +12,7 @@ html:not(.dark-theme) {
     color: $foreground;
 
     @import "sitenav";
+    @import "modal";
     @import "loadouts-page";
 }
 
@@ -23,6 +24,7 @@ html.dark-theme {
     color: $foreground;
 
     @import "sitenav";
+    @import "modal";
     @import "loadouts-page";
 }
 

@@ -5,8 +5,8 @@ import { type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
 
 export enum ArsenalMode {
   view,
-  edit,
-  buylist
+  buylist,
+  edit
 }
 
 export enum ArsenalStates {
@@ -54,7 +54,7 @@ export const useArsenalStore = defineStore('arsenal', {
 
     async fetchLoadout (loadoutID: string) { 
       this.arsenalState = ArsenalStates.loading;
-      const loadoutJson: ArsenalLoadoutJson | undefined = await $fetch(`/api/loadout/${ loadoutID }`)
+      const loadoutJson: ArsenalLoadoutJson | null = await $fetch(`/api/loadout/${ loadoutID }`);
 
       if (loadoutJson) {
         this.loadout = loadoutJson;

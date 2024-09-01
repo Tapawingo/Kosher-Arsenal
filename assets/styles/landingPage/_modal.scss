@@ -1,0 +1,76 @@
+.modal {
+    color: $foreground;
+
+    /* Full screen background cover */
+    & > div.transition-opacity {
+        background-color: $modal-background;
+    }
+
+    form.modal-body {
+        background-color: $background;
+        color: $foreground;
+        border: 1px solid $border-color;
+        padding: 1rem;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    label {
+        color: $foreground;
+    }
+
+    input, select, textarea, [role=button] button {
+        background-color: $background;
+        color: $foreground;
+        border: 1px solid $border-color;
+        --tw-ring-inset: none;
+    }
+
+    ul[role=listbox] {
+        background-color: $background;
+        border: 1px solid $border-color;
+        --tw-ring-inset: none;
+        --tw-bg-opacity: 0;
+
+        @include scrollbar;
+        
+        li {
+            color: $foreground;
+    
+            img {
+                background-color: $background;
+                border: 1px solid $border-color;
+                width: 1.5rem;
+            }
+
+            .iconify {
+                color: $foreground;
+            }
+    
+            &:hover {
+                background-color: $active-background;
+
+                .iconify {
+                    color: $active-foreground;
+                }
+            }
+
+            &.bg-gray-100 {
+                color: $active-foreground;
+                background-color: $active-background !important;
+
+                .iconify {
+                    color: $active-foreground;
+                }
+            }
+
+        }
+    }
+
+    div.button-group {
+        display: flex;
+        justify-content: space-between;
+    }
+}
