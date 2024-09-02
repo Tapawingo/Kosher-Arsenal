@@ -112,6 +112,12 @@
     isOpen.value = false;
 
     emit('submit');
+
+    const arsenalStore = useArsenalStore();
+    await $fetch(`/api/loadout/${ arsenalStore.loadout.id }`, {
+      method: "POST",
+      body: { data: arsenalStore.loadout }
+    });
   };
 
   /* Update preview with the image path on modal open */

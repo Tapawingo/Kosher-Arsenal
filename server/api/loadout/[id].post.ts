@@ -1,22 +1,9 @@
-import { ArsenalCategory, type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
-import { generateId } from 'lucia';
 import { array, number, object, string } from 'yup';
 import { initializeDB } from '~/server/utils/db';
+import { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
 
 interface IBody {
-  data: {
-    title: string;
-    description: string;
-    owner: string;
-    template: {
-      name: string;
-      categories: Array<{
-        position: number;
-        icon: string;
-        title: string;
-      }>;
-    };
-  }
+  data: ArsenalLoadoutJson
 }
 
 export default eventHandler(async (event) => {
@@ -42,50 +29,41 @@ export default eventHandler(async (event) => {
     title: string().min(2).max(255),
     description: string().min(2).max(1024),
     owner: string().oneOf([user.id]),
-    template: object().shape({
-      position: number().required(),
-      icon: string().required(),
-      title: string().min(2).max(50),
-      categories: array().of(
-        object().shape({
-          position: number(),
-          icon: string(),
-          title: string()
-        })
-      )
-    })
-  })
+    collaborators: array(),
+    preview: object().shape({
+      type: number(),
+      path: string()
+    }),
+    tags: array(),
+    visibility: number().oneOf([0, 1, 2]),
+    collections: array(),
+    categories: array()
+  });
   
   if (!await schema.isValid(body)) {
     throw createError({
-      message: 'Invalid loadout',
+      message: 'Loadout is invalid',
       statusCode: 400
-    })
+    });
   }
-
-  const categories: Array<ArsenalCategoryJson> = [];
-  body.template.categories.forEach((category) => {
-    categories.push(new ArsenalCategory(category).toJSON())
-  });
-
-  const loadoutId = generateId(15);
 
   try {
     await db.prepare('INSERT INTO loadouts ' +
       '(id, title, description, owner, collaborators, preview, tags, visibility, collections, categories) ' + 
       'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     ).bind(
-      loadoutId,
+      body.id,
       body.title,
       body.description,
       body.owner,
-      JSON.stringify([]),
-      JSON.stringify({ type: 0, path: "" }),
-      JSON.stringify([]), 1, JSON.stringify([]),
-      JSON.stringify(categories)
+      JSON.stringify(body.collaborators),
+      JSON.stringify(body.preview),
+      JSON.stringify(body.tags),
+      body.visibility,
+      JSON.stringify(body.collections),
+      JSON.stringify(body.categories)
     ).run();
-    
-    return loadoutId;
+
   } catch (e: any) {
     throw createError({
       message: e.message,

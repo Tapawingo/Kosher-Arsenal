@@ -51,10 +51,15 @@
         body: {
             files: files.value
         }
-    })
+    });
 
     arsenalStore.loadout.preview.path = `previews/${ filename }`;
     isPreviewModalOpen.value = false;
+
+    await $fetch(`/api/loadout/${ arsenalStore.loadout.id }`, {
+      method: "POST",
+      body: { data: arsenalStore.loadout }
+    });
   }
 </script>
 

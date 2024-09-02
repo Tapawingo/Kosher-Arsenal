@@ -32,6 +32,15 @@ export const initializeDB = (db: D1Database): D1Database => {
     FOREIGN KEY (owner) REFERENCES user(id)
   )`).run();
 
+  /* Create user settings table */
+  db.prepare(`CREATE TABLE IF NOT EXISTS user_setting (
+    user_id TEXT NOT NULL PRIMARY KEY,
+    setting TEXT NOT NULL ,
+    value TEXT,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+    UNIQUE(user_id, setting)
+  )`).run();
+
   return db;
 };
 
@@ -59,4 +68,10 @@ export interface DatabaseLoadout {
   visibility: number,
   collections: string,
   categories: string
+};
+
+export interface DatabaseUserSetting {
+  user_id: string;
+  setting: string;
+  value: string | null;
 };

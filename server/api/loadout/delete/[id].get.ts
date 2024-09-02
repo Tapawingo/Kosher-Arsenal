@@ -21,7 +21,7 @@ export default defineEventHandler(async (event): Promise<void> => {
   }
 
   try {
-    const result = await db.prepare('DELETE FROM loadouts WHERE id = ? AND owner = ?')
+    await db.prepare('DELETE FROM loadouts WHERE id = ? AND owner = ?')
     .bind(loadoutId, user.id).run();
 
     console.log(loadoutId);

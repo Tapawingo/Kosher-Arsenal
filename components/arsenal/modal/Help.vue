@@ -13,8 +13,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { useMagicKeys, whenever } from '@vueuse/core'
-
   const arsenalStore = useArsenalStore();
 
   const isOpen = defineModel('isOpen', { type: Boolean, default: true });
