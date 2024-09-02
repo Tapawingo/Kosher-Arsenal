@@ -1,6 +1,5 @@
 import { Lucia } from 'lucia';
 import { D1Adapter } from '@lucia-auth/adapter-sqlite';
-import { DatabaseUser } from './userDB';
 
 import type { D1Database } from '@nuxthub/core';
 
@@ -27,6 +26,10 @@ export function initializeLucia(D1: D1Database) {
 declare module "lucia" {
   interface Register {
     Lucia: ReturnType<typeof initializeLucia>;
-    DatabaseUserAttributes: Omit<DatabaseUser, "id">
+    DatabaseUserAttributes: DatabaseUserAttributes
   }
+}
+
+interface DatabaseUserAttributes {
+  username: string;
 }

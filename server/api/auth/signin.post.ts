@@ -1,6 +1,5 @@
 import { WebCryptoHash } from '../../utils/webCrypto';
-
-import type { DatabaseUser } from '../../utils/userDB';
+import { initializeDB } from '~/server/utils/db';
 
 interface IBody {
   data: {
@@ -11,7 +10,7 @@ interface IBody {
 
 export default defineEventHandler(async (event) => {
   const lucia = event.context.lucia;
-  const db = hubDatabase();
+  const db = initializeDB(hubDatabase());
   const { data: body } = await readBody<IBody>(event);
   
   const username = body.username;
