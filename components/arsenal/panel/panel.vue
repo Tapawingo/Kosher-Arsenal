@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core'
+  import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
 
   const props = withDefaults(defineProps<{ isSub?: boolean }>(), {
     isSub: false

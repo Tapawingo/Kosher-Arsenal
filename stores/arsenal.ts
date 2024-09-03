@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ArsenalLoadout, type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
+import { ArsenalLoadout, LoadoutVisibility, type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
 import { type ArsenalItemJson } from '~/classes/ArsenalItem';
 import { type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
 
@@ -51,9 +51,12 @@ export const useArsenalStore = defineStore('arsenal', {
     }
   },
   actions: {
-    setMode (mode: ArsenalMode): void { this.mode = mode },
+    setMode (mode: ArsenalMode): void { 
+      this.mode = mode 
+    },
 
     async fetchLoadout (loadoutID: string) { 
+      const user = useUser();
       this.arsenalState = ArsenalStates.loading;
       const loadoutJson: ArsenalLoadoutJson | null = await $fetch(`/api/loadout/${ loadoutID }`);
 

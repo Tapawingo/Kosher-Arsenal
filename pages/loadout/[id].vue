@@ -77,9 +77,18 @@
   const { ctrl } = useMagicKeys();
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
+  const user = useUser();
 
   /* Make sure state is reset */
   arsenalStore.resetState();
+
+  /* Attempt to load a loadout */
+  const route = useRoute();
+  const id = route.params.id;
+
+  onMounted(async () => {
+    arsenalStore.fetchLoadout(id as string);
+  });
 
   /* Help button */
   const helpIsOpen = ref(false);
@@ -87,9 +96,23 @@
   /* State management for Kosher Arsenal */
   const arsenalModes = ref(ArsenalMode);
   const arsenalModeSelect = ref([
-    { label: 'Preview', icon: 'material-symbols:visibility-rounded', mode: ArsenalMode.view },
-    { label: 'Buylist (WIP)', icon: 'material-symbols:check-box', mode: ArsenalMode.buylist },
-    { label: 'Edit', icon: 'material-symbols:edit', mode: ArsenalMode.edit }
+    {
+      label: 'Preview', 
+      icon: 'material-symbols:visibility-rounded', 
+      mode: ArsenalMode.view 
+    },
+    {
+      label: 'Buylist (WIP)', 
+      icon: 'material-symbols:check-box', 
+      mode: ArsenalMode.buylist, 
+      disabled: true 
+    },
+    {
+      label: 'Edit', 
+      icon: 'material-symbols:edit',
+      mode: ArsenalMode.edit, 
+      disabled: arsenalStore.loadout.owner !== user.value?.id
+    }
   ])
   const selectedArsenalMode = ref(arsenalModeSelect.value[arsenalStore.mode]);
 
@@ -101,14 +124,6 @@
   const onDrop = () => {
     arsenalStore.saveLoadout();
   };
-
-  /* Attempt to load a loadout */
-  const route = useRoute();
-  const id = route.params.id;
-
-  onMounted(async () => {
-    arsenalStore.fetchLoadout(id as string);
-  })
 
   /* SEO Site Meta */
   const getSEOTitle = () => { 
