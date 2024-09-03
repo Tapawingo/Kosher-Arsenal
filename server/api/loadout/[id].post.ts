@@ -39,32 +39,35 @@ export default eventHandler(async (event) => {
     collections: array(),
     categories: array()
   });
-  
-  if (!await schema.isValid(body)) {
+
+  try {
+    await schema.validate(body)
+  } catch (e: any) {
     throw createError({
-      message: 'Loadout is invalid',
+      message: e.message,
       statusCode: 400
-    });
+    })
   }
 
   try {
-    await db.prepare('INSERT INTO loadouts ' +
-      '(id, title, description, owner, collaborators, preview, tags, visibility, collections, categories) ' + 
-      'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+    await db.prepare('UPDATE loadouts SET ' +
+      'title = ?, description = ?, collaborators = ?, preview = ?, tags = ?, visibility = ?, collections = ?, categories = ? ' +
+      'WHERE id = ? AND owner = ?'
     ).bind(
-      body.id,
       body.title,
       body.description,
-      body.owner,
       JSON.stringify(body.collaborators),
       JSON.stringify(body.preview),
       JSON.stringify(body.tags),
       body.visibility,
       JSON.stringify(body.collections),
-      JSON.stringify(body.categories)
+      JSON.stringify(body.categories),
+      body.id,
+      user.id
     ).run();
 
   } catch (e: any) {
+    console.log(e.message);
     throw createError({
       message: e.message,
       statusCode: 500

@@ -57,7 +57,7 @@ import { ArsenalPreviewImage } from '~/classes/ArsenalPreviewImage';
     itemTitle.value = '';
     itemDescription.value = '';
     itemPreview.value = new ArsenalPreviewImage();
-    isOpen.value = false;
+    arsenalStore.saveLoadout();
   }
 </script>
 

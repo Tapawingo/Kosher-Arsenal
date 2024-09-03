@@ -195,6 +195,7 @@
         }
     
         toast.add({ title: `${ state ? 'Deleted' : 'Failed to delete' } ${ props.isSub ? 'subitem' : 'item' }: "${ props.item.title }"` });
+        arsenalStore.saveLoadout();
         isContextMenuOpen.value = false;
       }
     })
@@ -205,6 +206,7 @@
     props.item.title = newItemTitle.value;
     props.item.description = newItemDescription.value;
     props.item.preview = newItemPreview.value;
+    arsenalStore.saveLoadout();
   };
 </script>
 

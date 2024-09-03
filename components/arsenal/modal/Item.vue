@@ -62,6 +62,8 @@
     lazy: true
   })
 
+  const toast = useToast();
+
   const props = withDefaults(defineProps<{ submitLabel?: string }>(), { submitLabel: 'Add' });
   const emit = defineEmits(['submit']);
   const isOpen = defineModel('isOpen', { required: true, default: false });
@@ -112,12 +114,6 @@
     isOpen.value = false;
 
     emit('submit');
-
-    const arsenalStore = useArsenalStore();
-    await $fetch(`/api/loadout/${ arsenalStore.loadout.id }`, {
-      method: "POST",
-      body: { data: arsenalStore.loadout }
-    });
   };
 
   /* Update preview with the image path on modal open */

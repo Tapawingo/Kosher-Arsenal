@@ -1,9 +1,9 @@
 <template>
   <UModal class="arsenal-modal" v-model="isPreviewModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="arsenal-modal-body">
+    <form class="arsenal-modal-body" @submit.prevent="onSubmit">
       <UFormGroup label="Upload Image" required>
         <div class="preview-upload">
-        <input type="file" @change="onFileChange" @input="handleFileInput" accept="image/*">
+        <input name="files" type="file" @change="onFileChange" accept="image/*">
         <UContainer class="preview-upload-preview">
           <NuxtImg :src="previewUrl" alt="Preview" v-if="previewUrl" />
           <p v-else>Preview</p>
@@ -12,54 +12,46 @@
       </UFormGroup>
       <div class="button-group">
         <UButton label="Cancel" color="red" @click="isPreviewModalOpen = false"/>
-        <UButton label="Upload" @click="onSubmit"/>
+        <UButton label="Upload" type="submit"/>
       </div>
-    </div>
+    </form>
   </UModal>
 </template>
 
 <script lang="ts" setup>
-  const { handleFileInput, files } = useFileStorage()
+  const toast = useToast();
   const isPreviewModalOpen = defineModel<boolean>();
   const types = ref(['Figure', 'Background'])
   const arsenalStore = useArsenalStore();
 
+  const files = ref<File | undefined>();
   const type = ref<string>('Figure');
   isPreviewModalOpen.value = false;
 
   const previewUrl = ref('');
 
   const onFileChange = (event: any) => {
-    console.log('file change')
-    const file = event.target.files[0]
-    console.log(file)
-    if (!file) return false;
-    if (!file.type.match('image.*')) return false;
+    files.value = event.target.files[0];
+    if (!files.value) return false;
+    if (!files.value.type.match('image.*')) return false;
 
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onload = (event) => {
-      previewUrl.value = event.target?.result as string
+      previewUrl.value = event.target?.result as string;
     }
 
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(files.value);
   }
 
   const onSubmit = async () => {
-    /* @TODO: Show progress thingy */
-    const filename = await $fetch('/api/uploadPreview', {
-        method: 'POST',
-        body: {
-            files: files.value
-        }
-    });
+    if (!files.value) return;
 
-    arsenalStore.loadout.preview.path = `previews/${ filename }`;
+    const upload = useUpload('/api/loadout/preview', { method: 'PUT' });
+    const blob = await upload(files.value);
+
+    arsenalStore.loadout.preview.path = `/images/${ blob.pathname }`;
     isPreviewModalOpen.value = false;
-
-    await $fetch(`/api/loadout/${ arsenalStore.loadout.id }`, {
-      method: "POST",
-      body: { data: arsenalStore.loadout }
-    });
+    arsenalStore.saveLoadout();
   }
 </script>
 

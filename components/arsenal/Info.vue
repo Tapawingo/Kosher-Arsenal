@@ -82,6 +82,7 @@ import { ArsenalMode } from '~/stores/arsenal';
     arsenalStore.loadout.title = newLoadoutTitle.value;
     arsenalStore.loadout.description = newLoadoutDescription.value;
     arsenalStore.loadout.tags = newLoadoutTags.value;
+    arsenalStore.saveLoadout();
     isInfoModalOpen.value = false;
   }
 </script>

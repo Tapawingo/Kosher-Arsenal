@@ -39,26 +39,30 @@ export default eventHandler(async (event) => {
   }
 
   const schema = object({
-    title: string().min(2).max(255),
-    description: string().min(2).max(1024),
-    owner: string().oneOf([user.id]),
+    title: string().min(2).max(255).required(),
+    description: string().min(2).max(1024).required(),
+    owner: string().oneOf([user.id], 'Invalid user ID').required(),
+    preview: string().default('/arsenal/preview/default.png'),
+    tags: array().default([]),
+    visibility: number().oneOf([0, 1, 2]).default(0),
     template: object().shape({
-      position: number().required(),
-      icon: string().required(),
-      title: string().min(2).max(50),
+      name: string().min(2).max(50),
       categories: array().of(
         object().shape({
           position: number(),
           icon: string(),
           title: string()
         })
-      )
+      ).required()
     })
-  })
+  });
   
-  if (!await schema.isValid(body)) {
+  let validatedBody;
+  try {
+    validatedBody = await schema.validate(body)
+  } catch (e: any) {
     throw createError({
-      message: 'Invalid loadout',
+      message: e.message,
       statusCode: 400
     })
   }
@@ -76,12 +80,14 @@ export default eventHandler(async (event) => {
       'VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
     ).bind(
       loadoutId,
-      body.title,
-      body.description,
-      body.owner,
+      validatedBody.title,
+      validatedBody.description,
+      validatedBody.owner,
       JSON.stringify([]),
-      JSON.stringify({ type: 0, path: "" }),
-      JSON.stringify([]), 1, JSON.stringify([]),
+      JSON.stringify(validatedBody.preview),
+      JSON.stringify(validatedBody.tags), 
+      validatedBody.visibility, 
+      JSON.stringify([]),
       JSON.stringify(categories)
     ).run();
     

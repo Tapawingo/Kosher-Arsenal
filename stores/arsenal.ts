@@ -64,6 +64,27 @@ export const useArsenalStore = defineStore('arsenal', {
       };
     },
 
+    async saveLoadout(): Promise<boolean> {
+      const toast = useToast();
+
+      const { error } = await useFetch(`/api/loadout/${ this.loadout.id }`, {
+        method: "POST",
+        body: { data: this.loadout }
+      });
+  
+      if (error.value) {
+        toast.add({
+          title: 'Error',
+          description: `Save failed: ${ error.value.message }`,
+          color: 'red'
+        });
+
+        return false;
+      }
+
+      return true;
+    },
+
     setSelectedCategory (category: ArsenalCategoryJson | null): void { 
       this.selectedCategory = category;
       this.selectedItem = null;

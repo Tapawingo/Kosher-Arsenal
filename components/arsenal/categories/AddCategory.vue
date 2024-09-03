@@ -45,6 +45,7 @@
     }
 
     toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subcategory' : 'category' }: "${ categoryTitle.value }"` });
+    arsenalStore.saveLoadout();
   }
 
   const classOverride = {

@@ -126,6 +126,7 @@
         
         if (state) {
           toast.add({ title: `Deleted category: "${ props.category.title }"` });
+          arsenalStore.saveLoadout();
         } else {
           toast.add({ title: 'Failed to delete category: "${ props.category.title }"' });
         }
@@ -142,6 +143,7 @@
   const updateCategory = () => { /* @TODO: Force none empty strings */
     props.category.title = newCategoryTitle.value;
     props.category.icon = newCategoryIcon.value;
+    arsenalStore.saveLoadout();
   }
 </script>
 

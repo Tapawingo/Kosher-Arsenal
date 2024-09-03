@@ -5,7 +5,7 @@ import type { User, Session } from "lucia"
 let lucia: ReturnType<typeof initializeLucia>
 
 export default defineEventHandler(async (event) => {
-  // CSRF protection
+  /* CSRF protection */
   if (!isMethod(event, "GET")) {
     const originHeader = getHeader(event, "Origin") ?? null
     const hostHeader = getHeader(event, "Host") ?? null
@@ -18,8 +18,8 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // Initialize auth (Lucia)
-  const { DB } = event.context.cloudflare.env;
+  /* Initialize auth (Lucia) */
+  let { DB } = event.context.cloudflare.env;
 
   if (!lucia) {
     lucia = initializeLucia(DB);
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
 
   event.context.lucia = lucia;
 
-  // Set session and user
+  /* Set session and user */
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null
   if (!sessionId) {
     event.context.session = null

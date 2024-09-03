@@ -34,6 +34,8 @@
   import templatesJson from '~/content/categoryTemplates.json'
   import ArsenalCategoryIcon from "@/content/categoryIcons.json";
 
+  const toast = useToast();
+
   const props = withDefaults(defineProps<{ 
     isSub?: boolean, 
     submitLabel?: string,
@@ -62,12 +64,6 @@
   const onSubmit = async () => {
     isOpen.value = false;
     emit('submit');
-
-    const arsenalStore = useArsenalStore();
-    await $fetch(`/api/loadout/${ arsenalStore.loadout.id }`, {
-      method: "POST",
-      body: { data: arsenalStore.loadout }
-    });
   }
 
 </script>

@@ -1,14 +1,14 @@
 <template>
   <loadoutsModalNewLoadout v-model:isOpen="isNewLoadoutOpen" />
 
-  <div>
+  <div v-if="user">
     <div class="section">
   
       <h1>My loadouts</h1>
       <div class="body reversed">
         <div class="loadout" v-for="loadout in myLoadouts">
           <div class="preview">
-            <NuxtImg :src="loadout.preview.path" />
+            <img :src="loadout.preview.path" alt="Preview" />
           </div>
           <div class="meta">
             <div class="tags">
@@ -41,6 +41,12 @@
           <span>{{ collection.loadouts.length }} Loadouts</span>
         </div>
       </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="section">
+      <h1>Login to see your content</h1>
+      <NuxtLink to="/signin">Login</NuxtLink>
     </div>
   </div>
 </template>
@@ -77,6 +83,11 @@
       {
         label: 'Share',
         icon: 'material-symbols:link-rounded',
+        disabled: true
+      },
+      {
+        label: 'Change visibility',
+        icon: 'material-symbols:visibility-rounded',
         disabled: true
       }
     ],
