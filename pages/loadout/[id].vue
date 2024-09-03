@@ -15,7 +15,7 @@
 
     <div class="categories">
       <div>
-        <VueDraggable v-model="arsenalStore.loadout.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+        <VueDraggable v-model="arsenalStore.loadout.categories" @end="onDrop" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
           <ArsenalCategoriesCategory v-for="category in arsenalStore.loadout.categories" :category="category" :key="category.position"/>
         </VueDraggable>
       </div>
@@ -26,7 +26,7 @@
       <div v-if="arsenalStore.selectedCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedCategory.title }}</div>
         <div>
-          <VueDraggable v-if="arsenalStore.selectedCategory" v-model="arsenalStore.selectedCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <VueDraggable v-if="arsenalStore.selectedCategory" @end="onDrop" v-model="arsenalStore.selectedCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
             <ArsenalPanelItem v-for="item in arsenalStore.selectedCategory.items" :item="item" :key="item.position"/>
           </VueDraggable>
         </div>
@@ -66,7 +66,7 @@
       <div v-if="arsenalStore.selectedSubCategory" class="panel">
         <div class="title">{{ arsenalStore.selectedSubCategory.title }}</div>
         <div>
-          <VueDraggable v-if="arsenalStore.selectedSubCategory" v-model="arsenalStore.selectedSubCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <VueDraggable v-if="arsenalStore.selectedSubCategory" @end="onDrop" v-model="arsenalStore.selectedSubCategory.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
             <ArsenalPanelItem v-for="item in arsenalStore.selectedSubCategory.items" :item="item" :key="item.position" is-sub/>
           </VueDraggable>
         </div>
@@ -76,7 +76,7 @@
 
     <div class="categories">
       <div>
-        <VueDraggable v-if="arsenalStore.selectedItem" v-model="arsenalStore.selectedItem.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+        <VueDraggable v-if="arsenalStore.selectedItem" @end="onDrop" v-model="arsenalStore.selectedItem.categories" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
           <ArsenalCategoriesCategory v-for="category in arsenalStore.selectedItem.categories" :category="category" :key="category.position" is-sub />
         </VueDraggable>
       </div>
@@ -98,6 +98,9 @@
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
   const arsenalStore = useArsenalStore();
 
+  /* Make sure state is reset */
+  arsenalStore.resetState();
+
   /* Help button */
   const helpIsOpen = ref(false);
   
@@ -113,6 +116,11 @@
   watch(selectedArsenalMode, () => {
     arsenalStore.setMode(selectedArsenalMode.value.mode)
   })
+
+  /* Save loadout on drag finish */
+  const onDrop = () => {
+    arsenalStore.saveLoadout();
+  };
 
   /* Attempt to load a loadout */
   const route = useRoute();

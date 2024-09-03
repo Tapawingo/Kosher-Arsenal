@@ -85,6 +85,13 @@ export const useArsenalStore = defineStore('arsenal', {
       return true;
     },
 
+    resetState(): void {
+      this.selectedCategory = null;
+      this.selectedItem = null;
+      this.selectedSubCategory = null;
+      this.selectedSubItem = null;
+    },
+
     setSelectedCategory (category: ArsenalCategoryJson | null): void { 
       this.selectedCategory = category;
       this.selectedItem = null;
