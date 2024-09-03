@@ -1,5 +1,5 @@
 <template>
-  <div class="item" :class="selectedClass" @click="toggleItem()" @contextmenu.prevent="onContextMenu" ref="ItemRoot">
+  <div class="item" :class="selectedClass" @click="toggleItem()" @contextmenu.stop.prevent="onContextMenu" ref="ItemRoot">
     <div class="title">
 
       <div v-if="arsenalStore.mode == ArsenalMode.buylist" class="checkbox" @click.stop>

@@ -7,7 +7,7 @@
           <ArsenalPanelItem v-for="item in category.items" :item="item" :key="item.position" :is-sub="props.isSub"/>
         </VueDraggable>
       </div>
-      <ArsenalPanelAddItem v-if="category && isEditMode" />
+      <ArsenalPanelAddItem v-if="category && isEditMode" :is-sub="props.isSub" />
     </div>
   </div>
 
