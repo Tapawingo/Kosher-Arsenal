@@ -1,5 +1,6 @@
 <template>
   <loadoutsModalNewLoadout v-model:isOpen="isNewLoadoutOpen" />
+  <!-- <LoadoutsLoadoutDetails /> -->
 
   <div v-if="user">
     <div class="section">

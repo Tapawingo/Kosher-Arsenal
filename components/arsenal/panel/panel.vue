@@ -19,7 +19,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
+  import { createId } from '@paralleldrive/cuid2';
+import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
 
   const props = withDefaults(defineProps<{ isSub?: boolean }>(), {
     isSub: false
@@ -47,6 +48,9 @@
   /* Paste Item */
   const pasteItem = () => {
     if (!arsenalStore.clipboard) return;
+
+    /* Generate new item id */
+    arsenalStore.clipboard.id = createId();
 
     let state;
     if (props.isSub) {

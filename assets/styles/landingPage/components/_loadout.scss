@@ -1,0 +1,100 @@
+div.loadout {
+    background-color: $background;
+    max-width: 25%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    box-shadow: 0px 0px 23px -12px rgba(0, 0, 0, 0.75);
+    width: 24%;
+    height: 28rem;
+
+    div.preview {
+        border: 1px dashed black;
+        border-radius: 0.5rem;
+        background: radial-gradient(circle, #1c1917 1px, rgba(0, 0, 0, 0) 1px);
+        background-size: 30px 30px;
+        background-color: rgb(168, 162, 158);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: 12rem;
+        }
+    }
+
+    div.meta {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        h1 {
+            margin: 0;
+            height: 2.313rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid $border-color;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        p {
+            margin: 0;
+            height: 6rem;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        div.tags {
+            height: 2.313rem;
+            border-bottom: 1px solid $border-color;
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+
+            div {
+                border: 1px solid $border-color;
+                border-radius: 0.2rem;
+                padding: 0.1rem;
+                box-shadow: 0px 0px 10px -4px rgba(0, 0, 0, 0.75);
+            }
+        }
+    }
+
+    div.actions {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        a {
+            max-width: 50%;
+        }
+
+        div[data-headlessui-state] {
+            width: 100%;
+
+        }
+        
+        > button, button.dropdown {
+            flex-grow: 1;
+            width: 100%;
+            border-radius: 1rem;
+            background-color: $background;
+            border: 1px solid $border-color;
+            color: $foreground;
+            padding: 0.5rem 0.75rem;
+            text-align: center;
+            justify-content: center;
+
+            &:hover {
+                background-color: $active-background;
+                color: $active-foreground;
+            }
+        }
+    }
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}

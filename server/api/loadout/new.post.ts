@@ -42,7 +42,10 @@ export default eventHandler(async (event) => {
     title: string().min(2).max(255).required(),
     description: string().min(2).max(1024).required(),
     owner: string().oneOf([user.id], 'Invalid user ID').required(),
-    preview: string().default('/arsenal/preview/default.png'),
+    preview: object().shape({
+      type: number(),
+      path: string().default('/arsenal/preview/default.png')
+    }),
     tags: array().default([]),
     visibility: number().oneOf([0, 1, 2]).default(0),
     template: object().shape({
