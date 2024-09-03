@@ -20,7 +20,7 @@
 
       <UFormGroup label="Image">
         <div class="preview-upload">
-          <input type="file" @change="onFileChange" @input="handleFileInput" accept="image/*">
+          <input type="file" @change="onFileChange" accept="image/*">
           <UContainer class="preview-container">
             <div class="panel">
               <div class="item faded">
@@ -55,14 +55,15 @@
 </template>
 
 <script lang="ts" setup>
+  import { createId } from '@paralleldrive/cuid2';
   import { type ArsenalPreviewImageJson } from '@/classes/ArsenalPreviewImage';
 
-  const { handleFileInput, files } = useFileStorage();
   const { data: itemPresets } = useFetch<Array<Object>>('/api/getItemPresets', {
     lazy: true
   })
 
-  const toast = useToast();
+  const user = useUser();
+  const arsenalStore = useArsenalStore();
 
   const props = withDefaults(defineProps<{ submitLabel?: string }>(), { submitLabel: 'Add' });
   const emit = defineEmits(['submit']);
@@ -70,6 +71,8 @@
   const itemTitle = defineModel('title', { required: false, default: '' });
   const itemDescription = defineModel('description', { required: false, default: '' });
   const itemPreview = defineModel<ArsenalPreviewImageJson>('preview', { required: false, default: { type: 0, path: '' } });
+
+  const files = ref<File | undefined>();
   const itemPreset = ref({ title: '', description: '', preview: { type: 0, path: '' } })
   const itemPreviewView = ref<string>('');
 
@@ -85,29 +88,31 @@
 
   /* Change the preview image with the newly uploaded image */
   const onFileChange = (event: any) => {
-    const file = event.target.files[0]
-    if (!file) return false;
-    if (!file.type.match('image.*')) return false;
+    files.value = event.target.files[0]
+    if (!files.value) return false;
+    if (!files.value.type.match('image.*')) return false;
 
     const reader = new FileReader()
     reader.onload = (event) => {
       itemPreviewView.value = event.target?.result as string
     }
 
-    reader.readAsDataURL(file)
+    reader.readAsDataURL(files.value)
   }
 
   /* Upload image and emit submit event */
   const onSubmit = async (event: any) => {
     let previewImage: string = itemPreviewView.value;
-    if (files.value.length > 0) {
-      let filename = await $fetch('/api/uploadPreview', {
-          method: 'POST',
-          body: {
-              files: files.value
-          }
-      })
-      previewImage = `previews/${ filename }`;
+    if (files.value) {
+      const file = new File(
+        [files.value], 
+        `item-${ createId() }`, 
+        { type: files.value.type }
+      );
+      const upload = useUpload('/api/loadout/preview', { method: 'PUT' });
+      const blob = await upload(file);
+
+      previewImage = `/images/${ blob.pathname }`;
     }
     
     itemPreview.value = new ArsenalPreviewImage({ path: previewImage });

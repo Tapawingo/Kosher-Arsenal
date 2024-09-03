@@ -15,7 +15,6 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     "@nuxt/image",
     "@pinia/nuxt",
-    'nuxt-file-storage',
     '@nuxthub/core',
     'nitro-cloudflare-dev'
   ],
@@ -24,10 +23,6 @@ export default defineNuxtConfig({
     blob: true,
     cache: true,
     database: true,
-    kv: true
-  },
-
-  fileStorage: {
-    mount: 'public'
+    kv: false
   }
 })

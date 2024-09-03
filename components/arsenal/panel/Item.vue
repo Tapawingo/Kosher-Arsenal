@@ -20,7 +20,7 @@
 
     </div>
     <div v-if="item.preview.path" class="preview">
-      <NuxtImg :src="item.preview.path" />
+      <img :src="item.preview.path" alt="Preview" />
     </div>
     <div class="body" @click.stop>{{ item.description }}</div>
   </div>

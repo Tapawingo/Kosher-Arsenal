@@ -19,12 +19,14 @@
 </template>
 
 <script lang="ts" setup>
+  const user = useUser();
   const toast = useToast();
-  const isPreviewModalOpen = defineModel<boolean>();
-  const types = ref(['Figure', 'Background'])
   const arsenalStore = useArsenalStore();
 
+  const isPreviewModalOpen = defineModel<boolean>();
+  
   const files = ref<File | undefined>();
+  const types = ref(['Figure', 'Background'])
   const type = ref<string>('Figure');
   isPreviewModalOpen.value = false;
 
@@ -46,10 +48,15 @@
   const onSubmit = async () => {
     if (!files.value) return;
 
+    const file = new File([files.value], `loadout-${ arsenalStore.loadout.id }`, { type: files.value.type });
     const upload = useUpload('/api/loadout/preview', { method: 'PUT' });
-    const blob = await upload(files.value);
+    const blob = await upload(file);
 
     arsenalStore.loadout.preview.path = `/images/${ blob.pathname }`;
+    toast.add({
+      description: 'Successfully uploaded preview'
+    })
+
     isPreviewModalOpen.value = false;
     arsenalStore.saveLoadout();
   }
