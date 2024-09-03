@@ -28,6 +28,7 @@
   <UContextMenu v-model="isContextMenuOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
     <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.edit">
       <div @click="isEditOpen = true">Edit</div>
+      <div @click="onCopy">Copy</div>
       <div @click="deleteItem">Delete</div>
     </div>
     <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.buylist">
@@ -174,7 +175,6 @@
 
   /* Delete Item */
   const deleteItem = () => {
-    
     confirmationBox.open({
       title: 'Delete Item',
       description: `Are you sure you want to delete "${ props.item.title }"?`,
@@ -208,6 +208,13 @@
     props.item.preview = newItemPreview.value;
     arsenalStore.saveLoadout();
   };
+
+  /* Copy Item */
+  const onCopy = () => {
+    arsenalStore.clipboard = props.item;
+    isContextMenuOpen.value = false;
+    toast.add({ title: `Copied Item` });
+  }
 </script>
 
 <style lang="scss">

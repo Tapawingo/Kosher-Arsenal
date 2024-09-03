@@ -1,6 +1,7 @@
 .arsenal {
     color: $foreground;
     height: 100vh;
+    overflow: hidden;
 
     * {
         transition: background-color 0s, border-color 0s;
@@ -55,6 +56,7 @@
                 font-weight: 500;
                 font-size: 1.3rem;
                 text-align: center;
+                margin-bottom: 1px;
             }
         }
     }

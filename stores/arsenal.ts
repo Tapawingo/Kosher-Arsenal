@@ -36,7 +36,8 @@ export const useArsenalStore = defineStore('arsenal', {
       selectedItem: ref<ArsenalItemJson | null> (null),
       selectedSubCategory: ref<ArsenalCategoryJson | null> (null),
       selectedSubItem: ref<ArsenalItemJson | null> (null),
-      buyListItems: ref<Array<BuyListItem>> ([])
+      buyListItems: ref<Array<BuyListItem>> ([]),
+      clipboard: ref<ArsenalItemJson | null>(null)
     }
   },
   getters: {
@@ -65,7 +66,10 @@ export const useArsenalStore = defineStore('arsenal', {
     },
 
     async saveLoadout(): Promise<boolean> {
+      const user = useUser();
       const toast = useToast();
+
+      if (user.value?.id !== this.loadout.owner) return false;
 
       const { error } = await useFetch(`/api/loadout/${ this.loadout.id }`, {
         method: "POST",
