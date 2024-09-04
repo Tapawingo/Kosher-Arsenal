@@ -32,12 +32,16 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    db.prepare(
+    await db.prepare(
       'INSERT INTO buylist (user_id, loadout_id, item_id, owned, store, price) ' +
       'VALUES(?1, ?2, ?3, ?4, ?5, ?6) ' +
-      'ON CONFLICT (user_id, loadout_id, item_id) DO UPDATE ' +
-      'SET owned = ?4, store = ?5, price = ?6'
+      'ON CONFLICT(item_id) DO ' +
+      'UPDATE SET owned = ?4, store = ?5, price = ?6;'
     ).bind(user.id, body.loadoutId, body.itemId, +body.owned, body.store, JSON.stringify(body.price)).run();
+
+    /* testing pruposes */
+    /* const result = await db.prepare('SELECT * FROM buylist').all();
+    console.log(result.results); */
 
     return {
       user_id: user.id,

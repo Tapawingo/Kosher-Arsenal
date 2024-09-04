@@ -29,27 +29,12 @@ declare interface BuyListItem {
   price: ItemPrice;
 }
 
-const StringifyBuylist = (databaseBuylist: BuyListItem[]): DatabaseBuylistItem[] => {
-  let parsedBuylist: DatabaseBuylistItem[] = [];
-  databaseBuylist.forEach((buylistItem) => {
-    parsedBuylist.push({
-      user_id: buylistItem.user_id,
-      loadout_id: buylistItem.loadout_id,
-      item_id: buylistItem.item_id,
-      owned: +buylistItem.owned as 0 | 1,
-      store: buylistItem.store!,
-      price: JSON.stringify(buylistItem.price!)
-    });
-  });
-
-  return parsedBuylist;
-};
-
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
     return {
       mode: ref<ArsenalMode> (ArsenalMode.view),
       arsenalState: ref<ArsenalStates> (ArsenalStates.loading),
+      stateMessage: ref<undefined | string> (),
       loadout: ref<ArsenalLoadoutJson> (new ArsenalLoadout().toJSON()),
       buylist: ref<BuyListItem[]> ([]),
       selectedCategory: ref<ArsenalCategoryJson | null> (null),
@@ -91,16 +76,18 @@ export const useArsenalStore = defineStore('arsenal', {
       this.arsenalState = ArsenalStates.loading;
 
       try {
-        const loadoutJson: ArsenalLoadoutJson | null = await $fetch(`/api/loadout/${ loadoutID }`);
+        const loadoutJson: any = await $fetch(`/api/loadout/${ loadoutID }`);
 
         if (loadoutJson) {
           this.loadout = loadoutJson;
           this.arsenalState = ArsenalStates.ready;
         } else {
           this.arsenalState = ArsenalStates.error;
+          this.stateMessage = 'Loadout not found';
         };
       } catch (e: any) {
         this.arsenalState = ArsenalStates.error;
+        this.stateMessage = e.message;
       }
 
     },
@@ -109,7 +96,7 @@ export const useArsenalStore = defineStore('arsenal', {
       this.arsenalState = ArsenalStates.loading;
 
       try {
-        const buylist: Array<BuyListItem> | null = await $fetch(`/api/buylist/getLoadout`, {
+        const buylist: any = await $fetch(`/api/buylist/getLoadout`, {
           method: "POST",
           body: {
             loadoutId: this.loadout.id
@@ -120,10 +107,10 @@ export const useArsenalStore = defineStore('arsenal', {
           this.buylist = buylist;
           this.arsenalState = ArsenalStates.ready;
         } else {
-          this.arsenalState = ArsenalStates.error;
+          this.buylist = [];
         }
       } catch (e: any) {
-        this.arsenalState = ArsenalStates.error;
+        this.buylist = [];
       }
     },
 
@@ -302,9 +289,9 @@ export const useArsenalStore = defineStore('arsenal', {
           }
         });
 
-        console.log(buylistItem);
+        // console.log(buylistItem);
 
-        let listIndex = this.buylist.findIndex((buylistItem) => buylistItem.item_id === buylistItem.item_id);
+        let listIndex = this.buylist.findIndex((buylistItem) => buylistItem.item_id == buylistItem.item_id);
         if (listIndex > -1) {
           this.buylist[listIndex] = buylistItem;
         } else {
@@ -316,7 +303,8 @@ export const useArsenalStore = defineStore('arsenal', {
         toast.add({
           title: 'Error',
           description: e.message,
-          color: 'red'
+          color: 'red',
+          timeout: 50000
         });
       }
     }

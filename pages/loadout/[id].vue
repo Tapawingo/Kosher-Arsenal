@@ -5,9 +5,10 @@
       <div>Loading</div>
     </div>
 
-    <div v-else-if="arsenalStore.arsenalState == ArsenalStates.error" class="arsenal-loading">
-      <Icon name="i-heroicons:arrow-path-20-solid" />
+    <div v-else-if="arsenalStore.arsenalState == ArsenalStates.error" class="arsenal-error">
+      <Icon name="material-symbols:error-circle-rounded-outline-sharp" />
       <div>Error</div>
+      <div>{{ arsenalStore.stateMessage }}</div>
     </div>
 
     <div class="background"></div>
@@ -195,7 +196,7 @@
       background-color: transparent;
     }
     
-    p, span {
+    p, span, div {
       color: white;
     }
   }
@@ -283,7 +284,7 @@
     }
   }
 
-  .arsenal-loading {
+  .arsenal-loading, .arsenal-error {
     position: absolute;
     z-index: 100;
     width: 100vw;
@@ -292,12 +293,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     background-color: rgba(48, 48, 48, 0.75);
+  }
 
-    span.iconify {
-      animation: spin 1s linear infinite;
-      scale: 1;
-    }
+  .arsenal-loading span.iconify {
+    animation: spin 1s linear infinite;
+    scale: 1;
+  }
+
+  .arsenal-error span.iconify {
+    scale: 1.2;
   }
 </style>

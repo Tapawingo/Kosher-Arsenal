@@ -22,6 +22,7 @@
   import { createId } from '@paralleldrive/cuid2';
   import { VueDraggable } from 'vue-draggable-plus';
   import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
+import type { ArsenalItemJson } from '~/classes/ArsenalItem';
 
   const props = withDefaults(defineProps<{ isSub?: boolean }>(), {
     isSub: false
@@ -60,14 +61,21 @@
   const pasteItem = () => {
     if (!arsenalStore.clipboard) return;
 
-    /* Generate new item id */
-    arsenalStore.clipboard.id = createId();
+    /* Generate new item */
+    const newItem: ArsenalItemJson = {
+      id: createId(),
+      position: -1,
+      title: arsenalStore.clipboard.title,
+      description: arsenalStore.clipboard.description,
+      preview: arsenalStore.clipboard.preview,
+      categories: arsenalStore.clipboard.categories
+    }
 
     let state;
     if (props.isSub) {
-      state = arsenalStore.addSubItem(arsenalStore.clipboard);
+      state = arsenalStore.addSubItem(newItem);
     } else {
-      state = arsenalStore.addItem(arsenalStore.clipboard);
+      state = arsenalStore.addItem(newItem);
     }
 
     toast.add({ title: `${ state ? 'Pasted' : 'Failed to paste' } ${ props.isSub ? 'subitem' : 'item' }: "${ arsenalStore.clipboard.title }"` });
