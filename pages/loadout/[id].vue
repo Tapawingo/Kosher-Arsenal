@@ -148,11 +148,11 @@
   };
 
   const getSEOImage = () => {
-    if (arsenalStore.arsenalState == ArsenalStates.ready) {
+    if (arsenalStore.loadout.preview.path) {
       return arsenalStore.loadout.preview.path
     }
 
-    return '@/public/logo-alternate-long.svg'
+    return '/logo-long.png'
   };
 
   useSeoMeta({
