@@ -2,19 +2,19 @@
   <div class="item" :class="selectedClass" @click="toggleItem()" @contextmenu.stop.prevent="onContextMenu" ref="ItemRoot">
     <div class="title">
 
-      <div v-if="arsenalStore.mode == ArsenalMode.buylist" class="checkbox" @click.stop>
-        <input type="checkbox"/>
+      <div v-if="arsenalStore.isBuylistMode()" class="checkbox" @click.stop="isChecked = !isChecked; onbuylistUpdate()">
+        <input type="checkbox" :checked="isChecked"/>
         <span class="checkbox-checkmark"></span>
       </div>
 
       <span>{{ item.title }}</span>
 
-      <div class="buylist-content" v-if="arsenalStore.mode == ArsenalMode.buylist">
-        <UTooltip class="tooltip buylist-store" text="Go to Store" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemStore">
-          <Icon name="material-symbols:storefront" @click.stop />
+      <div class="buylist-content" v-if="arsenalStore.isBuylistMode()">
+        <UTooltip class="tooltip buylist-store" text="Go to Store" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="buylistItem.store">
+          <Icon name="material-symbols:storefront" @click.stop="openStore" />
         </UTooltip>
-        <UTooltip class="tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="newItemPrice">
-          {{ newItemPrice }}
+        <UTooltip class="tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="buylistItem.price.price > 0">
+          {{ buylistItem.price.price.toFixed(2) }}
         </UTooltip>
       </div>
 
@@ -26,14 +26,14 @@
   </div>
 
   <UContextMenu v-model="isContextMenuOpen" :virtual-element="virtualElement" :ui="{ background: '', ring: '', shadow: '', rounded: '' }">
-    <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.edit">
+    <div class="context-menu" v-if="arsenalStore.isEditMode()">
       <div @click="isEditOpen = true">Edit</div>
       <div @click="onCopy">Copy</div>
       <div @click="deleteItem">Delete</div>
     </div>
-    <div class="context-menu" v-if="arsenalStore.mode == ArsenalMode.buylist">
-      <div @click="buylistEditMode = 'store'; isBuylistModalOpen = true">Edit Store</div>
-      <div @click="buylistEditMode = 'price'; isBuylistModalOpen = true">Edit Price</div>
+    <div class="context-menu" v-if="arsenalStore.isBuylistMode()">
+      <div @click="buylistEditMode = 'store'; isBuylistModalOpen = true; isContextMenuOpen = false">Edit Store</div>
+      <div @click="buylistEditMode = 'price'; isBuylistModalOpen = true; isContextMenuOpen = false">Edit Price</div>
     </div>
   </UContextMenu>
 
@@ -46,14 +46,14 @@
     @submit="onEditSubmit"
   />
 
-  <UModal v-model="isBuylistModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="modal">
+  <UModal class="arsenal-modal" v-model="isBuylistModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
+    <div class="arsenal-modal-body">
       <UFormGroup label="Store Link" v-if="buylistEditMode == 'store'">
-        <UInput type="url" v-model="newItemStore" />
+        <UInput type="url" v-model="newItemStore" @change="onbuylistUpdate" />
       </UFormGroup>
 
       <UFormGroup label="Price" required v-if="buylistEditMode == 'price'">
-        <UInput type="number" v-model="newItemPrice" />
+        <UInput type="number" v-model="newItemPrice" @change="onbuylistUpdate" />
       </UFormGroup>
 
       <div class="button-group" style="justify-content: flex-end">
@@ -67,7 +67,6 @@
   import { useMouse, useWindowScroll, useMouseInElement, useMagicKeys } from '@vueuse/core'
   import { type ArsenalItemJson } from '~/classes/ArsenalItem';
   import { storeToRefs } from 'pinia'
-  import { ArsenalMode } from '~/stores/arsenal';
 
   /* @TODO: https://ui.nuxt.com/components/select-menu#creatable */
   /* @TODO: Quantity selection as item type */
@@ -127,19 +126,38 @@
   // API for currency conversion:
   // https://www.exchangerate-api.com/docs/free
   const isBuylistModalOpen = ref(false);
+  const buylistItem = ref(arsenalStore.getBuylistItem(props.item.id));
   const buylistEditMode = ref<'store' | 'price'>('store');
-  const itemChecked = ref(false);
-  const newItemStore = ref<string | undefined>();
-  const newItemPrice = ref<number | undefined>();
+  const newItemStore = ref<string>('');
+  const newItemPrice = ref<number>(0);
 
-  if (arsenalStore.mode == ArsenalMode.buylist) {
-    const buylistItem = arsenalStore.getBuylistItem(props.item.id);
+  /* Buylist logic */
+  const isChecked = ref(false);
 
+  const fetchBuylist = () => {
     if (buylistItem) {
-      newItemStore.value = buylistItem.storeLink;
-      newItemPrice.value = buylistItem.price.price;
-      itemChecked.value = buylistItem.purchased;
-    };
+      newItemStore.value = buylistItem.value.store;
+      newItemPrice.value = buylistItem.value.price.price;
+      isChecked.value = buylistItem.value.owned;
+    }
+  }
+
+  const onbuylistUpdate = () => {
+    buylistItem.value.owned = isChecked.value;
+    buylistItem.value.store = newItemStore.value;
+    buylistItem.value.price.price = newItemPrice.value;
+
+    arsenalStore.setBuylistItem(buylistItem.value);
+  }
+
+  const openStore = () => {
+    let url = !buylistItem.value.store!.includes('http') ? `http://${ buylistItem.value.store }` : buylistItem.value.store;
+    navigateTo(url, {
+      external: true,
+      open: {
+        target: '_blank'
+      }
+    });
   }
 
   /* Override Context Menu */
@@ -151,13 +169,16 @@
 
   const { isOutside } = useMouseInElement(ItemRoot);
 
-  onMounted(() => {
+  onMounted(async () => {
     document.addEventListener('contextmenu', () => {
       if (isOutside.value) { 
         isContextMenuOpen.value = false 
       }; 
     });
-  })
+
+    /* Fetch buylist status */
+    fetchBuylist();
+  });
 
   const onContextMenu = () => {
     const top = unref(y) - unref(windowY)

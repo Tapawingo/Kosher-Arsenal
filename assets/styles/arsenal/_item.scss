@@ -19,17 +19,22 @@
         height: 4rem;
 
         & > span {
-            width: 65%;
+            width: 15rem;
+            flex-grow: 1;
             overflow: hidden;
-            white-space: nowrap;
             text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-height: 1.5rem;
+            max-height: 1.5rem * 2;
         }
 
         .buylist-content {
             display: flex;
             align-items: center;
             gap: 0.2rem;
-            width: 25%;
+            width: 5rem;
 
             span {
                 vertical-align: middle;
@@ -124,7 +129,8 @@
     }
 
     input[type=checkbox]:checked ~ .checkbox-checkmark {
-        background-color: $foreground;
+        /* background-color: $active-background; */
+        border: 1px solid $disabled-foreground;
     }
 
     input[type=checkbox]:checked ~ .checkbox-checkmark:after {
@@ -150,11 +156,11 @@
             position: absolute;
             display: none;
 
-            left: 9px;
-            top: 5px;
-            width: 5px;
-            height: 10px;
-            border: solid $active-border-color;
+            left: 2px;
+            top: 3px;
+            width: 17px;
+            height: 12px;
+            border: solid $foreground;
             border-width: 0 3px 3px 0;
             -webkit-transform: rotate(45deg);
             -ms-transform: rotate(45deg);

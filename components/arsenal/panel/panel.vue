@@ -2,9 +2,9 @@
   <div class="category-panel" @contextmenu.prevent="onContextMenu" ref="PanelRoot">
     <div v-if="category" class="panel">
       <div class="title">{{ category?.title }}</div>
-      <div>
-        <VueDraggable v-if="category" @end="onDrop" v-model="category.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
-          <ArsenalPanelItem v-for="item in category.items" :item="item" :key="item.position" :is-sub="props.isSub"/>
+      <div v-if="!refresh">
+        <VueDraggable @end="onDrop" v-model="category.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
+          <ArsenalPanelItem v-for="item in category?.items" :item="item" :key="item.position" :is-sub="props.isSub"/>
         </VueDraggable>
       </div>
       <ArsenalPanelAddItem v-if="category && isEditMode" :is-sub="props.isSub" />
@@ -20,7 +20,8 @@
 
 <script lang="ts" setup>
   import { createId } from '@paralleldrive/cuid2';
-import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
+  import { VueDraggable } from 'vue-draggable-plus';
+  import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
 
   const props = withDefaults(defineProps<{ isSub?: boolean }>(), {
     isSub: false
@@ -33,6 +34,16 @@ import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vue
   /* select correct items */
   const category = computed(() => {
     return props.isSub ? arsenalStore.selectedSubCategory : arsenalStore.selectedCategory
+  });
+
+  /* Refresh panel items when category is changed (some weird nuxt bug) */
+  const refresh = ref(false);
+  watch(category, () => {
+    refresh.value = true;
+    setTimeout(() => {
+      refresh.value = false;
+    }),
+    1
   });
   
   /* Check if we are in edit mode */

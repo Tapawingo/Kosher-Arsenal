@@ -35,12 +35,16 @@
     </div>
   
     <div class="section discover">
+      <h2>My buylists</h2>
+      <div class="body">
+        <span style="width: 100%; text-align: center;">WIP</span>
+      </div>
+    </div>
+  
+    <div class="section discover">
       <h2>My collections</h2>
       <div class="body">
-        <div class="tag" v-for="collection in myCollections">
-          <h2>{{ collection.title }}</h2>
-          <span>{{ collection.loadouts.length }} Loadouts</span>
-        </div>
+        <span style="width: 100%; text-align: center;">WIP</span>
       </div>
     </div>
   </div>

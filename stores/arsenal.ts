@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ArsenalLoadout, LoadoutVisibility, type ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
 import { type ArsenalItemJson } from '~/classes/ArsenalItem';
 import { type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
+import type { DatabaseBuylistItem } from '~/server/utils/db';
 
 export enum ArsenalMode {
   view,
@@ -20,11 +21,29 @@ declare interface ItemPrice {
   currency: string;
 }
 declare interface BuyListItem {
-  itemID: string;
-  purchased: boolean;
-  storeLink: string;
+  user_id: string;
+  loadout_id: string;
+  item_id: string;
+  owned: boolean;
+  store: string;
   price: ItemPrice;
 }
+
+const StringifyBuylist = (databaseBuylist: BuyListItem[]): DatabaseBuylistItem[] => {
+  let parsedBuylist: DatabaseBuylistItem[] = [];
+  databaseBuylist.forEach((buylistItem) => {
+    parsedBuylist.push({
+      user_id: buylistItem.user_id,
+      loadout_id: buylistItem.loadout_id,
+      item_id: buylistItem.item_id,
+      owned: +buylistItem.owned as 0 | 1,
+      store: buylistItem.store!,
+      price: JSON.stringify(buylistItem.price!)
+    });
+  });
+
+  return parsedBuylist;
+};
 
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
@@ -32,6 +51,7 @@ export const useArsenalStore = defineStore('arsenal', {
       mode: ref<ArsenalMode> (ArsenalMode.view),
       arsenalState: ref<ArsenalStates> (ArsenalStates.loading),
       loadout: ref<ArsenalLoadoutJson> (new ArsenalLoadout().toJSON()),
+      buylist: ref<BuyListItem[]> ([]),
       selectedCategory: ref<ArsenalCategoryJson | null> (null),
       selectedItem: ref<ArsenalItemJson | null> (null),
       selectedSubCategory: ref<ArsenalCategoryJson | null> (null),
@@ -48,24 +68,63 @@ export const useArsenalStore = defineStore('arsenal', {
       })
 
       return categories;
-    }
+    },
   },
   actions: {
     setMode (mode: ArsenalMode): void { 
       this.mode = mode 
     },
 
-    async fetchLoadout (loadoutID: string) { 
-      const user = useUser();
-      this.arsenalState = ArsenalStates.loading;
-      const loadoutJson: ArsenalLoadoutJson | null = await $fetch(`/api/loadout/${ loadoutID }`);
+    isPreviewMode(): boolean {
+      return this.mode === ArsenalMode.view
+    },
 
-      if (loadoutJson) {
-        this.loadout = loadoutJson;
-        this.arsenalState = ArsenalStates.ready;
-      } else {
+    isBuylistMode(): boolean {
+      return this.mode === ArsenalMode.buylist
+    },
+
+    isEditMode(): boolean {
+      return this.mode === ArsenalMode.edit
+    },
+
+    async fetchLoadout (loadoutID: string) { 
+      this.arsenalState = ArsenalStates.loading;
+
+      try {
+        const loadoutJson: ArsenalLoadoutJson | null = await $fetch(`/api/loadout/${ loadoutID }`);
+
+        if (loadoutJson) {
+          this.loadout = loadoutJson;
+          this.arsenalState = ArsenalStates.ready;
+        } else {
+          this.arsenalState = ArsenalStates.error;
+        };
+      } catch (e: any) {
         this.arsenalState = ArsenalStates.error;
-      };
+      }
+
+    },
+
+    async fetchBuylist () { 
+      this.arsenalState = ArsenalStates.loading;
+
+      try {
+        const buylist: Array<BuyListItem> | null = await $fetch(`/api/buylist/getLoadout`, {
+          method: "POST",
+          body: {
+            loadoutId: this.loadout.id
+          }
+        });
+
+        if (buylist) {
+          this.buylist = buylist;
+          this.arsenalState = ArsenalStates.ready;
+        } else {
+          this.arsenalState = ArsenalStates.error;
+        }
+      } catch (e: any) {
+        this.arsenalState = ArsenalStates.error;
+      }
     },
 
     async saveLoadout(): Promise<boolean> {
@@ -74,15 +133,15 @@ export const useArsenalStore = defineStore('arsenal', {
 
       if (user.value?.id !== this.loadout.owner) return false;
 
-      const { error } = await useFetch(`/api/loadout/${ this.loadout.id }`, {
-        method: "POST",
-        body: { data: this.loadout }
-      });
-  
-      if (error.value) {
+      try {
+        await $fetch(`/api/loadout/${ this.loadout.id }`, {
+          method: "POST",
+          body: { data: this.loadout }
+        });
+      } catch (e: any) {
         toast.add({
           title: 'Error',
-          description: `Save failed: ${ error.value.message }`,
+          description: `Save failed: ${ e.message }`,
           color: 'red'
         });
 
@@ -213,13 +272,52 @@ export const useArsenalStore = defineStore('arsenal', {
       return true;
     },
 
-    getBuylistItem (itemID: string): BuyListItem | void {
-      const itemIndex = this.buyListItems.findIndex((item: BuyListItem) => { 
-        return item.itemID === itemID
+    getBuylistItem (itemID: string): BuyListItem {
+      const user = useUser();
+      const buylistData = this.buylist.find((buylistItem) => {
+        return buylistItem.item_id === itemID
       });
 
-      if (itemIndex) {
-        return this.buyListItems[itemIndex];
+      return buylistData ? buylistData : {
+        user_id: user.value ? user.value.id : '',
+        loadout_id: this.loadout.id,
+        item_id: itemID,
+        owned: false,
+        store: '',
+        price: { price: 0, currency: '' }
+      };
+    },
+
+    async setBuylistItem (buylistItem: BuyListItem): Promise<void> {
+      const toast = useToast();
+      try {
+        await $fetch('/api/buylist/set', {
+          method: "POST",
+          body: {
+            loadoutId: this.loadout.id,
+            itemId: buylistItem.item_id,
+            owned: buylistItem.owned,
+            store: buylistItem.store,
+            price: buylistItem.price
+          }
+        });
+
+        console.log(buylistItem);
+
+        let listIndex = this.buylist.findIndex((buylistItem) => buylistItem.item_id === buylistItem.item_id);
+        if (listIndex > -1) {
+          this.buylist[listIndex] = buylistItem;
+        } else {
+          this.buylist.push(buylistItem);
+        }
+
+        console.log(this.buylist);
+      } catch (e: any) {
+        toast.add({
+          title: 'Error',
+          description: e.message,
+          color: 'red'
+        });
       }
     }
   }

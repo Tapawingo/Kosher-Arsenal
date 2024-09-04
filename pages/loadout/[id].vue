@@ -5,6 +5,11 @@
       <div>Loading</div>
     </div>
 
+    <div v-else-if="arsenalStore.arsenalState == ArsenalStates.error" class="arsenal-loading">
+      <Icon name="i-heroicons:arrow-path-20-solid" />
+      <div>Error</div>
+    </div>
+
     <div class="background"></div>
 
     <ArsenalPreview />
@@ -87,7 +92,8 @@
   const id = route.params.id;
 
   onMounted(async () => {
-    arsenalStore.fetchLoadout(id as string);
+    await arsenalStore.fetchLoadout(id as string);
+    arsenalStore.fetchBuylist();
   });
 
   /* Help button */
@@ -102,10 +108,9 @@
       mode: ArsenalMode.view 
     },
     {
-      label: 'Buylist (WIP)', 
+      label: 'Buylist', 
       icon: 'material-symbols:check-box', 
-      mode: ArsenalMode.buylist, 
-      disabled: true 
+      mode: ArsenalMode.buylist
     },
     {
       label: 'Edit', 

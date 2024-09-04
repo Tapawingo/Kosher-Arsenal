@@ -37,8 +37,21 @@ export const initializeDB = (db: D1Database): D1Database => {
     user_id TEXT NOT NULL PRIMARY KEY,
     setting TEXT NOT NULL ,
     value TEXT,
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES user(id),
     UNIQUE(user_id, setting)
+  )`).run();
+
+  /* Create buylist table */
+  db.prepare(`CREATE TABLE IF NOT EXISTS buylist (
+    user_id TEXT NOT NULL PRIMARY KEY,
+    loadout_id TEXT NOT NULL,
+    item_id TEXT NOT NULL,
+    owned INT,
+    store TEXT,
+    price TEXT,
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (loadout_id) REFERENCES loadouts(id),
+    UNIQUE(user_id, loadout_id, item_id)
   )`).run();
 
   return db;
@@ -74,4 +87,13 @@ export interface DatabaseUserSetting {
   user_id: string;
   setting: string;
   value: string | null;
+};
+
+export interface DatabaseBuylistItem {
+  user_id: string;
+  loadout_id: string;
+  item_id: string;
+  owned: 0 | 1;
+  store: string;
+  price: string;
 };
