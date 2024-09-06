@@ -18,6 +18,10 @@
   const { theme } = storeToRefs(userSettings);
 
   onMounted(() => {
+    if (localStorage.getItem("theme")) {
+      document.documentElement.classList.remove(`${ localStorage.getItem("theme") }-theme`);
+    }
+
     useHead({
       htmlAttrs: {
         lang: 'en',
@@ -42,13 +46,16 @@
     htmlAttrs: {
       lang: 'en'
     },
-  link: [
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: () => { return usePreferredDark() ? '/favicon.ico' : '/favicon_dark.ico' }
-    }
-  ]
+    script: [ { 
+      innerHTML: 'if (localStorage.getItem("theme")) document.documentElement.classList.add(`${ localStorage.getItem("theme") }-theme`)'
+    } ],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        href: () => { return usePreferredDark() ? '/favicon.ico' : '/favicon_dark.ico' }
+      }
+    ]
   });
 
   useSeoMeta({
