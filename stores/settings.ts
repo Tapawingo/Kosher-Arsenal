@@ -14,6 +14,11 @@ export const useUserSettings = async () => {
     }),
     getters: {
       theme (state) {
+        const user = useUser();
+        if (!user && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+
         let themeState = state.settings.find((storedSetting) => { return storedSetting.setting === 'theme' });
 
         if (themeState) {
@@ -25,12 +30,16 @@ export const useUserSettings = async () => {
       }
     },
     actions: {
-      set (setting: string, value: any) {
+      set (setting: string, value: any, local?: boolean) {
         if (typeof value !== 'string') value = JSON.stringify(value);
 
         const i = this.settings.findIndex(storedSetting => storedSetting.setting === setting);
         if (i > -1) this.settings[i].value = value;
         else this.settings.push({ setting: setting, value: value });
+
+        if (local) {
+          localStorage.setItem(setting, value);
+        }
 
         this._syncDB(setting, value);
       },

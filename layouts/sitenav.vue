@@ -36,9 +36,9 @@
 
   const toggleTheme = () => {
     if (theme.value === 'dark') {
-      userSettings.set('theme', 'light');
+      userSettings.set('theme', 'light', true);
     } else {
-      userSettings.set('theme', 'dark');
+      userSettings.set('theme', 'dark', true);
     }
   };
 
