@@ -1,4 +1,4 @@
-import { DatabaseBuylistItem, initializeDB } from "~/server/utils/db";
+import { DatabaseBuylistItem } from "~/server/utils/db";
 
 interface IBody {
   loadoutId: string
@@ -18,7 +18,7 @@ interface BuyListItem {
 
 export default defineEventHandler(async (event) => {
   const lucia = event.context.lucia;
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const body = await readBody<IBody>(event);
 
   if (!event.context.session) {

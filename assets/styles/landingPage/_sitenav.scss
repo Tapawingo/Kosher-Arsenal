@@ -13,9 +13,13 @@ header.sitenav {
     transition: background-color 0.5s;
     min-height: 4.625rem;
 
-    img {
+    svg {
         max-height: 2.8rem;
         width: 10%;
+        
+        g {
+            fill: $foreground;
+        }
     }
 
     nav {

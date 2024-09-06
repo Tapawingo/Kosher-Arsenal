@@ -1,8 +1,6 @@
-import { initializeDB } from "~/server/utils/db";
-
 export default defineEventHandler(async (event): Promise<void> => {
   const lucia = event.context.lucia;
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const { id: loadoutId } = getRouterParams(event);
 
   if (!event.context.session) {

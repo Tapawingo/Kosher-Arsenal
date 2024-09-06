@@ -1,7 +1,6 @@
 import { ArsenalCategory, type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
 import { generateId } from 'lucia';
 import { array, number, object, string } from 'yup';
-import { initializeDB } from '~/server/utils/db';
 
 interface IBody {
   data: {
@@ -20,7 +19,7 @@ interface IBody {
 }
 
 export default eventHandler(async (event) => {
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const lucia = event.context.lucia;
   const { data: body } = await readBody<IBody>(event);
 

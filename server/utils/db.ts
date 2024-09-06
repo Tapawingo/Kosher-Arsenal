@@ -33,12 +33,15 @@ export const initializeDB = (db: D1Database): D1Database => {
   )`).run();
 
   /* Create user settings table */
+  // db.prepare('DROP TABLE user_setting').run();
+
   db.prepare(`CREATE TABLE IF NOT EXISTS user_setting (
     user_id TEXT NOT NULL,
     setting TEXT NOT NULL,
     value TEXT,
     FOREIGN KEY (user_id) REFERENCES user(id),
-    PRIMARY KEY (user_id, setting)
+    PRIMARY KEY (user_id, setting),
+    UNIQUE (user_id, setting)
   )`).run();
 
   /* Create buylist table */

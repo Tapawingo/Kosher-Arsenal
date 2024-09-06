@@ -29,6 +29,8 @@ declare interface BuyListItem {
   price: ItemPrice;
 }
 
+const arsenalEvents: { id: Number, event: string, callback: Function }[] = [];
+
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
     return {
@@ -42,7 +44,8 @@ export const useArsenalStore = defineStore('arsenal', {
       selectedSubCategory: ref<ArsenalCategoryJson | null> (null),
       selectedSubItem: ref<ArsenalItemJson | null> (null),
       buyListItems: ref<Array<BuyListItem>> ([]),
-      clipboard: ref<ArsenalItemJson | null>(null)
+      clipboard: ref<ArsenalItemJson | null> (null),
+      eventCounter: ref<number> (0)
     }
   },
   getters: {
@@ -56,8 +59,47 @@ export const useArsenalStore = defineStore('arsenal', {
     },
   },
   actions: {
+    on (event: string, callback: Function): number {
+      this.eventCounter++;
+
+      arsenalEvents.push({
+        id: this.eventCounter,
+        event: event,
+        callback: callback
+      });
+
+      return this.eventCounter;
+    },
+
+    trigger (eventTrigger: string, args: object): void {
+      arsenalEvents.forEach((event) => {
+        if (event.event === eventTrigger) {
+          event.callback(args);
+        }
+      });
+    },
+
+    removeEvent (eventId: number): boolean {
+      const categoryIndex = arsenalEvents.findIndex((event) => {
+        return event.id === eventId
+      });
+  
+      if (categoryIndex == -1) {
+        return false;
+      };
+  
+      arsenalEvents.splice(categoryIndex, 1);
+
+      return true;
+    },
+
     setMode (mode: ArsenalMode): void { 
-      this.mode = mode 
+      let oldMode = this.mode;
+      this.mode = mode;
+      this.trigger('onChangeMode', {
+        new: mode,
+        old: oldMode
+      });
     },
 
     isPreviewMode(): boolean {
@@ -85,6 +127,8 @@ export const useArsenalStore = defineStore('arsenal', {
           this.arsenalState = ArsenalStates.error;
           this.stateMessage = 'Loadout not found';
         };
+
+        this.trigger('onLoadoutFetched', {});
       } catch (e: any) {
         this.arsenalState = ArsenalStates.error;
         this.stateMessage = e.message;
@@ -92,7 +136,7 @@ export const useArsenalStore = defineStore('arsenal', {
 
     },
 
-    async fetchBuylist () { 
+    async fetchBuylist () {
       this.arsenalState = ArsenalStates.loading;
 
       try {
@@ -109,8 +153,11 @@ export const useArsenalStore = defineStore('arsenal', {
         } else {
           this.buylist = [];
         }
+
+        this.trigger('onBuylistFetched', {});
       } catch (e: any) {
         this.buylist = [];
+        this.arsenalState = ArsenalStates.ready;
       }
     },
 
@@ -292,19 +339,18 @@ export const useArsenalStore = defineStore('arsenal', {
         // console.log(buylistItem);
 
         let listIndex = this.buylist.findIndex((buylistItem) => buylistItem.item_id == buylistItem.item_id);
-        if (listIndex > -1) {
-          this.buylist[listIndex] = buylistItem;
-        } else {
+        if (listIndex === -1) {
           this.buylist.push(buylistItem);
-        }
+        } else {
+          this.buylist[listIndex] = buylistItem;
+        };
 
         console.log(this.buylist);
       } catch (e: any) {
         toast.add({
           title: 'Error',
           description: e.message,
-          color: 'red',
-          timeout: 50000
+          color: 'red'
         });
       }
     }

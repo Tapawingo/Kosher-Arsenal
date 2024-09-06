@@ -25,7 +25,7 @@
           <ArsenalCategoriesCategory v-for="category in arsenalStore.loadout.categories" :category="category" :key="category.position"/>
         </VueDraggable>
       </div>
-      <ArsenalCategoriesAddCategory v-if="arsenalStore.mode == arsenalModes.edit" />
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.isEditMode()" />
     </div>
 
     <ArsenalPanel />
@@ -66,7 +66,7 @@
           <ArsenalCategoriesCategory v-for="category in arsenalStore.selectedItem.categories" :category="category" :key="category.position" is-sub />
         </VueDraggable>
       </div>
-      <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.mode == arsenalModes.edit" is-sub/>
+      <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.isEditMode()" is-sub/>
     </div>
   </div>
   
@@ -101,7 +101,6 @@
   const helpIsOpen = ref(false);
   
   /* State management for Kosher Arsenal */
-  const arsenalModes = ref(ArsenalMode);
   const arsenalModeSelect = ref([
     {
       label: 'Preview', 
@@ -119,7 +118,12 @@
       mode: ArsenalMode.edit, 
       disabled: arsenalStore.loadout.owner !== user.value?.id
     }
-  ])
+  ]);
+
+  arsenalStore.on('onLoadoutFetched', () => {
+    arsenalModeSelect.value[2].disabled = arsenalStore.loadout.owner !== user.value?.id;
+  });
+
   const selectedArsenalMode = ref(arsenalModeSelect.value[arsenalStore.mode]);
 
   watch(selectedArsenalMode, () => {

@@ -1,9 +1,10 @@
 import { ArsenalLoadout, ArsenalLoadoutJson, LoadoutVisibility } from '~/classes/ArsenalLoadout';
-import { initializeDB, type DatabaseLoadout } from '~/server/utils/db';
+
+import type { DatabaseLoadout } from '~/server/utils/db';
 
 
 export default defineEventHandler(async (event): Promise<ArsenalLoadoutJson | null> => {
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const lucia = event.context.lucia;
   const { id } = getRouterParams(event);
 

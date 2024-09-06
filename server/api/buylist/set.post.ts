@@ -1,5 +1,3 @@
-import { DatabaseBuylistItem, initializeDB } from "~/server/utils/db";
-
 interface IBody {
   loadoutId: string,
   itemId: string,
@@ -13,7 +11,7 @@ interface IBody {
 
 export default defineEventHandler(async (event) => {
   const lucia = event.context.lucia;
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const body = await readBody<IBody>(event);
 
   if (!event.context.session) {

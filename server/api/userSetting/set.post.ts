@@ -1,13 +1,11 @@
-import { initializeDB } from "~/server/utils/db";
-
 interface IBody {
-  setting: 'theme';
-  value: string | null;
+  setting: string;
+  value: string;
 }
 
 export default defineEventHandler(async (event) => {
   const lucia = event.context.lucia;
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const body = await readBody<IBody>(event);
 
   if (!event.context.session) {
@@ -24,30 +22,14 @@ export default defineEventHandler(async (event) => {
       statusCode: 403
     });
   }
-
-  const setting = body.setting;
-  if (typeof setting !== "string") {
-    throw createError({
-      message: 'Invalid Setting',
-      statusCode: 400
-    });
-  }
-
-  let setting_value = body.value;
-  if (setting_value !== "string") {
-    throw createError({
-      message: 'Invalid Setting value',
-      statusCode: 400
-    });
-  }
-
+  
   try {
     db.prepare(
       'INSERT INTO user_setting (user_id, setting, value) ' +
       'VALUES(?1, ?2, ?3) ' +
       'ON CONFLICT (user_id, setting) DO UPDATE ' +
       'SET value = ?3'
-    ).bind(user.id, setting, setting_value).run();
+    ).bind(user.id, body.setting, body.value).run();
 
   } catch (e) {
     throw createError({

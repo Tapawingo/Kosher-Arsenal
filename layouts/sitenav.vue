@@ -1,6 +1,6 @@
 <template>
   <header class="sitenav">
-    <NuxtImg :src="authStore.themeIsDarkmode() ? '/logo_white.svg' : '/logo.svg'" />
+    <Logo />
     <nav>
       <NuxtLink active-class="active" to="/">Loadouts</NuxtLink>
       <NuxtLink class="disabled" active-class="active">Gear Database</NuxtLink>
@@ -16,7 +16,7 @@
       <button v-if="user" @click="signout">Logout</button>
     </div>
     <div class="settings-container">
-      <button @click="authStore.toggleTheme()">
+      <button @click="toggleTheme()">
         <Icon name="material-symbols:dark-mode" />
       </button>
       <button>
@@ -29,9 +29,18 @@
 </template>
 
 <script lang="ts" setup>
-  const authStore = useAuthStore();
-
+  const userSettings = await useUserSettings();
   const user = useUser();
+
+  const { theme } = storeToRefs(userSettings);
+
+  const toggleTheme = () => {
+    if (theme.value === 'dark') {
+      userSettings.set('theme', 'light');
+    } else {
+      userSettings.set('theme', 'dark');
+    }
+  };
 
   const signout = async () => {
     await useFetch("/api/auth/signout", {

@@ -1,5 +1,4 @@
 import { array, number, object, string } from 'yup';
-import { initializeDB } from '~/server/utils/db';
 import { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
 
 interface IBody {
@@ -7,7 +6,7 @@ interface IBody {
 }
 
 export default eventHandler(async (event) => {
-  const db = initializeDB(hubDatabase());
+  const db = event.context.db;
   const lucia = event.context.lucia;
   const { data: body } = await readBody<IBody>(event);
 
