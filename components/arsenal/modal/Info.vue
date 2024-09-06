@@ -42,9 +42,9 @@
     title: string().min(2, 'Too short').max(255, 'Exceeds character limit').required('Required'),
     description: string().min(2, 'Too short').max(1024, 'Exceeds character limit').required('Required'),
     tags: array().of(object<ObjectSchema<LoadoutTagJson>>()),
-    preview: mixed<File>().test('fileSize', 'The file cannot exceed 6MB.', (file: File | undefined) => {
+    preview: mixed<File>().test('fileSize', 'The file cannot exceed 8MB.', (file: File | undefined) => {
       if (!file) return true;
-      return file.size <= 6_000_000;
+      return file.size <= 8_000_000;
     }).test('fileType', 'The file must be an image', (file: File | undefined) => {
       if (!file) return true;
       return file.type.includes('image/');
