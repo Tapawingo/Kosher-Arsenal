@@ -60,10 +60,7 @@
 
   const { data: itemPresets } = useFetch<Array<Object>>('/api/getItemPresets', {
     lazy: true
-  })
-
-  const user = useUser();
-  const arsenalStore = useArsenalStore();
+  });
 
   const props = withDefaults(defineProps<{ submitLabel?: string }>(), { submitLabel: 'Add' });
   const emit = defineEmits(['submit']);

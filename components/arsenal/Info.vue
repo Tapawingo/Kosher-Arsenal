@@ -2,17 +2,20 @@
   <div class="info" :class="selectedClass" @click="toggleInfo()">
     <div class="info-title">
 
-      <div>
-        <UTooltip v-if="arsenalStore.mode == ArsenalMode.edit" text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
+      <div class="edit">
+        <UTooltip v-if="arsenalStore.isEditMode()" text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
           <Icon name="material-symbols:edit" @click.stop="isInfoModalOpen = true"/>
         </UTooltip>
       </div>
 
       <div>{{ arsenalStore.loadout.title }}</div>
       
-      <div>
-        <UTooltip v-if="arsenalStore.mode == ArsenalMode.edit" text="Change Preview Image" :popper="{ placement: 'top' }" :ui="classOverride">
-          <Icon name="material-symbols:add-photo-alternate" @click.stop="isPreviewModalOpen = true"/>
+      <div class="import-export">
+        <UTooltip v-if="arsenalStore.isEditMode()" text="Export JSON" :popper="{ placement: 'top' }" :ui="classOverride">
+          <Icon name="material-symbols:upload-rounded" @click.stop="onExport"/>
+        </UTooltip>
+        <UTooltip v-if="arsenalStore.isEditMode()" text="import JSON" :popper="{ placement: 'top' }" :ui="classOverride">
+          <Icon name="material-symbols:download-rounded" @click.stop="" class="disabled"/>
         </UTooltip>
       </div>
 
@@ -27,45 +30,33 @@
     </div>
   </div>
 
-  <ArsenalModalPreviewUpload v-model="isPreviewModalOpen" />
+  <ArsenalModalInfo 
+    v-model:is-open="isInfoModalOpen"
+    v-model:form-data="infoModalData"
+    @submit="onSubmit"
+  />
 
-  <UModal class="arsenal-modal" v-model="isInfoModalOpen">
-    <div class="arsenal-modal-body">
-      <UFormGroup label="Title" required>
-        <UInput v-model="newLoadoutTitle" />
-      </UFormGroup>
-
-      <UFormGroup label="Description" required>
-        <UTextarea autoresize v-model="newLoadoutDescription" />
-      </UFormGroup>
-
-      <UFormGroup label="Tags">
-        
-      </UFormGroup>
-
-      <div class="button-group">
-        <UButton label="Cancel" color="red" @click="isInfoModalOpen = false"/>
-        <UButton label="Save" @click="saveInfo" />
-      </div>
-    </div>
-  </UModal>
+  <a ref="exportLink" href="" style="display: none"></a>
 </template>
 
 <script lang="ts" setup>
-import { ArsenalMode } from '~/stores/arsenal';
+  import type { LoadoutTagJson } from '~/classes/LoadoutTag';
 
   const arsenalStore = useArsenalStore();
 
+  const exportLink = ref<HTMLAnchorElement>();
   const isInfoModalOpen = ref(false);
-  const isPreviewModalOpen = ref(false);
   const infoSelected = ref(false);
-  const newLoadoutTitle = ref(arsenalStore.loadout.title);
-  const newLoadoutDescription = ref(arsenalStore.loadout.description);
-  const newLoadoutTags = ref(arsenalStore.loadout.tags); /* @TODO: Create Tag editor */
+  const infoModalData = ref<{ title: string, description: string, tags: LoadoutTagJson[], preview: File | undefined }>({
+    title: arsenalStore.loadout.title,
+    description: arsenalStore.loadout.description,
+    tags: arsenalStore.loadout.tags,
+    preview: undefined
+  });
   
   const selectedClass = reactive({
     selected: infoSelected
-  })
+  });
 
   const classOverride = {
     background: '',
@@ -76,12 +67,51 @@ import { ArsenalMode } from '~/stores/arsenal';
 
   const toggleInfo = () => {
     infoSelected.value = !infoSelected.value;
-  }
+  };
 
-  const saveInfo = () => {
-    arsenalStore.loadout.title = newLoadoutTitle.value;
-    arsenalStore.loadout.description = newLoadoutDescription.value;
-    arsenalStore.loadout.tags = newLoadoutTags.value;
+  /* Update modal defaults */
+  arsenalStore.on('onLoadoutFetched', () => {
+    infoModalData.value = {
+      title: arsenalStore.loadout.title,
+      description: arsenalStore.loadout.description,
+      tags: arsenalStore.loadout.tags,
+      preview: undefined
+    }
+  });
+
+  const onExport = () => {
+    const toast = useToast();
+    if (!exportLink.value) {
+      toast.add({
+        title: 'Error',
+        description: 'Failed to export JSON'
+      });
+      return;
+    }
+
+    exportLink.value.href = 'data:attachment/text,' + encodeURI(JSON.stringify(arsenalStore.loadout));
+    exportLink.value.target = '_blank';
+    exportLink.value.download = `${ arsenalStore.loadout.title }.json`;
+    exportLink.value.click();
+  };
+
+  const onSubmit = async () => {
+    arsenalStore.loadout.title = infoModalData.value.title;
+    arsenalStore.loadout.description = infoModalData.value.description;
+    arsenalStore.loadout.tags = infoModalData.value.tags;
+
+    if (infoModalData.value.preview) {
+      const file = new File(
+        [infoModalData.value.preview], 
+        `loadout-${ arsenalStore.loadout.id }`, 
+        { type: infoModalData.value.preview.type }
+      );
+      const upload = useUpload('/api/loadout/preview', { method: 'PUT' });
+      const blob = await upload(file);
+
+      arsenalStore.loadout.preview = new ArsenalPreviewImage({ path: `/images/${ blob.pathname }` });
+    }
+
     arsenalStore.saveLoadout();
     isInfoModalOpen.value = false;
   }
@@ -103,11 +133,36 @@ import { ArsenalMode } from '~/stores/arsenal';
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      & > .edit {
+        display: flex;
+        width: 2.5rem;
+      }
+
+      & > .import-export {
+        display: flex;
+        width: 2.5rem;
+        gap: 0.5rem;
+
+        span {
+          scale: 1.2;
+        }
+
+        .disabled {
+          cursor: auto;
+          color: rgb(182, 182, 182);
+        }
+      }
+
+      
+      &:hover:not(.selected) {
+          background-color: rgba(255, 255, 255, 0.25);
+      }
     }
     
     .info-content {
       text-align: left;
-      transition: 0.25s linear max-height;
+      transition: 0.25s linear max-height !important;
       padding: 0rem;
       font-size: 0.75rem;
       overflow: hidden;
@@ -142,12 +197,9 @@ import { ArsenalMode } from '~/stores/arsenal';
     }
 
     &.selected .info-content {
-        padding: 0.2rem;
-        max-height: 10rem;
-    }
-
-    &:hover:not(.selected) {
-        background-color: rgba(255, 255, 255, 0.25);
+      transition: 0.25s linear max-height !important;
+      padding: 0.2rem;
+      max-height: 10rem;
     }
   }
 
