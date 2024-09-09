@@ -14,8 +14,8 @@
 
   <ArsenalModalCategory
     v-model:isOpen="isModalOpen"
-    v-model:title="newCategoryTitle"
-    v-model:icon="newCategoryIcon"
+    v-model:form-data="editModalData"
+    v-model:category="props.category"
     :is-sub="props.isSub"
     :show-templates="false"
     @submit="updateCategory"
@@ -138,11 +138,14 @@
 
   /* Update modal */
   const isModalOpen = ref(false);
-  const newCategoryTitle = ref<string>(props.category.title);
-  const newCategoryIcon = ref<string>(props.category.icon);
-  const updateCategory = () => { /* @TODO: Force none empty strings */
-    props.category.title = newCategoryTitle.value;
-    props.category.icon = newCategoryIcon.value;
+  const editModalData = ref({
+    title: '',
+    icon: ''
+  });
+
+  const updateCategory = () => {
+    props.category.title = editModalData.value.title;
+    props.category.icon = editModalData.value.icon;
     arsenalStore.saveLoadout();
   }
 </script>

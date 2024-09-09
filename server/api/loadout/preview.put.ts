@@ -17,6 +17,7 @@ export default eventHandler(async (event) => {
 
   /* @TODO: ensure glob file type with magic numbers to prevent image spoofing */
   /* https://stackoverflow.com/questions/18299806/how-to-check-file-mime-type-with-javascript-before-upload */
+  /* https://gist.github.com/Qti3e/6341245314bf3513abb080677cd1c93b */
   return hubBlob().handleUpload(event, {
     formKey: 'files',
     multiple: false,

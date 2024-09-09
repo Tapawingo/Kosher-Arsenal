@@ -7,8 +7,7 @@
 
   <ArsenalModalCategory
     v-model:isOpen="isModalOpen"
-    v-model:title="categoryTitle"
-    v-model:icon="categoryIcon"
+    v-model:form-data="ModalData"
     :is-sub="props.isSub"
     @submit="addCategory"
   />
@@ -28,13 +27,15 @@
   const icon = 'arsenal/icons/icon_plus.svg';
 
   const isModalOpen = ref<boolean>(false);
-  const categoryTitle = ref<string>('');
-  const categoryIcon = ref<string>('')
+  const ModalData = ref({
+    title: '',
+    icon: ''
+  })
 
   const addCategory = () => {
     const newCategory = new ArsenalCategory({
-      title: categoryTitle.value,
-      icon: categoryIcon.value
+      title: ModalData.value.title,
+      icon: ModalData.value.title
     });
 
     let state = false;
@@ -44,7 +45,7 @@
       state = arsenalStore.addCategory(newCategory);
     }
 
-    toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subcategory' : 'category' }: "${ categoryTitle.value }"` });
+    toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subcategory' : 'category' }: "${ ModalData.value.title }"` });
     arsenalStore.saveLoadout();
   }
 

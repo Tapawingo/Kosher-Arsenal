@@ -1,9 +1,10 @@
 <template>
     <UModal class="arsenal-modal" v-model="isOpen">
-    <div class="arsenal-modal-body">
-      <UFormGroup label="Item Title" required>
+    <UForm :state="state" :schema="schema" class="arsenal-modal-body" @submit.prevent="onSubmit">
+      <UFormGroup label="Item Title" required name="title">
         <USelectMenu 
           v-model="itemPreset" 
+          name="title"
           searchable
           creatable
           searchable-placeholder="Title..."
@@ -14,13 +15,13 @@
         />
       </UFormGroup>
 
-      <UFormGroup label="Description" required>
-        <UTextarea autoresize v-model="itemDescription" />
+      <UFormGroup label="Description" required name="description">
+        <UTextarea autoresize v-model="state.description" name="description" />
       </UFormGroup>
 
-      <UFormGroup label="Image">
+      <UFormGroup label="Image" name="preview">
         <div class="preview-upload">
-          <input type="file" @change="onFileChange" accept="image/*">
+          <input type="file" @change="onFileChange" accept="image/*" name="preview">
           <UContainer class="preview-container">
             <div class="panel">
               <div class="item faded">
@@ -30,10 +31,10 @@
               </div>
               <div class="item">
                 <div class="title">
-                  <div>{{ itemTitle }}</div>
+                  <div>{{ state.title }}</div>
                 </div>
-                <div v-if="itemPreviewView" class="fake-item-preview">
-                  <NuxtImg :src="itemPreviewView" />
+                <div v-if="previewUrl" class="fake-item-preview">
+                  <NuxtImg :src="previewUrl" />
                 </div>
               </div>
               <div class="item faded">
@@ -47,39 +48,73 @@
       </UFormGroup>
 
       <div class="button-group">
-        <UButton label="Cancel" color="red" @click="isOpen = false"/>
-        <UButton :label="props.submitLabel" @click="onSubmit" />
+        <UButton label="Cancel" color="red" @click="onClose"/>
+        <UButton :label="props.submitLabel" type="submit" />
       </div>
-    </div>
+    </UForm>
   </UModal>
 </template>
 
 <script lang="ts" setup>
   import { createId } from '@paralleldrive/cuid2';
-  import { type ArsenalPreviewImageJson } from '@/classes/ArsenalPreviewImage';
+  import { ArsenalPreviewImage } from '@/classes/ArsenalPreviewImage';
+  import type { ArsenalItemJson } from '~/classes/ArsenalItem';
+  import { object, string, mixed, type InferType, number } from 'yup';
 
   const { data: itemPresets } = useFetch<Array<Object>>('/api/getItemPresets', {
     lazy: true
   });
 
+  const schema = object({
+    title: string().min(2, 'Too short').max(255, 'Exceeds character limit').required('Required'),
+    description: string().min(2, 'Too short').max(1024, 'Exceeds character limit').required('Required'),
+    previewFile: mixed<File>().test('fileSize', 'The file cannot exceed 8MB.', (file: File | undefined) => {
+      if (!file) return true;
+      return file.size <= 8_000_000;
+    }).test('fileType', 'The file must be an image', (file: File | undefined) => {
+      if (!file) return true;
+      return file.type.includes('image/');
+    }),
+    preview: object({
+      type: number(),
+      path: string()
+    })
+  });
+
   const props = withDefaults(defineProps<{ submitLabel?: string }>(), { submitLabel: 'Add' });
   const emit = defineEmits(['submit']);
+
   const isOpen = defineModel('isOpen', { required: true, default: false });
-  const itemTitle = defineModel('title', { required: false, default: '' });
-  const itemDescription = defineModel('description', { required: false, default: '' });
-  const itemPreview = defineModel<ArsenalPreviewImageJson>('preview', { required: false, default: { type: 0, path: '' } });
+  const item = defineModel<ArsenalItemJson>('item', { required: false, default: {
+    title: undefined,
+    description: undefined,
+    preview: new ArsenalPreviewImage().toJSON()
+  }});
+  
+  type Schema = InferType<typeof schema>
+  const state = defineModel<Schema>('formData', { required: true });
+
+  onMounted(() => {
+    resetForm();
+  });
+
+  watch(isOpen, () => {
+    if (!isOpen.value) {
+      resetForm();
+    }
+  });
 
   const files = ref<File | undefined>();
   const itemPreset = ref({ title: '', description: '', preview: { type: 0, path: '' } })
-  const itemPreviewView = ref<string>('');
+  const previewUrl = ref<string>('');
 
   /* Load preset if selected */
   const onTitleChange = () => {
-    if (itemPreset.value.title) itemTitle.value = itemPreset.value.title;
-    if (itemPreset.value.description) itemDescription.value = itemPreset.value.description;
+    if (itemPreset.value.title) state.value.title = itemPreset.value.title;
+    if (itemPreset.value.description) state.value.description = itemPreset.value.description;
     if (itemPreset.value.preview) {
-      itemPreview.value = itemPreset.value.preview;
-      itemPreviewView.value = itemPreset.value.preview.path;
+      state.value.preview = itemPreset.value.preview;
+      previewUrl.value = itemPreset.value.preview.path;
     };
   }
 
@@ -91,15 +126,33 @@
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      itemPreviewView.value = event.target?.result as string
+      previewUrl.value = event.target?.result as string
     }
 
     reader.readAsDataURL(files.value)
   }
 
+  /* Handle modal closing */
+  const onClose = () => {
+    isOpen.value = false;
+    resetForm();
+  };
+
+  /* Clear form on close */
+  const resetForm = () => {
+    state.value.title = item.value.title ?? '';
+    state.value.description = item.value.description ?? '';
+    state.value.preview = item.value.preview;
+    previewUrl.value = item.value.preview.path;
+    itemPreset.value = { 
+      title: item.value.title ?? '',
+      description: item.value.description ?? '',
+      preview: item.value.preview
+    };
+  };
+
   /* Upload image and emit submit event */
   const onSubmit = async (event: any) => {
-    let previewImage: string = itemPreviewView.value;
     if (files.value) {
       const file = new File(
         [files.value], 
@@ -109,22 +162,12 @@
       const upload = useUpload('/api/loadout/preview', { method: 'PUT' });
       const blob = await upload(file);
 
-      previewImage = `/images/${ blob.pathname }`;
+      state.value.preview = new ArsenalPreviewImage({ path: `/images/${ blob.pathname }` });
     }
     
-    itemPreview.value = new ArsenalPreviewImage({ path: previewImage });
-    isOpen.value = false;
-
     emit('submit');
+    isOpen.value = false;
   };
-
-  /* Update preview with the image path on modal open */
-  watch(isOpen, () => {
-    if (isOpen) {
-      itemPreset.value.title = itemTitle.value;
-      itemPreviewView.value = itemPreview.value.path;
-    };
-  })
 </script>
 
 <style lang="scss">

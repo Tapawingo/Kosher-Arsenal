@@ -9,16 +9,12 @@
 
   <ArsenalModalItem 
     v-model:is-open="isOpen" 
-    v-model:title="itemTitle" 
-    v-model:description="itemDescription" 
-    v-model:preview="itemPreview"
+    v-model:form-data="itemModalData"
     @submit="onSubmit"
   />
 </template>
 
 <script lang="ts" setup>
-import { ArsenalPreviewImage } from '~/classes/ArsenalPreviewImage';
-
   const props = withDefaults(defineProps<{isSub?: boolean}>(), {
     isSub: false
   });
@@ -27,9 +23,12 @@ import { ArsenalPreviewImage } from '~/classes/ArsenalPreviewImage';
   const toast = useToast()
 
   const isOpen = ref<boolean>(false);
-  const itemTitle = ref<string>();
-  const itemDescription = ref<string>();
-  const itemPreview = ref<ArsenalPreviewImage>(new ArsenalPreviewImage());
+  const itemModalData = ref({
+    title: '',
+    description: '',
+    preview: new ArsenalPreviewImage().toJSON(),
+    previewFile: undefined
+  });
   
   const classOverride = {
     background: '',
@@ -40,9 +39,9 @@ import { ArsenalPreviewImage } from '~/classes/ArsenalPreviewImage';
 
   const onSubmit = async () => {
     const newItem = new ArsenalItem({
-      title: itemTitle.value,
-      description: itemDescription.value,
-      preview: itemPreview.value
+      title: itemModalData.value.title,
+      description: itemModalData.value.description,
+      preview: new ArsenalPreviewImage().fromJSON(JSON.stringify(itemModalData.value.preview))
     });
     
     let state = false;
@@ -52,11 +51,11 @@ import { ArsenalPreviewImage } from '~/classes/ArsenalPreviewImage';
       state = arsenalStore.addItem(newItem);
     };
 
-    toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subitem' : 'item' }: "${ itemTitle.value }"` });
+    toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subitem' : 'item' }: "${ itemModalData.value.title }"` });
 
-    itemTitle.value = '';
-    itemDescription.value = '';
-    itemPreview.value = new ArsenalPreviewImage();
+    itemModalData.value.title = '';
+    itemModalData.value.description = '';
+    itemModalData.value.preview = new ArsenalPreviewImage().toJSON();
     arsenalStore.saveLoadout();
   }
 </script>

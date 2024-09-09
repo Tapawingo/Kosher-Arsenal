@@ -40,9 +40,8 @@
   <ArsenalModalItem
     submit-label="Update"
     v-model:is-open="isEditOpen" 
-    v-model:title="newItemTitle" 
-    v-model:description="newItemDescription" 
-    v-model:preview="newItemPreview"
+    v-model:form-data="itemModalData"
+    v-model:item="props.item"
     @submit="onEditSubmit"
   />
 
@@ -83,9 +82,12 @@
 
   /* Edit Modal Refs */
   const isEditOpen = ref(false);
-  const newItemTitle = ref(props.item.title);
-  const newItemDescription = ref(props.item.description);
-  const newItemPreview = ref(props.item.preview);
+  const itemModalData = ref({
+    title: '',
+    description: '',
+    preview: new ArsenalPreviewImage().toJSON(),
+    previewFile: undefined
+  });
   
   /* Item select state */
   const itemState = ref(false);
@@ -224,9 +226,9 @@
 
   /* Edit Item */
   const onEditSubmit = async () => {
-    props.item.title = newItemTitle.value;
-    props.item.description = newItemDescription.value;
-    props.item.preview = newItemPreview.value;
+    props.item.title = itemModalData.value.title;
+    props.item.description = itemModalData.value.description;
+    props.item.preview = itemModalData.value.preview;
     arsenalStore.saveLoadout();
   };
 
