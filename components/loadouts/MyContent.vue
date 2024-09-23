@@ -1,19 +1,25 @@
 <template>
   <loadoutsModalNewLoadout v-model:isOpen="isNewLoadoutOpen" />
-  <!-- <LoadoutsLoadoutDetails /> -->
+  <!-- <LoadoutsLoadoutDetails :loadout="myLoadouts[0]" /> -->
 
   <div v-if="user">
     <div class="section">
   
       <h1>My loadouts</h1>
-      <div class="body reversed">
-        <div class="loadout" v-for="loadout in myLoadouts">
+      <div class="body">
+        <div class="loadout-new" @click="isNewLoadoutOpen = true">
+          <span class="plus-icon">+</span>
+          <span>NEW</span>
+          <span>LOADOUT</span>
+        </div>
+
+        <div class="loadout" v-for="loadout in myLoadouts.slice().reverse()">
           <div class="preview">
             <img :src="loadout.preview.path" alt="Preview" />
           </div>
           <div class="meta">
             <div class="tags">
-              <div v-for="tag in loadout.tags">{{ tag.label }}</div>
+              <div v-for="tag in loadout.tags">#{{ tag.label }}</div>
             </div>
             <h1> {{ loadout.title }} </h1>
             <p>{{ loadout.description }}</p>
@@ -25,19 +31,27 @@
             </div>
           </div>
         </div>
-  
-        <div class="loadout-new" @click="isNewLoadoutOpen = true">
-          <span class="plus-icon">+</span>
-          <span>NEW</span>
-          <span>LOADOUT</span>
-        </div>
       </div>
     </div>
   
     <div class="section discover">
       <h2>My buylists</h2>
       <div class="body">
-        <span style="width: 100%; text-align: center;">WIP</span>
+        <div class="loadout" v-for="buylist in myBuylists">
+          <div class="preview">
+            <img :src="buylist.preview.path" alt="Preview" />
+          </div>
+          <div class="meta">
+            <div class="tags">
+              <div v-for="tag in buylist.tags">#{{ tag.label }}</div>
+            </div>
+            <h1> {{ buylist.title }} </h1>
+            <p>{{ buylist.description }}</p>
+            <div class="actions">
+              <button @click="viewBuylist(buylist.id)">View Buylist</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   
@@ -65,20 +79,48 @@
 
   const myCollections = ref<Array<LoadoutCollectionJson>>([]);
   const myLoadouts = ref<Array<ArsenalLoadoutJson>>([]);
+  const myBuylists = ref<Array<ArsenalLoadoutJson>>([]);
   const isNewLoadoutOpen = ref(false);
   const selectedLoadout = ref();
   
-  const { data, error } = await useFetch(`/api/loadout/loadouts/${ user.value?.id }`);
+  /* Get loadouts */
+  useFetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
+    if (res.error.value) {
+      toast.add({ title: "Error", description: res.error.value.message, color: "red" });
+    } else {
+      myLoadouts.value = res.data.value!;
+    };
+  });
 
-  if (error.value) {
-    toast.add({ title: "Error", description: error.value.message, color: "red" });
-  } else {
-    myLoadouts.value = data.value!;
-  };
+  /* Get buylists */
+  useFetch('/api/buylist/buylists').then((res) => {
+    if (res.error.value) {
+      toast.add({ title: "Error", description: res.error.value.message, color: "red" });
+    } else {
+      myBuylists.value = res.data.value!;
+    };
+  });
 
+  /* Open Preview */
   const viewLoadout = async (loadoutId: string) => {
     const arsenalStore = useArsenalStore();
     arsenalStore.setMode(ArsenalMode.view);
+
+    await navigateTo(`/loadout/${ loadoutId }`);
+  };
+
+  /* Open buylist */
+  const viewBuylist = async (loadoutId: string) => {
+    const arsenalStore = useArsenalStore();
+    arsenalStore.setMode(ArsenalMode.buylist);
+
+    await navigateTo(`/loadout/${ loadoutId }`);
+  };
+
+  /* Open edit */
+  const editLoadout = async (loadoutId: string) => {
+    const arsenalStore = useArsenalStore();
+    arsenalStore.setMode(ArsenalMode.edit);
 
     await navigateTo(`/loadout/${ loadoutId }`);
   };
@@ -114,10 +156,7 @@
         /* shortcuts: ['E'], */
         click: async () => {
           if (!selectedLoadout.value) return;
-          const arsenalStore = useArsenalStore();
-          arsenalStore.setMode(ArsenalMode.edit);
-
-          await navigateTo(`/loadout/${ selectedLoadout.value.id }`);
+          editLoadout(selectedLoadout.value.id);
         }
       }, {
         label: 'Duplicate',

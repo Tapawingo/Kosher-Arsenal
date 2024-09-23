@@ -35,7 +35,7 @@
   const addCategory = () => {
     const newCategory = new ArsenalCategory({
       title: ModalData.value.title,
-      icon: ModalData.value.title
+      icon: ModalData.value.icon
     });
 
     let state = false;

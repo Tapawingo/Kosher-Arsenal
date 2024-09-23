@@ -10,7 +10,7 @@
       </UFormGroup>
 
       <UFormGroup label="Tags" name="tags">
-        
+        <TagInput v-model:tags="state.tags"/>
       </UFormGroup>
 
       <UFormGroup label="Upload Image" name="preview">
@@ -41,7 +41,7 @@
   const schema = object({
     title: string().min(2, 'Too short').max(255, 'Exceeds character limit').required('Required'),
     description: string().min(2, 'Too short').max(1024, 'Exceeds character limit').required('Required'),
-    tags: array().of(object<ObjectSchema<LoadoutTagJson>>()),
+    tags: array().required(),
     preview: mixed<File>().test('fileSize', 'The file cannot exceed 8MB.', (file: File | undefined) => {
       if (!file) return true;
       return file.size <= 8_000_000;
@@ -60,9 +60,6 @@
     tags: [],
     preview: undefined
   }});
-
-  const types = ref(['Figure', 'Background'])
-  const type = ref<string>('Figure');
   const previewUrl = ref(arsenalStore.loadout.preview.path);
 
   /* Update preview once loadout is fetched */

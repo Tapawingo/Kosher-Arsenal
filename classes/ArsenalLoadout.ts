@@ -10,6 +10,24 @@ export enum LoadoutVisibility {
   private
 }
 
+export const visibility2String = (visibility: LoadoutVisibility): string => {
+  switch (visibility) {
+    case LoadoutVisibility.private: return 'Private';
+    case LoadoutVisibility.unlisted: return 'Unlisted';
+    case LoadoutVisibility.public: return 'Public';
+    default: return 'Unknown';
+  }
+}
+
+export const visibility2Icon = (visibility: LoadoutVisibility): string => {
+  switch (visibility) {
+    case LoadoutVisibility.private: return 'material-symbols:lock';
+    case LoadoutVisibility.unlisted: return 'material-symbols:link';
+    case LoadoutVisibility.public: return 'material-symbols:public';
+    default: return 'material-symbols:indeterminate-question-box';
+  }
+}
+
 export declare interface ArsenalLoadoutJson {
   id: string,
   title: string,
