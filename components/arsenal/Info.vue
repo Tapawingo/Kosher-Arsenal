@@ -24,7 +24,7 @@
     <div class="info-content">
       <div class="info-description">{{ arsenalStore.loadout.description }}</div>
       <div class="info-tags">
-        <div v-for="tag in arsenalStore.loadout.tags">#{{ tag.label }}</div>
+        <div v-for="tag in arsenalStore.loadout.tags">{{ tag.label.replace('y:', '').replace('d:', '') }}</div>
       </div>
     </div>
   </div>

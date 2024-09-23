@@ -22,12 +22,8 @@
     input, select, textarea, [role=button] button {
         background-color: $modal-input-background;
         color: white;
-        border: 1px solid $border-color;
+        border: 1px solid $border-color !important;
         --tw-ring-inset: none;
-  
-        &:focus {
-            border: none;
-        }
     }
 
     ul[role=listbox] {
@@ -120,4 +116,38 @@
             }
         }
     }
+
+    .ui-input-autocomplete > input {
+        width: 100%;
+        padding: 0.375rem 0.625rem;
+        border: solid 1px $border-color !important;
+        border-radius: 0.5rem;
+        outline: none;
+      }
+    
+      .ui-input-autocomplete-list {
+        position: absolute;
+        border: solid 1px $border-color;
+        border-radius: 0.5rem;
+        z-index: 99;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 0.5rem;
+        overflow: hidden;
+        
+        & > div {
+          padding: 10px;
+          cursor: pointer;
+          background-color: $modal-background;
+    
+          &:hover {
+            background-color: $active-modal-input-background;
+          }
+    
+          &.active {
+            background-color: $active-modal-input-background;
+          }
+        }
+      }
 }

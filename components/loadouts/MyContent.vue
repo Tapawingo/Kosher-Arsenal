@@ -19,7 +19,7 @@
           </div>
           <div class="meta">
             <div class="tags">
-              <div v-for="tag in loadout.tags">#{{ tag.label }}</div>
+              <div v-for="tag in loadout.tags">#{{ tag.label.replace('y:', '').replace('d:', '') }}</div>
             </div>
             <h1> {{ loadout.title }} </h1>
             <p>{{ loadout.description }}</p>
@@ -43,7 +43,7 @@
           </div>
           <div class="meta">
             <div class="tags">
-              <div v-for="tag in buylist.tags">#{{ tag.label }}</div>
+              <div v-for="tag in buylist.tags">#{{ tag.label.replace('y:', '').replace('d:', '') }}</div>
             </div>
             <h1> {{ buylist.title }} </h1>
             <p>{{ buylist.description }}</p>
@@ -82,24 +82,26 @@
   const myBuylists = ref<Array<ArsenalLoadoutJson>>([]);
   const isNewLoadoutOpen = ref(false);
   const selectedLoadout = ref();
-  
-  /* Get loadouts */
-  useFetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
-    if (res.error.value) {
-      toast.add({ title: "Error", description: res.error.value.message, color: "red" });
-    } else {
-      myLoadouts.value = res.data.value!;
-    };
-  });
-
-  /* Get buylists */
-  useFetch('/api/buylist/buylists').then((res) => {
-    if (res.error.value) {
-      toast.add({ title: "Error", description: res.error.value.message, color: "red" });
-    } else {
-      myBuylists.value = res.data.value!;
-    };
-  });
+    
+  if (user) {
+    /* Get loadouts */
+    useFetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
+      if (res.error.value) {
+        toast.add({ title: "Error", description: res.error.value.message, color: "red" });
+      } else {
+        myLoadouts.value = res.data.value!;
+      };
+    });
+    
+    /* Get buylists */
+    useFetch('/api/buylist/buylists').then((res) => {
+      if (res.error.value) {
+        toast.add({ title: "Error", description: res.error.value.message, color: "red" });
+      } else {
+        myBuylists.value = res.data.value!;
+      };
+    });
+  }
 
   /* Open Preview */
   const viewLoadout = async (loadoutId: string) => {
@@ -175,7 +177,6 @@
           const { error } = await useFetch(`/api/loadout/delete/${ selectedLoadout.value.id }`);
 
           if (error.value) {
-            console.log(error.value)
             toast.add({ title: 'Error', description: error.value?.message, color: 'red' });
           } else {
             toast.add({ description: 'Deleted loadout', color: 'green' });

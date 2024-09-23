@@ -2,16 +2,15 @@
     <UModal class="arsenal-modal" v-model="isOpen">
     <UForm :state="state" :schema="schema" class="arsenal-modal-body" @submit.prevent="onSubmit">
       <UFormGroup label="Item Title" required name="title">
-        <USelectMenu 
-          v-model="itemPreset" 
+        <UiInputAuto
+          v-model="itemPreset"
           name="title"
-          searchable
-          creatable
-          searchable-placeholder="Title..."
-          :search-attributes="['title', 'alias']"
+          placeholder="Title..."
           :options="itemPresets ? itemPresets : []"
+          :search-attributes="['title', 'alias']"
           option-attribute="title"
           @change="onTitleChange"
+          creatable
         />
       </UFormGroup>
 

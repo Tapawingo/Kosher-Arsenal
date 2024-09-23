@@ -26,7 +26,6 @@
       htmlAttrs: {
         lang: 'en',
         class: () => {
-          console.log(theme.value);
           if (theme.value === 'dark') {
             return 'dark-theme'
           } else {
