@@ -51,11 +51,14 @@ div.loadout {
             display: flex;
             gap: 0.5rem;
             padding: 0.3rem 0;
+            overflow: hidden;
 
             div {
                 color: $muted-foreground;
                 border-radius: 0.2rem;
                 padding: 0.1rem;
+                text-wrap: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }
