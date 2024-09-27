@@ -58,6 +58,20 @@
                 text-align: center;
                 margin-bottom: 1px;
             }
+
+            & > .total-price {
+                position: absolute;
+                bottom: 0.3rem;
+                width: 19.9%;
+
+                padding: 0.15rem;
+                background-color: $background-200;
+                text-align: left;
+
+                & > span.price {
+                    float: right;
+                }
+            }
         }
     }
     

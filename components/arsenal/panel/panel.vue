@@ -8,6 +8,10 @@
         </VueDraggable>
       </div>
       <ArsenalPanelAddItem v-if="category && isEditMode" :is-sub="props.isSub" />
+      <div class="total-price" v-if="arsenalStore.isBuylistMode()">
+        <span>Total (WIP):</span>
+        <span class=price>0.00 €</span>
+      </div>
     </div>
   </div>
 
@@ -22,7 +26,7 @@
   import { createId } from '@paralleldrive/cuid2';
   import { VueDraggable } from 'vue-draggable-plus';
   import { useMagicKeys, useMouse, useMouseInElement, useWindowScroll } from '@vueuse/core';
-import type { ArsenalItemJson } from '~/classes/ArsenalItem';
+  import type { ArsenalItemJson } from '~/classes/ArsenalItem';
 
   const props = withDefaults(defineProps<{ isSub?: boolean }>(), {
     isSub: false
