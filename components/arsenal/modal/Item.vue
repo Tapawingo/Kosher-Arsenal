@@ -66,7 +66,7 @@
 
   const schema = object({
     title: string().min(2, 'Too short').max(255, 'Exceeds character limit').required('Required'),
-    description: string().min(2, 'Too short').max(1024, 'Exceeds character limit').required('Required'),
+    description: string().max(1024, 'Exceeds character limit'),
     previewFile: mixed<File>().test('fileSize', 'The file cannot exceed 8MB.', (file: File | undefined) => {
       if (!file) return true;
       return file.size <= 8_000_000;
