@@ -83,7 +83,7 @@
   const isNewLoadoutOpen = ref(false);
   const selectedLoadout = ref();
     
-  if (user) {
+  if (user.value) {
     /* Get loadouts */
     useFetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
       if (res.error.value) {
