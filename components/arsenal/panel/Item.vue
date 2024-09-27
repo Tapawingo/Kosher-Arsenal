@@ -2,7 +2,7 @@
   <div class="item" :class="selectedClass" @click="toggleItem()" @contextmenu.stop.prevent="onContextMenu" ref="ItemRoot">
     <div class="title">
 
-      <div v-if="arsenalStore.isBuylistMode()" class="checkbox" @click.stop="isChecked = !isChecked; onbuylistUpdate()">
+      <div v-if="arsenalStore.isBuylistMode()" class="checkbox" @click.stop="isChecked = !isChecked; onbuylistSubmit()">
         <input type="checkbox" :checked="isChecked"/>
         <span class="checkbox-checkmark"></span>
       </div>
@@ -14,7 +14,7 @@
           <Icon name="material-symbols:storefront" @click.stop="openStore" />
         </UTooltip>
         <UTooltip class="tooltip buylist-price" text="Price" :popper="{ placement: 'bottom' }" :ui="classOverride" v-if="buylistItem.price.price > 0">
-          {{ buylistItem.price.price.toFixed(2) }}
+          {{ buylistItem.price.price.toFixed(2) }} {{ currencies.find(currency => currency.code === buylistItem.price.currency)?.symbol }}
         </UTooltip>
       </div>
 
@@ -32,8 +32,8 @@
       <div @click="deleteItem">Delete</div>
     </div>
     <div class="context-menu" v-if="arsenalStore.isBuylistMode()">
-      <div @click="buylistEditMode = 'store'; isBuylistModalOpen = true; isContextMenuOpen = false">Edit Store</div>
-      <div @click="buylistEditMode = 'price'; isBuylistModalOpen = true; isContextMenuOpen = false">Edit Price</div>
+      <div @click="onOpenModal('store'); isContextMenuOpen = false">Edit Store</div>
+      <div @click="onOpenModal('price'); isContextMenuOpen = false">Edit Price</div>
     </div>
   </UContextMenu>
 
@@ -46,19 +46,27 @@
   />
 
   <UModal class="arsenal-modal" v-model="isBuylistModalOpen" :ui="{ overlay: { background: 'bg-stone-600/75' }, background: '', ring: '' }">
-    <div class="arsenal-modal-body">
+    <form class="arsenal-modal-body" @submit.prevent="onbuylistSubmit">
       <UFormGroup label="Store Link" v-if="buylistEditMode == 'store'">
-        <UInput type="url" v-model="newItemStore" @change="onbuylistUpdate" />
+        <UInput type="url" v-model="newItemStore" />
       </UFormGroup>
 
-      <UFormGroup label="Price" required v-if="buylistEditMode == 'price'">
-        <UInput type="number" v-model="newItemPrice" @change="onbuylistUpdate" />
+      <UFormGroup class="price" label="Price" required v-if="buylistEditMode == 'price'">
+        <UInput type="number" v-model="newItemPrice" />
+        <UiSelectMenu
+          :options="currencies" 
+          v-model="newItemCurrency" 
+          option-attribute="code"
+          searchable
+          :search-attributes="['code']"
+        />
       </UFormGroup>
 
-      <div class="button-group" style="justify-content: flex-end">
-        <UButton label="close" color="red" @click="isBuylistModalOpen = false"/>
+      <div class="button-group">
+        <UButton label="Cancel" color="red" @click="onClose"/>
+        <UButton label="Save" type="submit" />
       </div>
-    </div>
+    </form>
   </UModal>
 </template>
 
@@ -66,8 +74,8 @@
   import { useMouse, useWindowScroll, useMouseInElement, useMagicKeys } from '@vueuse/core'
   import { type ArsenalItemJson } from '~/classes/ArsenalItem';
   import { storeToRefs } from 'pinia'
+  import currencies from '@/content/currencies.json';
 
-  /* @TODO: https://ui.nuxt.com/components/select-menu#creatable */
   /* @TODO: Quantity selection as item type */
   
   const props = withDefaults(defineProps<{item: ArsenalItemJson, isSub?: boolean}>(), {
@@ -132,6 +140,7 @@
   const buylistEditMode = ref<'store' | 'price'>('store');
   const newItemStore = ref<string>('');
   const newItemPrice = ref<number>(0);
+  const newItemCurrency = ref<any>();
 
   /* Buylist logic */
   const isChecked = ref(false);
@@ -144,12 +153,30 @@
     }
   }
 
-  const onbuylistUpdate = () => {
+  const onOpenModal = (mode: "store" | "price") => {
+    buylistEditMode.value = mode;
+    isBuylistModalOpen.value = true;
+
+    newItemStore.value = buylistItem.value.store;
+    newItemPrice.value = buylistItem.value.price.price;
+
+    const currencyIndex = currencies.findIndex(currency => currency.code === buylistItem.value.price.currency);
+    newItemCurrency.value = currencyIndex === -1 ? 2 : currencyIndex;
+  }
+
+  const onbuylistSubmit = () => {
     buylistItem.value.owned = isChecked.value;
-    buylistItem.value.store = newItemStore.value;
-    buylistItem.value.price.price = newItemPrice.value;
+    
+    if (buylistEditMode.value === 'price') {
+      const currency = currencies[newItemCurrency.value]?.code;
+      buylistItem.value.price.price = newItemPrice.value ? newItemPrice.value : 0;
+      buylistItem.value.price.currency = currency ? currency : '';
+    } else if (buylistEditMode.value === 'store') {
+      buylistItem.value.store = newItemStore.value ? newItemStore.value : '';
+    }
 
     arsenalStore.setBuylistItem(buylistItem.value);
+    isBuylistModalOpen.value = false;
   }
 
   const openStore = () => {
@@ -161,6 +188,11 @@
       }
     });
   }
+
+  /* Handle modal closing */
+  const onClose = async () => {
+    isBuylistModalOpen.value = false;
+  };
 
   /* Override Context Menu */
   const ItemRoot = ref<HTMLDivElement | null>(null);
@@ -241,5 +273,24 @@
 </script>
 
 <style lang="scss">
-  
+  .arsenal-modal-body .price .relative {
+    width: 100%;
+    display: flex;
+
+    & > input[type=number] {
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+      border-right: none;
+    }
+
+    & > .ui-select {
+      width: 20%;
+      min-width: 4.5rem;
+      
+      & > .ui-select-button {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+      }
+    }
+  }
 </style>

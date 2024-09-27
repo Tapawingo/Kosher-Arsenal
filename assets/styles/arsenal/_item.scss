@@ -19,7 +19,7 @@
         height: 4rem;
 
         & > span {
-            width: 15rem;
+            width: 62%;
             flex-grow: 1;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -31,10 +31,21 @@
         }
 
         .buylist-content {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1rem auto;
             gap: 0.2rem;
-            width: 5rem;
+            width: 38%;
+
+            & > .buylist-store {
+                grid-column: 1;
+                display: block;
+            }
+
+            & > .buylist-price {
+                grid-column: 2;
+                display: block;
+                text-align: right;
+            }
 
             span {
                 vertical-align: middle;

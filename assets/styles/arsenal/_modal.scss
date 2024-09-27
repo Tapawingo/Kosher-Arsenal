@@ -22,7 +22,7 @@
     input, select, textarea, [role=button] button {
         background-color: $modal-input-background;
         color: white;
-        border: 1px solid $border-color !important;
+        border: 1px solid $border-color;
         --tw-ring-inset: none;
     }
 
