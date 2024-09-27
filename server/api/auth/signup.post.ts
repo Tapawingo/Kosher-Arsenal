@@ -29,13 +29,13 @@ export default eventHandler(async (event) => {
   const password = body.password;
   if (
     typeof password !== "string" ||
-    username.length < 8 ||
-    username.length > 255
+    password.length < 8 ||
+    password.length > 255
   ) {
     throw createError({
       message: 'Invalid Password',
       statusCode: 400
-    })
+    });
   }
 
   const salt = generateId(13);
