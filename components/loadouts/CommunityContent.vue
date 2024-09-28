@@ -34,7 +34,9 @@
         </div>
         <div class="meta">
           <div class="tags">
-            <div v-for="tag in loadout.tags">{{ tag.label }}</div>
+            <div v-for="tag in loadout.tags">
+              #{{ tag.label.replace('y:', '').replace('d:', '') }}
+            </div>
           </div>
           <h1> {{ loadout.title }} </h1>
           <p>{{ loadout.description }}</p>
