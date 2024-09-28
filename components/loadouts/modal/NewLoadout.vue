@@ -8,7 +8,7 @@
         <UTextarea v-model="state.description" name="description" />
       </UFormGroup>
       <UFormGroup label="Tags" name="tags">
-        WIP
+        <TagInput v-model:tags="state.tags"/>
       </UFormGroup>
       <UFormGroup label="Category Template" name="template">
         <USelectMenu v-model="state.template" :options="templates" optionAttribute="name" name="template" />
@@ -61,6 +61,7 @@
     description: undefined,
     owner: user.value?.id,
     template: templates.value[0],
+    tags: [],
     preview: { type: 0, path: '/arsenal/preview/default.png' },
     visibility: 0
   });

@@ -95,6 +95,7 @@
   };
 
   const onSubmit = async () => {
+    const toast = useToast();
     arsenalStore.loadout.title = infoModalData.value.title;
     arsenalStore.loadout.description = infoModalData.value.description;
     arsenalStore.loadout.tags = infoModalData.value.tags;
@@ -110,6 +111,23 @@
 
       arsenalStore.loadout.preview = new ArsenalPreviewImage({ path: `/images/${ blob.pathname }` });
     }
+
+    /* Set tags */
+    arsenalStore.loadout.tags.forEach(tag => {
+      $fetch('/api/tag/set', {
+        method: 'POST',
+        body: {
+          label: tag.label,
+          type: tag.type,
+          loadoutId: arsenalStore.loadout.id
+        }
+      }).catch((e: any) => {
+        toast.add({
+          title: 'Error',
+          description: e.toString()
+        });
+      })
+    });
 
     arsenalStore.saveLoadout();
     isInfoModalOpen.value = false;

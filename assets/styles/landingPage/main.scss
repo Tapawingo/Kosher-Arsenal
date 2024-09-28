@@ -13,7 +13,8 @@ html:not(.dark-theme) {
 
     @import "sitenav";
     @import "modal";
-    @import "loadouts-page";
+    @import "loadouts/main";
+    @import "references/main";
     @import "components/loadout-details";
 }
 
@@ -26,7 +27,8 @@ html.dark-theme {
 
     @import "sitenav";
     @import "modal";
-    @import "loadouts-page";
+    @import "loadouts/main";
+    @import "references/main";
     @import "components/loadout-details";
 }
 

@@ -38,7 +38,8 @@
     /* @TODO: Check for duplicates */
     tags.value.push({
       label: newTagTitle.value,
-      type: type
+      type: type,
+      loadouts: []
     });
 
     newTagTitle.value = '';

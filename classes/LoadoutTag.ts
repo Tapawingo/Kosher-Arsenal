@@ -7,11 +7,13 @@ export enum LoadoutTagType {
 export declare interface LoadoutTagJson {
   label: string;
   type: number;
+  loadouts: string[];
 }
 
 export class LoadoutTag {
   public label: string = '';
   public type: LoadoutTagType = LoadoutTagType.text;
+  public loadouts: string[] = [];
 
   public constructor(label?: string) {
     if (label) {
@@ -19,10 +21,15 @@ export class LoadoutTag {
     }
   }
 
+  public get prettyLabel() {
+    return `#${ this.label.replace('y:', '').replace('d:', '') }`
+  }
+
   public toJSON(): LoadoutTagJson {
     return {
       label: this.label,
-      type: this.type
+      type: this.type,
+      loadouts: this.loadouts
     }
   }
 

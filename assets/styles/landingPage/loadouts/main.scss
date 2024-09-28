@@ -18,7 +18,7 @@
         button {
             background-color: $background;
             height: 2.8rem;
-            border: 1px solid $active-border-color;
+            border: 1px solid $border-color;
             flex-grow: 1;
             text-align: center;
 
@@ -102,10 +102,20 @@
                 border-radius: 1rem;
             }
 
+            div.load-message {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.2rem;
+                color: $muted-foreground;
+            }
+
             div.collection {
                 background-size: cover;
                 background-position: top center;
-                color: $foreground;
+                color: white;
                 height: 100%;
                 flex-grow: 1;
                 display: flex;
@@ -129,18 +139,18 @@
             div.tag {
                 overflow: hidden;
                 background-color: $background;
-                color: black;
+                color: $foreground;
                 width: 18.9%;
                 height: fit-content;
                 cursor: pointer;
 
                 &:hover {
-                    background-color: black;
-                    color: white;
+                    background-color: $active-background;
+                    color: $active-foreground;
                 }
             }
 
-            @import 'components/loadout';
+            @import './loadout';
 
             div.loadout-new {
                 background-color: $background;

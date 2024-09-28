@@ -13,7 +13,7 @@
           <span>LOADOUT</span>
         </div>
 
-        <div class="loadout" v-for="loadout in myLoadouts.slice().reverse()">
+        <div class="loadout" v-if="myLoadouts" v-for="loadout in myLoadouts.slice().reverse()">
           <div class="preview">
             <img :src="loadout.preview.path" alt="Preview" />
           </div>
@@ -31,13 +31,15 @@
             </div>
           </div>
         </div>
+
+        <div class="load-message" v-if="!myLoadouts">Loading Loadouts...</div>
       </div>
     </div>
   
     <div class="section discover">
       <h2>My buylists</h2>
       <div class="body">
-        <div class="loadout" v-for="buylist in myBuylists">
+        <div class="loadout" v-if="myBuylists" v-for="buylist in myBuylists">
           <div class="preview">
             <img :src="buylist.preview.path" alt="Preview" />
           </div>
@@ -52,6 +54,8 @@
             </div>
           </div>
         </div>
+
+        <div class="load-message" v-if="!myBuylists">Loading Buylists...</div>
       </div>
     </div>
   
@@ -78,28 +82,24 @@
   const user = useUser();
 
   const myCollections = ref<Array<LoadoutCollectionJson>>([]);
-  const myLoadouts = ref<Array<ArsenalLoadoutJson>>([]);
-  const myBuylists = ref<Array<ArsenalLoadoutJson>>([]);
+  const myLoadouts = ref<ArsenalLoadoutJson[] | undefined>();
+  const myBuylists = ref<ArsenalLoadoutJson[] | undefined>();
   const isNewLoadoutOpen = ref(false);
   const selectedLoadout = ref();
     
   if (user.value) {
     /* Get loadouts */
-    useFetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
-      if (res.error.value) {
-        toast.add({ title: "Error", description: res.error.value.message, color: "red" });
-      } else {
-        myLoadouts.value = res.data.value!;
-      };
+    $fetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
+      myLoadouts.value = res;
+    }).catch((e: any) => {
+      toast.add({ title: "Error", description: e.message, color: "red" });
     });
     
     /* Get buylists */
-    useFetch('/api/buylist/buylists').then((res) => {
-      if (res.error.value) {
-        toast.add({ title: "Error", description: res.error.value.message, color: "red" });
-      } else {
-        myBuylists.value = res.data.value!;
-      };
+    $fetch('/api/buylist/buylists').then((res) => {
+      myBuylists.value = res;
+    }).catch((e: any) => {
+      toast.add({ title: "Error", description: e.message, color: "red" });
     });
   }
 
@@ -182,8 +182,8 @@
             toast.add({ description: 'Deleted loadout', color: 'green' });
 
             /* Delete loadout from local array */
-            const loadoutIndex = myLoadouts.value.findIndex((loadout: ArsenalLoadoutJson) => loadout.id === selectedLoadout.value.id);
-            myLoadouts.value.splice(loadoutIndex, 1);
+            const loadoutIndex = myLoadouts.value!.findIndex((loadout: ArsenalLoadoutJson) => loadout.id === selectedLoadout.value.id);
+            myLoadouts.value!.splice(loadoutIndex, 1);
           }
         }
       }

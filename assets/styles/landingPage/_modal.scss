@@ -73,4 +73,21 @@
         display: flex;
         justify-content: space-between;
     }
+
+    div.tag-editor {
+        input {
+            background-color: $background;
+            color: $foreground;
+            border: 1px solid $border-color;
+            --tw-ring-inset: none;
+        }
+
+        ul > .tag {
+            background-color: $background;
+            color: $foreground;
+            border: 1px solid $border-color;
+            border-radius: 0.5rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
 }
