@@ -15,14 +15,34 @@ export class LoadoutTag {
   public type: LoadoutTagType = LoadoutTagType.text;
   public loadouts: string[] = [];
 
-  public constructor(label?: string) {
+  public constructor(label?: string, type?: LoadoutTagType) {
     if (label) {
       this.label = label;
+    }
+
+    if (type) {
+      this.type = type;
     }
   }
 
   public get prettyLabel() {
     return `#${ this.label.replace('y:', '').replace('d:', '') }`
+  }
+
+  public get prettyType() {
+    switch (this.type) {
+      case LoadoutTagType.text:
+        return 'Text'
+
+      case LoadoutTagType.date:
+        return 'Date';
+
+      case LoadoutTagType.year:
+        return 'Year';
+      
+      default:
+        return 'Unknown';
+    }
   }
 
   public toJSON(): LoadoutTagJson {

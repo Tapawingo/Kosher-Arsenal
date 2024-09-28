@@ -1,0 +1,49 @@
+.page-tag {
+    margin-top: 5rem;
+    min-height: 91%;
+    background: linear-gradient(to right, rgba(128, 128, 128, 0.071) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(128, 128, 128, 0.071) 1px, transparent 1px);
+    background-size: 24px 24px;
+    padding: 0 20rem;
+
+    * {
+        transition: background-color 0.5s, border-color 0.5s;
+    }
+
+    & > header.header {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+
+        h1 {
+            font-size: 1.6rem;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        button {
+            border-radius: 0.5rem;
+            background-color: $background;
+            border: 1px solid $border-color;
+            color: $foreground;
+            padding: 0.5rem 0.75rem;
+            text-align: center;
+            justify-content: center;
+
+            &:hover {
+                background-color: $active-background;
+                color: $active-foreground;
+            }
+        }
+    }
+
+    & > section.loadouts {
+        display: flex;
+        height: 100%;
+        width: 100%;
+        gap: 1rem;
+        flex-wrap: wrap;
+
+        @import '../loadouts/loadout';
+    }
+}

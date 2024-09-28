@@ -15,6 +15,7 @@ html:not(.dark-theme) {
     @import "modal";
     @import "loadouts/main";
     @import "references/main";
+    @import "tag/main";
     @import "components/loadout-details";
 }
 
@@ -29,6 +30,7 @@ html.dark-theme {
     @import "modal";
     @import "loadouts/main";
     @import "references/main";
+    @import "tag/main";
     @import "components/loadout-details";
 }
 

@@ -17,7 +17,7 @@
   <div class="section discover">
     <h2>Discover popular tags</h2>
     <div class="body">
-      <div class="tag" v-if="recTags" v-for="tag in recTags">
+      <div class="tag" v-if="recTags" v-for="tag in recTags" @click="viewTag(tag.label)">
         <h2>{{ tag.prettyLabel.replace('#', '') }}</h2>
         <span>{{ tag.loadouts.length }} Loadouts</span>
       </div>
@@ -63,19 +63,15 @@
     await navigateTo(`/loadout/${ loadoutId }`);
   };
 
+  const viewTag = async (tagLabel: string) => {
+    await navigateTo(`/tag/${ tagLabel }`);
+  }
+
   const recCollections = ref<Array<LoadoutCollectionJson>>([]);
   const recTags = ref<LoadoutTag[] | undefined>();
   const popLoadouts = ref<ArsenalLoadoutJson[]>([]);
   
   onMounted(() => {
-    useFetch(`/api/loadout/loadouts`).then((res) => {
-      if (res.error.value) {
-        toast.add({ title: "Error", description: res.error.value.message, color: "red" });
-      } else {
-        popLoadouts.value = res.data.value!;
-      };
-    });
-
     $fetch(`/api/tag/topTags`).then((res) => {
       if (res) {
         recTags.value = res.map(data => new LoadoutTag().fromJSON(JSON.stringify(data)));
