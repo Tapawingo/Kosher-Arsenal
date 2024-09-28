@@ -3,7 +3,7 @@
     <header class="header">
       <h1> 
         {{ tag?.prettyLabel.substring(1) }} 
-        <span v-if="tag?.type !== LoadoutTagType.text">
+        <span v-if="tag && tag?.type !== LoadoutTagType.text">
           ({{ tag?.prettyType }})
         </span>
       </h1>
@@ -42,23 +42,20 @@
   const tag = ref<LoadoutTag>();
   const loadouts = ref<ArsenalLoadoutJson[]>()
 
+  const { data, error } = await useFetch(`/api/tag/label/${ decodeURI(label) }`);
+  if (data.value) {
+    tag.value = new LoadoutTag(data.value.label, data.value.type);
+    loadouts.value = data.value.loadouts;
+  } else if (error.value) {
+    toast.add({ title: "Error", description: error.value.message, color: "red" });
+  }
+
   const viewLoadout = async (loadoutId: string) => {
     const arsenalStore = useArsenalStore();
     arsenalStore.setMode(ArsenalMode.view);
 
     await navigateTo(`/loadout/${ loadoutId }`);
   };
-
-  onMounted(() => {
-    $fetch(`/api/tag/label/${ decodeURI(label) }`).then((res) => {
-      if (res) {
-        tag.value = new LoadoutTag(res.label, res.type);
-        loadouts.value = res.loadouts;
-      }
-    }).catch((e: any) => {
-      toast.add({ title: "Error", description: e.message, color: "red" });
-    })
-  });
 
   definePageMeta({
     layout: 'sitenav'

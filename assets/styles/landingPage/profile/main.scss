@@ -1,0 +1,80 @@
+.page-profile {
+    & > header {
+        margin-top: 1rem;
+        display: flex;
+        gap: 5rem;
+        border: 1px solid $border-color;
+        padding: 1rem 1rem;
+        background-color: $background;
+        border-radius: 0.5rem;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+        img {
+            border-radius: 50%;
+            height: 10rem;
+        }
+
+        div.meta {
+            flex-grow: 1;
+        }
+    }
+
+    & > header > div.meta {
+        div.name {
+            width: 75%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            & > div.username {
+                display: flex;
+                flex-direction: column;
+
+                h1 {
+                    font-size: 3rem;
+                }
+
+                sub {
+                    font-size: 1rem;
+                    color: $muted-foreground;
+                }
+            }
+
+            button {
+                height: fit-content;
+                border-radius: 0.5rem;
+                background-color: $background;
+                border: 1px solid $border-color;
+                color: $foreground;
+                padding: 0.5rem 0.75rem;
+                text-align: center;
+                transition: none;
+
+                &:hover {
+                    background-color: $active-background;
+                    color: $active-foreground;
+                }
+            }
+        }
+
+        div.statistics {
+            margin-top: 2rem;
+            width: 75%;
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            font-size: 1.1rem;
+        }
+
+        div.description {
+            margin-top: 1rem;
+            width: 75%;
+        }
+    }
+
+    section.content {
+        background-color: $background;
+        height: 100%;
+    }
+}

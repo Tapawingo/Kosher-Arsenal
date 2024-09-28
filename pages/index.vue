@@ -1,12 +1,14 @@
 <template>
-  <div class="loadouts-page">
+  <div class="header-tabs">
     <div class="tabs">
-      <button :class="{ active: selectedTab === 'community' }" @click="selectedTab = 'community'">Community Content</button>
+      <button :class="{ active: selectedTab === 'feed' }" @click="" class="disabled">Feed</button>
+      <button :class="{ active: selectedTab === 'community' }" @click="selectedTab = 'community'">Discover Content</button>
       <button :class="{ active: selectedTab === 'personal' }" @click="selectedTab = 'personal'">My Content</button>
     </div>
-
+  </div>
+  <div class="page-loadouts">
     <LoadoutsCommunityContent v-if="selectedTab === 'community'" />
-    <LoadoutsMyContent v-if="selectedTab === 'personal'" />
+    <div v-show="selectedTab === 'personal'"><LoadoutsMyContent /></div>
   </div>
 </template>
 

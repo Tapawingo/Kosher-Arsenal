@@ -17,6 +17,16 @@ export const initializeDB = (db: D1Database): D1Database => {
     FOREIGN KEY (user_id) REFERENCES user(id)
   )`).run();
 
+  /* Create user meta table */
+  db.prepare('DROP TABLE user_meta').run();
+  db.prepare(`CREATE TABLE IF NOT EXISTS user_meta (
+    user_id TEXT NOT NULL PRIMARY KEY,
+    display_name TEXT NOT NULL,
+    biography TEXT NOT NULL,
+    avatar TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+  )`).run();
+
   /* Create loadout table */
   db.prepare(`CREATE TABLE IF NOT EXISTS loadouts (
     id TEXT NOT NULL PRIMARY KEY,
@@ -73,8 +83,6 @@ export const initializeDB = (db: D1Database): D1Database => {
     PRIMARY KEY (collection_id, loadout_id)
   )`).run();
 
-  /* @TODO: many-to-many relationship with tags: https://stackoverflow.com/questions/24799753/database-design-for-apps-using-hashtags */
-  /* @TODO: Tag id should just be the label */
   /* Create tag table */
   // db.prepare('DROP TABLE tag').run();
   db.prepare(`CREATE TABLE IF NOT EXISTS tag (
@@ -106,6 +114,13 @@ export interface DatabaseSession {
   id: string;
   expires_at: number;
   user_id: string;
+};
+
+export interface DatabaseUserMeta {
+  user_id: string;
+  display_name: string;
+  biography: string;
+  avatar: string;
 };
 
 export interface DatabaseLoadout {

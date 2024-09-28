@@ -1,7 +1,26 @@
 @import "../globals";
 
-.app-container {
+div.app-container {
     transition: background-color 0.5s;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+
+    [class^='page-'], [class*=' page-'] {
+        flex-grow: 1;
+    
+        overflow-y: scroll;
+        background: linear-gradient(to right, rgba(128, 128, 128, 0.071) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(128, 128, 128, 0.071) 1px, transparent 1px);
+        background-size: 24px 24px;
+        padding: 0 20rem;
+
+        @include scrollbar;
+    
+        * {
+            transition: background-color 0.5s, border-color 0.5s;
+        }
+    }
 }
 
 html:not(.dark-theme) {
@@ -13,6 +32,7 @@ html:not(.dark-theme) {
 
     @import "sitenav";
     @import "modal";
+    @import "profile/main";
     @import "loadouts/main";
     @import "references/main";
     @import "tag/main";
@@ -28,6 +48,7 @@ html.dark-theme {
 
     @import "sitenav";
     @import "modal";
+    @import "profile/main";
     @import "loadouts/main";
     @import "references/main";
     @import "tag/main";

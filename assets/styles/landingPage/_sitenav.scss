@@ -1,7 +1,10 @@
 /* Used for color vars */
 
+.sitenav-container {
+    width: 100%;
+}
+
 header.sitenav {
-    position: fixed;
     width: 100%;
     margin: 0;
     padding: 0rem 0.25rem;
@@ -11,7 +14,6 @@ header.sitenav {
     background-color: $background ;
     border-bottom: 1px solid $border-color;
     transition: background-color 0.5s;
-    min-height: 4.625rem;
 
     svg {
         max-height: 2.8rem;
@@ -99,21 +101,42 @@ header.sitenav {
         height: 2.8rem;
         display: flex;
         gap: 1rem;
+    }
+}
+
+div.header-tabs {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: $background;
+    border-bottom: 1px solid $border-color;
+
+    div.tabs {
+        display: flex;
+        width: 100%;
 
         button {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 1px solid $border-color;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.2rem;
-            height: 100%;
+            background-color: $background;
+            height: 2.8rem;
+            flex-grow: 1;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            width: 33%;
 
-            &:hover {
+            &.active {
                 background-color: $active-background;
                 color: $active-foreground;
             }
 
+            &.disabled {
+                color: $disabled-foreground;
+                cursor: auto;
+            }
+
+            &:hover:not(.active, .disabled) {
+                background-color: $active-background;
+                color: $active-foreground;
+            }
         }
     }
 }

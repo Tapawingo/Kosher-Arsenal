@@ -87,21 +87,29 @@
   const isNewLoadoutOpen = ref(false);
   const selectedLoadout = ref();
     
-  if (user.value) {
-    /* Get loadouts */
-    $fetch(`/api/loadout/loadouts/${ user.value?.id }`).then((res) => {    
-      myLoadouts.value = res;
-    }).catch((e: any) => {
-      toast.add({ title: "Error", description: e.message, color: "red" });
-    });
-    
-    /* Get buylists */
-    $fetch('/api/buylist/buylists').then((res) => {
-      myBuylists.value = res;
-    }).catch((e: any) => {
-      toast.add({ title: "Error", description: e.message, color: "red" });
-    });
-  }
+  onMounted(async () => {
+    if (user.value) {
+      /* Get loadouts */
+      try {
+        const loadouts = await $fetch(`/api/loadout/loadouts/${ user.value?.id }`);
+        if (loadouts) {
+          myLoadouts.value = loadouts;
+        };
+      } catch (e: any) {
+        toast.add({ title: "Error", description: e.message, color: "red" });
+      }
+      
+      /* Get buylists */
+      try {
+        const buylists = await $fetch('/api/buylist/buylists');
+        if (buylists) {
+          myBuylists.value = buylists;
+        };
+      } catch(e: any) {
+        toast.add({ title: "Error", description: e.message, color: "red" });
+      };
+    }
+  })
 
   /* Open Preview */
   const viewLoadout = async (loadoutId: string) => {
