@@ -101,6 +101,21 @@ header.sitenav {
         height: 2.8rem;
         display: flex;
         gap: 1rem;
+
+        a, button {
+            display: flex;
+            border: 1px solid $border-color;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.2rem;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                color: $active-foreground;
+                background-color: $active-background;
+            }
+        }
     }
 }
 
