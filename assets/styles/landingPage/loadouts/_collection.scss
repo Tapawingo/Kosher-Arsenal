@@ -1,0 +1,23 @@
+div.collection {
+    background-size: cover;
+    background-position: top center;
+    color: white;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: flex-end;
+
+    button {
+        margin-top: 1rem;
+        background-color: $background;
+        color: $foreground;
+        padding: 0.5rem 0.75rem;
+
+        &:hover {
+            background-color: $active-background;
+            color: $active-foreground;
+        }
+    }
+}

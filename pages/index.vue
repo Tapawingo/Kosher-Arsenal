@@ -7,7 +7,7 @@
     </div>
   </div>
   <div class="page-loadouts">
-    <LoadoutsCommunityContent v-if="selectedTab === 'community'" />
+    <div v-show="selectedTab === 'community'"><LoadoutsCommunityContent /></div>
     <div v-show="selectedTab === 'personal'"><LoadoutsMyContent /></div>
   </div>
 </template>

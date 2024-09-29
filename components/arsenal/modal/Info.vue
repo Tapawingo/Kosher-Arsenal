@@ -15,12 +15,12 @@
 
       <UFormGroup label="Upload Image" name="preview">
         <div class="preview-upload">
-        <input name="preview" type="file" @change="onFileChange" accept="image/*" />
-        <UContainer class="preview-upload-preview">
-          <img :src="previewUrl" alt="Preview" v-if="previewUrl" />
-          <p v-else>Preview</p>
-        </UContainer>
-      </div>
+          <input name="preview" type="file" @change="onFileChange" accept="image/*" />
+          <UContainer class="preview-upload-preview">
+            <img :src="previewUrl" alt="Preview" v-if="previewUrl" />
+            <p v-else>Preview</p>
+          </UContainer>
+        </div>
       </UFormGroup>
 
       <div class="button-group">

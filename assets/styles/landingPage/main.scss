@@ -21,6 +21,20 @@ div.app-container {
             transition: background-color 0.5s, border-color 0.5s;
         }
     }
+
+    .loader {
+        border: 0.3rem solid #ffffff;
+        border-top: 0.3rem solid #000000;
+        border-radius: 50%;
+        width: 1.2rem;
+        height: 1.2rem;
+        animation: spin 2s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
 }
 
 html:not(.dark-theme) {
@@ -29,6 +43,11 @@ html:not(.dark-theme) {
     font-family: $main-font, 'Courier New', Courier, monospace;
     background-color: $background;
     color: $foreground;
+
+    .loader {
+        border-color: $foreground;
+        border-top-color: $background;
+    }
 
     @import "sitenav";
     @import "modal";
@@ -45,6 +64,11 @@ html.dark-theme {
     font-family: $main-font, 'Courier New', Courier, monospace;
     background-color: $background;
     color: $foreground;
+
+    .loader {
+        border-color: $foreground;
+        border-top-color: $background;
+    }
 
     @import "sitenav";
     @import "modal";

@@ -18,7 +18,6 @@ export const initializeDB = (db: D1Database): D1Database => {
   )`).run();
 
   /* Create user meta table */
-  db.prepare('DROP TABLE user_meta').run();
   db.prepare(`CREATE TABLE IF NOT EXISTS user_meta (
     user_id TEXT NOT NULL PRIMARY KEY,
     display_name TEXT NOT NULL,

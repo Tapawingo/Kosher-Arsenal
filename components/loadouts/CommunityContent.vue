@@ -21,7 +21,7 @@
         <h2>{{ tag.prettyLabel.replace('#', '') }}</h2>
         <span>{{ tag.loadouts.length }} Loadouts</span>
       </div>
-      <div class="load-message" v-if="!recTags">Loading Tags...</div>
+      <div class="load-message" v-if="!recTags"><div class="loader"></div></div>
       <div class="load-message" v-if="recTags && recTags.length === 0">Could not find any tags. Try again later.</div>
     </div>
   </div>
@@ -45,6 +45,9 @@
           </div>
         </div>
       </div>
+
+      <div class="load-message" v-if="!popLoadouts"><div class="loader"></div></div>
+      <div class="load-message" v-if="popLoadouts && popLoadouts.length === 0">Could not find any loadouts. Try again later.</div>
     </div>
   </div>
 </template>
@@ -68,8 +71,8 @@
   }
 
   const recCollections = ref<Array<LoadoutCollectionJson>>([]);
-  const recTags = ref<LoadoutTag[] | undefined>();
-  const popLoadouts = ref<ArsenalLoadoutJson[]>([]);
+  const recTags = ref<LoadoutTag[]>();
+  const popLoadouts = ref<ArsenalLoadoutJson[]>();
   
   onMounted(() => {
     $fetch(`/api/tag/topTags`).then((res) => {
@@ -78,6 +81,7 @@
       }
     }).catch((e: any) => {
       toast.add({ title: "Error", description: e.message, color: "red" });
+      popLoadouts.value = [];
     });
 
     $fetch(`/api/loadout/loadouts`).then((res) => {
@@ -86,6 +90,7 @@
       };
     }).catch((e: any) => {
       toast.add({ title: "Error", description: e.message, color: "red" });
+      popLoadouts.value = [];
     });
   });
 </script>

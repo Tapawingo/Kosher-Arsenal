@@ -1,4 +1,5 @@
 <template>
+  <ModalProfile v-model:user-meta="user_meta" v-model:is-open="isEditModalOpen" />
   <div class="page-profile">
     <header>
       <img :src="user_meta?.avatar" alt="Avatar">
@@ -8,16 +9,16 @@
             <h1>{{ user_meta?.display_name }}</h1>
             <sub>@{{ user_meta?.username }}</sub>
           </div>
-          <button>Edit profile</button>
+          <button v-if="user?.id === user_meta?.user_id" @click="isEditModalOpen = true">Edit profile</button>
         </div>
         <div class="statistics">
-          <div>? contributions</div>
-          <div>? followers</div>
-          <div>? following</div>
-          <div>? Credebility</div>
+          <div>0 contributions</div>
+          <div>0 followers</div>
+          <div>0 following</div>
+          <div>0 credibility</div>
         </div>
         <div class="description">
-          my description
+          {{ user_meta?.biography }}
         </div>
       </div>
     </header>
@@ -28,10 +29,13 @@
 </template>
 
 <script lang="ts" setup>
+  const user = useUser();
   const route = useRoute();
   const userId = route.params.id;
 
-  const { data: user_meta } = await useFetch(`/api/user/${ userId }`);
+  const { data: user_meta } = await useFetch<any>(`/api/user/${ userId }`);
+
+  const isEditModalOpen = ref(false);
 
   definePageMeta({
     layout: 'sitenav'

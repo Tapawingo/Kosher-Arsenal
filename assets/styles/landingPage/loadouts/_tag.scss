@@ -1,0 +1,13 @@
+div.tag {
+    overflow: hidden;
+    background-color: $background;
+    color: $foreground;
+    width: 18.9%;
+    height: 5.5rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $active-background;
+        color: $active-foreground;
+    }
+}

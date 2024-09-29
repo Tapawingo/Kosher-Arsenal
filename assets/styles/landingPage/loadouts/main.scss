@@ -40,8 +40,13 @@
             height: 20rem;
         }
 
-        &.popular {
+        &.discover {
             height: auto;
+            min-height: 6rem;
+        }
+
+        &.popular {
+            min-height: 10rem;
         }
 
         .body {
@@ -71,45 +76,11 @@
                 color: $muted-foreground;
             }
 
-            div.collection {
-                background-size: cover;
-                background-position: top center;
-                color: white;
-                height: 100%;
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: start;
-                justify-content: flex-end;
+            @import 'collection';
 
-                button {
-                    margin-top: 1rem;
-                    background-color: $background;
-                    color: $foreground;
-                    padding: 0.5rem 0.75rem;
+            @import 'tag';
 
-                    &:hover {
-                        background-color: $active-background;
-                        color: $active-foreground;
-                    }
-                }
-            }
-
-            div.tag {
-                overflow: hidden;
-                background-color: $background;
-                color: $foreground;
-                width: 18.9%;
-                height: fit-content;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: $active-background;
-                    color: $active-foreground;
-                }
-            }
-
-            @import './loadout';
+            @import 'loadout';
 
             div.loadout-new {
                 background-color: $background;
