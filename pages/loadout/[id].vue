@@ -91,11 +91,8 @@
   /* Attempt to load a loadout */
   const route = useRoute();
   const id = route.params.id;
-
-  onMounted(async () => {
-    await arsenalStore.fetchLoadout(id as string);
-    arsenalStore.fetchBuylist();
-  });
+  await arsenalStore.fetchLoadout(id as string);
+  arsenalStore.fetchBuylist();
 
   /* Help button */
   const helpIsOpen = ref(false);
