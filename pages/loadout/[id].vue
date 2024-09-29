@@ -134,27 +134,15 @@
 
   /* SEO Site Meta */
   const getSEOTitle = () => { 
-    if (arsenalStore.arsenalState == ArsenalStates.ready) {
-      return arsenalStore.loadout.title
-    }
-
-    return 'Kosher Arsenal'
+    return arsenalStore.loadout.title
   };
 
   const getSEODescription = () => {
-    if (arsenalStore.arsenalState == ArsenalStates.ready) {
-      return arsenalStore.loadout.description
-    }
-
-    return 'Kosher Arsenal is a tool to visualize and/or organize loadouts, firearms or any other category users see fit.'
+    return arsenalStore.loadout.description
   };
 
   const getSEOImage = () => {
-    if (arsenalStore.loadout.preview.path) {
-      return arsenalStore.loadout.preview.path
-    }
-
-    return '/logo-long.png'
+    return arsenalStore.loadout.preview.path
   };
 
   useSeoMeta({
