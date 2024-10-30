@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isPhone" class="arsenal">
+  <div v-if="!isPhone && arsenalStore.viewMode !== ArsenalViewMode.list" class="arsenal">
     <div v-if="arsenalStore.arsenalState == ArsenalStates.loading" class="arsenal-loading">
       <Icon name="i-heroicons:arrow-path-20-solid" />
       <div>Loading</div>
@@ -69,6 +69,11 @@
       <ArsenalCategoriesAddCategory v-if="arsenalStore.selectedItem && arsenalStore.isEditMode()" is-sub/>
     </div>
   </div>
+
+  <!-- List Mode -->
+  <div v-if="arsenalStore.viewMode === ArsenalViewMode.list" class="arsenal-list-view">
+    <ArsenalListMode />
+  </div>
   
   <div v-if="isPhone">
     Kosher Arsenal currently does not support mobile devices.
@@ -78,7 +83,7 @@
 <script lang="ts" setup>
   import { useMediaQuery, useMagicKeys } from '@vueuse/core'
   import { VueDraggable } from 'vue-draggable-plus';
-  import { ArsenalMode, ArsenalStates } from '~/stores/arsenal';
+  import { ArsenalMode, ArsenalStates, ArsenalViewMode } from '~/stores/arsenal';
   
   const { ctrl } = useMagicKeys();
   const isPhone: Ref<boolean> = useMediaQuery('(max-width: 768px)');
@@ -93,6 +98,11 @@
   const id = route.params.id;
   await arsenalStore.fetchLoadout(id as string);
   arsenalStore.fetchBuylist();
+
+  /* Set mode and view mode */
+  console.log(route.query.viewMode ?? 'no');
+  arsenalStore.setViewMode(parseInt(route.query.viewMode as string) ?? ArsenalViewMode.normal);
+  //arsenalStore.setMode(parseInt(route.query.mode as string) ?? ArsenalMode.view);
 
   /* Help button */
   const helpIsOpen = ref(false);

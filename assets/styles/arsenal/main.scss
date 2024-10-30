@@ -6,6 +6,7 @@ html:not(.dark-theme) {
     font-family: $main-font, 'Courier New', Courier, monospace;
 
     @import "arsenal";
+    @import "list-view";
     @import "modal";
     @import "item";
 }
@@ -16,6 +17,7 @@ html.dark-theme {
     font-family: $main-font, 'Courier New', Courier, monospace;
 
     @import "arsenal";
+    @import "list-view";
     @import "modal";
     @import "item";
 }

@@ -1,0 +1,57 @@
+.list-category {
+    background-color: $background;
+    margin-bottom: 1px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: visible;
+
+    .icon {
+        width: 50px;
+        img {
+            width: 100%;
+        }
+    }
+
+    .title {
+        padding: 1.25rem 0.5rem 1.25rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        height: 4rem;
+
+        & > span {
+            width: 62%;
+            flex-grow: 1;
+            font-size: 1.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-height: 1.5rem;
+            max-height: 1.5rem * 2;
+        }
+    }
+
+    &.selected > .title {
+        background-color: $active-background;
+    }
+
+    & > .body {
+        background-color: $background;
+        transition: 0.25s linear height;
+        padding: 0rem 0rem;
+        padding-bottom: 0;
+        font-size: 0.75rem;
+        overflow-y: auto;
+        cursor: auto;
+        height: 0px;
+
+        @include scrollbar(0.3rem);
+    }
+
+    &.selected > .body {
+        padding: 0.1rem;
+    }
+}

@@ -10,6 +10,11 @@ export enum ArsenalMode {
   edit
 }
 
+export enum ArsenalViewMode {
+  normal,
+  list
+}
+
 export enum ArsenalStates {
   loading,
   ready,
@@ -29,12 +34,29 @@ declare interface BuyListItem {
   price: ItemPrice;
 }
 
+const setQueryParam = (key: string, value: any) => {
+  const router = useRouter();
+  const route = useRoute();
+
+  if (route.query[key] === value) return
+
+  const query = { ...route.query }
+  if (value) {
+    query[key] = value;
+  } else {
+    delete query[key];
+  }
+
+  router.replace({ query });
+}
+
 const arsenalEvents: { id: Number, event: string, callback: Function }[] = [];
 
 export const useArsenalStore = defineStore('arsenal', {
   state: () => {
     return {
       mode: ref<ArsenalMode> (ArsenalMode.view),
+      viewMode: ref<ArsenalViewMode> (ArsenalViewMode.normal),
       arsenalState: ref<ArsenalStates> (ArsenalStates.loading),
       stateMessage: ref<undefined | string> (),
       loadout: ref<ArsenalLoadoutJson> (new ArsenalLoadout().toJSON()),
@@ -96,10 +118,17 @@ export const useArsenalStore = defineStore('arsenal', {
     setMode (mode: ArsenalMode): void { 
       let oldMode = this.mode;
       this.mode = mode;
+
+      setQueryParam('mode', mode);
       this.trigger('onChangeMode', {
         new: mode,
         old: oldMode
       });
+    },
+
+    setViewMode (mode: ArsenalViewMode): void {
+      setQueryParam('viewMode', mode);
+      this.viewMode = mode;
     },
 
     isPreviewMode(): boolean {
