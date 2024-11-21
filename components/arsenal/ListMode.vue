@@ -31,7 +31,9 @@
 
         </div>
         <div class="preview">
-            <img :src="arsenalStore.loadout.preview.path" alt="Preview">
+            <ClientOnly>
+                <img :src="arsenalStore.loadout.preview.path" fit="cover" alt="Preview" />
+            </ClientOnly>
         </div>
         <ArsenalInfo />
     </div>

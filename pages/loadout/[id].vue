@@ -100,9 +100,10 @@
   arsenalStore.fetchBuylist();
 
   /* Set mode and view mode */
-  console.log(route.query.viewMode ?? 'no');
-  arsenalStore.setViewMode(parseInt(route.query.viewMode as string) ?? ArsenalViewMode.normal);
-  //arsenalStore.setMode(parseInt(route.query.mode as string) ?? ArsenalMode.view);
+  let viewMode = parseInt(route.query.viewMode as string);
+  let mode = parseInt(route.query.mode as string);
+  arsenalStore.setViewMode(!isNaN(viewMode) ? viewMode : ArsenalViewMode.normal);
+  arsenalStore.setMode(!isNaN(mode) ? mode : ArsenalMode.view);
 
   /* Help button */
   const helpIsOpen = ref(false);

@@ -132,15 +132,23 @@ export const useArsenalStore = defineStore('arsenal', {
     },
 
     isPreviewMode(): boolean {
-      return this.mode === ArsenalMode.view
+      return this.mode === ArsenalMode.view;
     },
 
     isBuylistMode(): boolean {
-      return this.mode === ArsenalMode.buylist
+      return this.mode === ArsenalMode.buylist;
     },
 
     isEditMode(): boolean {
-      return this.mode === ArsenalMode.edit
+      return this.mode === ArsenalMode.edit;
+    },
+
+    isNormalViewMode(): boolean {
+      return this.viewMode === ArsenalViewMode.normal;
+    },
+
+    isListViewMode(): boolean {
+      return this.viewMode === ArsenalViewMode.list;
     },
 
     async fetchLoadout (loadoutID: string) { 

@@ -13,6 +13,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxt/ui',
+    '@nuxt/icon',
     "@nuxt/image",
     "@pinia/nuxt",
     '@nuxthub/core',
@@ -24,5 +25,11 @@ export default defineNuxtConfig({
     cache: true,
     database: true,
     kv: false
+  },
+
+  icon: {
+    serverBundle: {
+      collections: ['material-symbols']
+    }
   }
 })
