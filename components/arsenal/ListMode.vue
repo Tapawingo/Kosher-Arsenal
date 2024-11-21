@@ -2,6 +2,14 @@
     <div class="background"></div>
     <div class="list-container">
         <div class="panel">
+            <!-- <div class="title">
+                <UTooltip text="Expand All" :popper="{ placement: 'top' }" :ui="classOverride">
+                    <Icon name="material-symbols:expand-all" @click.stop="arsenalStore.setViewMode(ArsenalViewMode.list)"/>
+                </UTooltip>
+                <UTooltip text="Collapse All" :popper="{ placement: 'top' }" :ui="classOverride">
+                    <Icon name="material-symbols:collapse-all" @click.stop="arsenalStore.setViewMode(ArsenalViewMode.normal)"/>
+                </UTooltip>
+            </div> -->
             <ArsenalListCategory v-for="category in arsenalStore.loadout.categories" :category="category" />
         </div>
     </div>
@@ -58,6 +66,13 @@
             mode: ArsenalMode.buylist
         }
     ]);
+
+    const classOverride = {
+        background: '',
+        base: "arsenal-tooltip",
+        ring: '',
+        color: "white"
+    };
 
     const selectedArsenalMode = ref(arsenalModeSelect.value[arsenalStore.mode]);
 

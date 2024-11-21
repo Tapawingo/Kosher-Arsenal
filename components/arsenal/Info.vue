@@ -6,7 +6,7 @@
         <UTooltip v-if="arsenalStore.isEditMode()" text="Edit Loadout Info" :popper="{ placement: 'top' }" :ui="classOverride">
           <Icon name="material-symbols:edit" @click.stop="isInfoModalOpen = true"/>
         </UTooltip>
-        <UTooltip v-if="!arsenalStore.isEditMode() && arsenalStore.isNormalViewMode()" text="List Mode (Alpha Preview)" :popper="{ placement: 'top' }" :ui="classOverride">
+        <UTooltip v-if="!arsenalStore.isEditMode() && arsenalStore.isNormalViewMode()" text="List Mode" :popper="{ placement: 'top' }" :ui="classOverride">
           <Icon name="material-symbols:list" @click.stop="arsenalStore.setViewMode(ArsenalViewMode.list)"/>
         </UTooltip>
         <UTooltip v-if="!arsenalStore.isEditMode() && arsenalStore.isListViewMode()" text="Normal Mode" :popper="{ placement: 'top' }" :ui="classOverride">

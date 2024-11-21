@@ -3,9 +3,18 @@
     display: block;
 }
 
+.list-item:first-child {
+    margin-top: 1rem;
+}
+
+.list-item:last-child {
+    margin-bottom: 1rem;
+}
+
 .list-item, .preview-container .list-item {
-    background-color: $background-100;
-    margin-bottom: 1px;
+    background-color: darken($background, 10%);
+    list-style-type: none;
+    margin: 1px 1rem;
     cursor: pointer;
     user-select: none;
     position: relative;
@@ -58,21 +67,37 @@
     }
 
     & > .body {
-        background-color: $background-100;
-        transition: 0.25s linear height;
+        background-color: darken($background, 10%);
+        transition: 0.25s linear height, 0.25s linear min-height;
         padding: 0rem 0.2rem;
         padding-bottom: 0;
         font-size: 0.75rem;
         overflow-y: scroll;
         cursor: auto;
         height: 0px;
+        min-height: 0px;
 
         @include scrollbar(0.3rem);
+
+        & > span {
+            display: block;
+            width: 100%;
+        }
+
+        & > .list-category {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        & > .list-category:last-child {
+            margin-bottom: 1rem;
+        }
     }
 
     &.selected > .body {
-        padding: 0.5rem;
-        height: 6rem;
+        & > span {
+            padding: 0.5rem;
+        }
     }
 
     .title > .preview {

@@ -28,6 +28,15 @@
             height: 100%;
 
             @include scrollbar(0.3rem);
+
+            & > .title {
+                padding: 0.15rem;
+                background-color: $background-200;
+                font-weight: 500;
+                font-size: 1.3rem;
+                text-align: center;
+                margin-bottom: 1px;
+            }
         }
     }
 

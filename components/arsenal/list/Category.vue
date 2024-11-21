@@ -9,7 +9,7 @@
       <span>{{ props.category.title }}</span>
     </div>
 
-    <div ref="itemContainerEl" class="body" @click.stop :style="{ 'height': `${ bodyHeight }px` }">
+    <div ref="itemContainerEl" class="body" @click.stop>
       <ArsenalListItem v-for="item in category.items" :item="item" />
     </div>
   </div>
@@ -31,9 +31,23 @@
 
   const toggleCategory = () => {
     categoryState.value = !categoryState.value;
+    
+    setHeight();
   }
 
-  const bodyHeight = computed(() => {
+  const setHeight = () => {
+    if (!itemContainerEl.value) return;
+    itemContainerEl.value.style.height = `${ calculateHeight() }px`;
+    itemContainerEl.value.style.minHeight = `${ calculateHeight() }px`;
+
+    if (!categoryState.value) return;
+    setTimeout(() => {
+      if (!itemContainerEl.value) return;
+      itemContainerEl.value.style.height = `auto`;
+    }, 300);
+  }
+
+  const calculateHeight = () => {
     if (!itemContainerEl.value || !categoryState.value) return 0;
     
     let height = 0;
@@ -45,9 +59,5 @@
     });
 
     return height + 5;
-  });
+  }
 </script>
-
-<style>
-
-</style>

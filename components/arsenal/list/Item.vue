@@ -22,7 +22,10 @@
       </div> -->
 
     </div>
-    <div class="body" @click.stop>{{ item.description }}</div>
+    <div ref="itemBodyEl" class="body" @click.stop>
+      <span>{{ item.description }}</span>
+      <ArsenalListCategory v-for="category in item.categories" :category="category" />
+    </div>
   </div>
 </template>
 
@@ -36,32 +39,45 @@
   });
 
   const arsenalStore = useArsenalStore();
-  const { selectedItem, selectedSubItem } = storeToRefs(arsenalStore)
   
   /* Item select state */
   const itemState = ref(false);
+  const itemBodyEl = ref();
   const selectedClass = reactive({
     selected: itemState
-  })
-
-  watch(props.isSub ? selectedSubItem : selectedItem, () => {
-    if (!props.isSub && selectedItem.value != props.item) {
-      itemState.value = false;
-      arsenalStore.setSelectedSubCategory(null);
-    } else if (props.isSub && selectedSubItem.value != props.item) {
-      itemState.value = false;
-    }
   })
 
   const toggleItem = () => {
     itemState.value = !itemState.value;
     emit('onSelectToggle', itemState.value);
 
-    if (props.isSub) {
-      arsenalStore.setSelectedSubItem(itemState.value ? props.item : null);
-    } else {
-      arsenalStore.setSelectedItem(itemState.value ? props.item : null);
-    }
+    setHeight();
+  }
+
+  const setHeight = () => {
+    if (!itemBodyEl.value) return;
+    itemBodyEl.value.style.height = `${ calculateHeight() }px`;
+    itemBodyEl.value.style.minHeight = `${ calculateHeight() }px`;
+
+    if (!itemState.value) return;
+    setTimeout(() => {
+      if (!itemBodyEl.value) return;
+      itemBodyEl.value.style.height = `auto`;
+    }, 300);
+  }
+
+  const calculateHeight = () => {
+    if (!itemBodyEl.value || !itemState.value) return 0;
+    
+    let height = 0;
+    Array.from(itemBodyEl.value.children).forEach((child) => {
+      const styles = window.getComputedStyle(child as HTMLElement);
+      const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+  
+      height += Math.ceil((child as HTMLElement).offsetHeight + margin);
+    });
+
+    return Math.max(height + 5, 96);
   }
 </script>
 
