@@ -63,7 +63,8 @@
             align-items: center;
 
             img {
-                height: 100%;
+                max-height: 100%;
+                max-width: 100%;
                 margin: 0;
             }
         }
