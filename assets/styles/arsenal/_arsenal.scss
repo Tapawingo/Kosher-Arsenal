@@ -48,10 +48,10 @@
         .panel {
             background-color: $background;
             border: 1px solid $border-color;
-            overflow-y: auto;
+            //overflow-y: auto;
             height: 100%;
 
-            @include scrollbar(0.3rem);
+            //@include scrollbar(0.3rem);
     
             & > .title {
                 padding: 0.15rem;
