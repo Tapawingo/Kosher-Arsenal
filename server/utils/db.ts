@@ -18,6 +18,13 @@ export const initializeDB = (db: D1Database): D1Database => {
     FOREIGN KEY (user_id) REFERENCES user(id)
   )`).run();
 
+  db.prepare(`CREATE TABLE IF NOT EXISTS password_reset_token (
+    id TEXT NOT NULL PRIMARY KEY,
+    expires INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+  )`).run();
+
   /* Create session table */
   db.prepare(`CREATE TABLE IF NOT EXISTS session (
     id TEXT NOT NULL PRIMARY KEY,
@@ -121,6 +128,12 @@ export interface DatabaseUser {
 };
 
 export interface DatabaseEmailToken {
+  id: string;
+  expires: number;
+  user_id: string;
+}
+
+export interface DatabasePasswordToken {
   id: string;
   expires: number;
   user_id: string;

@@ -9,6 +9,9 @@
       <UFormGroup label="password" name="password">
         <UInput type="password" v-model="state.password" />
       </UFormGroup>
+      <p>
+        <NuxtLink to="/password-reset">Forgot password</NuxtLink> <br/>
+      </p>
 
       <UButton type="submit">Submit</UButton>
     </UForm>
@@ -79,6 +82,12 @@
       margin-bottom: 10px;
       font-size: 3rem;
       font-weight: 600;
+    }
+
+    form p {
+      margin-top: 5px;
+      font-size: small;
+      text-align: center
     }
   }
 

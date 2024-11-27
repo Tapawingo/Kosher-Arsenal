@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   }
   
   try {
-    await db.prepare('UPDATE user SET email = ?2 WHERE id = ?1').bind(user.id, body.email).run();
+    await db.prepare('UPDATE user SET email = ?2 WHERE id = ?1').bind(user.id, body.email.toLowerCase()).run();
   } catch (e) {
     console.error(e);
     throw createError({

@@ -47,7 +47,7 @@ export default eventHandler(async (event) => {
 
   try {
     await db.prepare('INSERT INTO user (id, username, email, password, salt) VALUES(?, ?, ?, ?, ?)')
-      .bind(userId, username, email, hashedPassword, salt).run();
+      .bind(userId, username, email.toLowerCase(), hashedPassword, salt).run();
     
       const session = await lucia.createSession(userId, {});
       appendHeader(event,
