@@ -26,10 +26,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  console.log(body);
-  
   try {
-    db.prepare(
+    await db.prepare(
       'INSERT INTO user_meta (user_id, display_name, biography, avatar) ' +
       'VALUES(?1, ?2, ?3, ?4) ' +
       'ON CONFLICT (user_id) DO UPDATE ' +
