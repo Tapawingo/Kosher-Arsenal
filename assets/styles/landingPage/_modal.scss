@@ -1,4 +1,4 @@
-.modal {
+.modal, .email-modal {
     color: $foreground;
 
     /* Full screen background cover */
@@ -6,7 +6,7 @@
         background-color: $modal-background;
     }
 
-    form.modal-body {
+    div.modal-body, form.modal-body {
         background-color: $background;
         color: $foreground;
         border: 1px solid $border-color;

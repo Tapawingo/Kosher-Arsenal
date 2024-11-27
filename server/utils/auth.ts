@@ -19,6 +19,8 @@ export function initializeLucia(D1: D1Database) {
     },
     getUserAttributes: (attributes) => {
       return {
+        email: attributes.email,
+        emailVerified: attributes.email_verified,
         username: attributes.username
       }
     }
@@ -33,5 +35,7 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
+  email: string;
+  email_verified: number;
   username: string;
 }

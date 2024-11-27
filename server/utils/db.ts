@@ -4,9 +4,18 @@ export const initializeDB = (db: D1Database): D1Database => {
   /* Create user table */
   db.prepare(`CREATE TABLE IF NOT EXISTS user (
     id TEXT NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE DEFAULT 'unset',
+    email_verified INT NOT NULL DEFAULT 0,
     username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     salt TEXT NOT NULL
+  )`).run();
+
+  db.prepare(`CREATE TABLE IF NOT EXISTS email_verification_token (
+    id TEXT NOT NULL PRIMARY KEY,
+    expires INTEGER NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(id)
   )`).run();
 
   /* Create session table */
@@ -104,10 +113,18 @@ export const initializeDB = (db: D1Database): D1Database => {
 
 export interface DatabaseUser {
   id: string;
+  email: string;
+  email_verified: number;
   username: string;
   password: string;
   salt: string;
 };
+
+export interface DatabaseEmailToken {
+  id: string;
+  expires: number;
+  user_id: string;
+}
 
 export interface DatabaseSession {
   id: string;

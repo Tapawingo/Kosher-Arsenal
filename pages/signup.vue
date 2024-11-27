@@ -3,6 +3,9 @@
     <h1>Sign Up</h1>
 
     <UForm ref="formEl" :schema="schema" :state="state" @submit="onSubmit">
+      <UFormGroup label="email" name="email">
+        <UInput v-model="state.email" />
+      </UFormGroup>
       <UFormGroup label="username" name="username">
         <UInput v-model="state.username" />
       </UFormGroup>
@@ -31,6 +34,7 @@
     .min(3, "Must be at least 3 Characters")
     .max(30, "Must not be longer than 30 characters")
     .required('Required'),
+    email: string().email('Invalid Email').required('Required'),
     password: string()
     .min(8, "Must be at least 8 characters")
     .max(50, "Must not be longer than 50 characters")
@@ -42,6 +46,7 @@
   const formEl = ref();
   const state = reactive({
     username: undefined,
+    email: undefined,
     password: undefined
   });
 

@@ -1,4 +1,6 @@
 <template>
+  <LoadoutsModalMissingEmail v-if="!emailSet" />
+
   <div class="header-tabs">
     <div class="tabs">
       <button :class="{ active: selectedTab === 'feed' }" @click="" class="disabled">Feed</button>
@@ -16,10 +18,14 @@
   /* Users should have a credibility rating. once the rating is above a certain number content can be posted without a check. non credible users will have their shit tagged */
 
   const selectedTab = ref('community'); /* If user is not logged in community tab should be default */
+  const user = useUser();
+
+  const emailSet = ref(user.value?.email !== 'unset')
 
   definePageMeta({
     layout: 'sitenav'
   });
+
 </script>
 
 <style lang="scss">
