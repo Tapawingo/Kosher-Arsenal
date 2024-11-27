@@ -48,10 +48,48 @@
         .panel {
             background-color: $background;
             border: 1px solid $border-color;
-            //overflow-y: auto;
             height: 100%;
+            //min-width: 18rem;
 
-            //@include scrollbar(0.3rem);
+            & > .items-container {
+                width: 200%;
+                height: calc(100vh - 49px);
+                overflow-y: auto;
+                
+                &::-webkit-scrollbar {
+                    width: 0.1rem;
+                    background-color: rgba(43, 43, 43, 0);
+                    position: absolute;
+                }
+            
+                &::-webkit-scrollbar-thumb {
+                    border-radius: 10px;
+                    background-color: rgb(43, 43, 43);
+                }
+            
+                &::-webkit-scrollbar-track {
+                    border-radius: 10px;
+                    background-color: rgba(43, 43, 43, 0);
+                }
+            }
+
+            & > .items-container:not(.isSub) {
+                direction: rtl;
+
+                & > div {
+                    direction: ltr;
+                    margin-right: 50%;
+                }
+            }
+
+            & > .items-container.isSub {
+                direction: ltr;
+                margin-left: -100%;
+
+                & > div {
+                    margin-left: 50%;
+                }
+            }
     
             & > .title {
                 padding: 0.15rem;

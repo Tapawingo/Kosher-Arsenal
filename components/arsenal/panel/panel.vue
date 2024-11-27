@@ -2,12 +2,14 @@
   <div class="category-panel" @contextmenu.prevent="onContextMenu" ref="PanelRoot">
     <div v-if="category" class="panel">
       <div class="title">{{ category?.title }}</div>
-      <div v-if="!refresh">
+      <div ref="itemContainerEl" class="items-container" :class="{ isSub: props.isSub }" v-if="!refresh">
         <VueDraggable @end="onDrop" v-model="category.items" :disabled="!ctrl" :sort=true :swap-threshold="0.5">
           <ArsenalPanelItem v-for="item in category?.items" :item="item" :key="item.position" :is-sub="props.isSub"/>
         </VueDraggable>
+        <div>
+          <ArsenalPanelAddItem v-if="category && isEditMode" :is-sub="props.isSub" />
+        </div>
       </div>
-      <ArsenalPanelAddItem v-if="category && isEditMode" :is-sub="props.isSub" />
       <div class="total-price" v-if="arsenalStore.isBuylistMode()">
         <span>Total (WIP):</span>
         <span class=price>0.00 €</span>
