@@ -79,7 +79,6 @@
       return toast.add({ title: 'Error', description: result.error.value.data?.message, color: "red" });
     }
 
-    const arsenalStore = useArsenalStore();
     await navigateTo(`/loadout/${ result.data.value }?mode=2`);
   }
 </script>

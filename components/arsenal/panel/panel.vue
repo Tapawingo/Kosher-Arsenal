@@ -74,7 +74,7 @@
       title: arsenalStore.clipboard.title,
       description: arsenalStore.clipboard.description,
       preview: arsenalStore.clipboard.preview,
-      categories: arsenalStore.clipboard.categories
+      categories: props.isSub ? [] : arsenalStore.clipboard.categories
     }
 
     let state;

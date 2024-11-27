@@ -11,6 +11,7 @@ export default eventHandler(async (event) => {
   const { data: body } = await readBody<IBody>(event);
 
   if (!event.context.session) {
+    console.error('Invalid Session');
     throw createError({
       statusCode: 403
     });
@@ -18,6 +19,7 @@ export default eventHandler(async (event) => {
 
   const { session, user } = await lucia.validateSession(event.context.session.id);
   if (!session) {
+    console.error('Invalid User');
     throw createError({
       message: 'Unauthenticated User',
       statusCode: 403
@@ -42,6 +44,7 @@ export default eventHandler(async (event) => {
   try {
     await schema.validate(body)
   } catch (e: any) {
+    console.error(e);
     throw createError({
       message: e.message,
       statusCode: 400
@@ -66,7 +69,7 @@ export default eventHandler(async (event) => {
     ).run();
 
   } catch (e: any) {
-    console.log(e.message);
+    console.log(e);
     throw createError({
       message: e.message,
       statusCode: 500

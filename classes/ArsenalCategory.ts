@@ -34,7 +34,11 @@ export class ArsenalCategory {
 
   public toJSON(): ArsenalCategoryJson {
     const items: Array<ArsenalItemJson> = this.items.map((item: ArsenalItem) => {
-      return item.toJSON()
+      if (item.toJSON) {
+        return item.toJSON();
+      } else {
+        return item;
+      }
     });
 
     return {

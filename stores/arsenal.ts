@@ -210,6 +210,7 @@ export const useArsenalStore = defineStore('arsenal', {
           body: { data: this.loadout }
         });
       } catch (e: any) {
+        console.error(e);
         toast.add({
           title: 'Error',
           description: `Save failed: ${ e.message }`,

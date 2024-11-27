@@ -113,25 +113,16 @@
 
   /* Open Preview */
   const viewLoadout = async (loadoutId: string) => {
-    const arsenalStore = useArsenalStore();
-    arsenalStore.setMode(ArsenalMode.view);
-
     await navigateTo(`/loadout/${ loadoutId }`);
   };
 
   /* Open buylist */
   const viewBuylist = async (loadoutId: string) => {
-    const arsenalStore = useArsenalStore();
-    arsenalStore.setMode(ArsenalMode.buylist);
-
     await navigateTo(`/loadout/${ loadoutId }?mode=1`);
   };
 
   /* Open edit */
   const editLoadout = async (loadoutId: string) => {
-    const arsenalStore = useArsenalStore();
-    arsenalStore.setMode(ArsenalMode.edit);
-
     await navigateTo(`/loadout/${ loadoutId }?mode=2`);
   };
 
