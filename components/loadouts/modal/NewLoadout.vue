@@ -80,7 +80,6 @@
     }
 
     const arsenalStore = useArsenalStore();
-    arsenalStore.setMode(ArsenalMode.edit);
-    await navigateTo(`/loadout/${ result.data.value }`);
+    await navigateTo(`/loadout/${ result.data.value }?mode=2`);
   }
 </script>

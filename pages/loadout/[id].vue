@@ -103,7 +103,10 @@
   let viewMode = parseInt(route.query.viewMode as string);
   let mode = parseInt(route.query.mode as string);
   arsenalStore.setViewMode(!isNaN(viewMode) ? viewMode : ArsenalViewMode.normal);
-  arsenalStore.setMode(!isNaN(mode) ? mode : ArsenalMode.view);
+
+  if (mode === ArsenalMode.edit && user.value?.id === arsenalStore.loadout.owner) {
+    arsenalStore.setMode(!isNaN(mode) ? mode : ArsenalMode.view);
+  }
 
   /* Help button */
   const helpIsOpen = ref(false);

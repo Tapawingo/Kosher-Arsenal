@@ -124,7 +124,7 @@
     const arsenalStore = useArsenalStore();
     arsenalStore.setMode(ArsenalMode.buylist);
 
-    await navigateTo(`/loadout/${ loadoutId }`);
+    await navigateTo(`/loadout/${ loadoutId }?mode=1`);
   };
 
   /* Open edit */
@@ -132,7 +132,7 @@
     const arsenalStore = useArsenalStore();
     arsenalStore.setMode(ArsenalMode.edit);
 
-    await navigateTo(`/loadout/${ loadoutId }`);
+    await navigateTo(`/loadout/${ loadoutId }?mode=2`);
   };
 
   const loadoutActions = [
