@@ -144,34 +144,22 @@
   };
 
   /* SEO Site Meta */
-  const getSEOTitle = () => { 
-    return arsenalStore.loadout.title
-  };
-
-  const getSEODescription = () => {
-    return arsenalStore.loadout.description
-  };
-
-  const getSEOImage = () => {
-    return arsenalStore.loadout.preview.path
-  };
-
   useSeoMeta({
-    title: getSEOTitle,
-    description: getSEODescription,
+    title: arsenalStore.loadout.title,
+    description: arsenalStore.loadout.description,
     applicationName: 'Kosher Arsenal',
     author: 'JSOK',
     
-    ogTitle: getSEOTitle,
-    ogDescription: getSEODescription,
-    ogImage: getSEOImage,
+    ogTitle: arsenalStore.loadout.title,
+    ogDescription: arsenalStore.loadout.description,
+    ogImage: arsenalStore.loadout.preview.path,
     ogImageAlt: 'Kosher Arsenal',
     ogUrl: '',
 
     twitterCard: 'app',
-    twitterTitle: getSEOTitle,
-    twitterDescription: getSEODescription,
-    twitterImage: getSEOImage,
+    twitterTitle: arsenalStore.loadout.title,
+    twitterDescription: arsenalStore.loadout.description,
+    twitterImage: arsenalStore.loadout.preview.path,
   })
 </script>
 
