@@ -23,12 +23,9 @@ export default defineEventHandler(async (event) => {
       statusCode: 403
     });
   }
-
-  console.log(body);
   
   try {
-    db.prepare('UPDATE user SET email = ?2 WHERE id = ?1').bind(user.id, body.email).run();
-
+    await db.prepare('UPDATE user SET email = ?2 WHERE id = ?1').bind(user.id, body.email).run();
   } catch (e) {
     console.error(e);
     throw createError({
