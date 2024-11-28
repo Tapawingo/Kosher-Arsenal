@@ -116,6 +116,7 @@ import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
       { property: 'og:image', content: loadoutData.value?.preview?.path },
       { property: 'og:image:alt', content: 'Kosher Arsenal' },
       { property: 'og:url', content: 'https://kosher-arsenal.com' },
+      { property: 'og:site_name', content: 'Kosher Arsenal' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: loadoutData.value?.title },
       { name: 'twitter:description', content: loadoutData.value?.description },
