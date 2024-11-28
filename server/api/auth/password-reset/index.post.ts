@@ -11,11 +11,12 @@ export default defineEventHandler(async (event) => {
   const db = event.context.db;
 	const { email } = await readBody<IBody>(event);
 
-	if (!await string().email().isValid(email)) {
-		throw createError({ status: 400, message: "Invalid email" });
-	}
-
+  
 	try {
+    if (!await string().email().isValid(email)) {
+      throw createError({ status: 400, message: "Invalid email" });
+    }
+    
     const user = await db.prepare(`SELECT * FROM user WHERE email = ?1`).bind(email).first<DatabaseUser>();
 		if (!user) {
 			throw createError({ status: 400, message: "User does not exist" });
