@@ -151,27 +151,22 @@ import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   };
 
   /* SEO Site Meta */
-  const { data: loadoutData } = await useLazyFetch<ArsenalLoadoutJson>(`/api/loadout/${ id as string }`); // Inefficient bandaid for bug with useSEOMeta composable);
-
-  if (loadoutData.value) {
-    useSeoMeta({
-      title: loadoutData.value.title,
-      description: loadoutData.value.description,
-      applicationName: 'Kosher Arsenal',
-      author: 'JSOK',
-      
-      ogTitle: loadoutData.value.title,
-      ogDescription: loadoutData.value.description,
-      ogImage: loadoutData.value.preview.path,
-      ogImageAlt: 'Kosher Arsenal',
-      ogUrl: 'https://kosher-arsenal.com',
-  
-      twitterCard: 'app',
-      twitterTitle: loadoutData.value.title,
-      twitterDescription: loadoutData.value.description,
-      twitterImage: loadoutData.value.preview.path,
-    });
-  }
+  const { data: loadoutData } = await useFetch<ArsenalLoadoutJson>(`/api/loadout/${ id as string }`); // Inefficient bandaid for bug with useSEOMeta composable);
+  useHead({
+    title: loadoutData.value?.title,
+    meta: [
+      { name: 'description', content: loadoutData.value?.description },
+      { property: 'og:title', content: loadoutData.value?.title },
+      { property: 'og:description', content: loadoutData.value?.description },
+      { property: 'og:image', content: loadoutData.value?.preview?.path },
+      { property: 'og:image:alt', content: 'Kosher Arsenal' },
+      { property: 'og:url', content: 'https://kosher-arsenal.com' },
+      { name: 'twitter:card', content: 'app' },
+      { name: 'twitter:title', content: loadoutData.value?.title },
+      { name: 'twitter:description', content: loadoutData.value?.description },
+      { name: 'twitter:image', content: loadoutData.value?.preview?.path },
+    ]
+  });
 </script>
 
 <style lang="scss">
