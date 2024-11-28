@@ -84,7 +84,7 @@ div.loadout {
 
             p {
                 margin: 0;
-                height: 4.3rem;
+                height: 4.1rem;
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
@@ -109,6 +109,7 @@ div.loadout {
     }
 
     div.actions {
+        padding: 0 0.5rem;
         margin-top: 0.3rem;
         display: flex;
         justify-content: space-between;
