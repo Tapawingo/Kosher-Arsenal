@@ -173,6 +173,19 @@ export const useArsenalStore = defineStore('arsenal', {
 
     },
 
+    loadLoadout (loadout: ArsenalLoadoutJson | null) {
+      this.arsenalState = ArsenalStates.loading;
+
+      if (loadout) {
+        this.loadout = loadout;
+        this.arsenalState = ArsenalStates.ready;
+      } else {        
+        this.arsenalState = ArsenalStates.error;
+        this.stateMessage = 'Loadout not found';
+      }
+      this.trigger('onLoadoutFetched', {});
+    },
+
     async fetchBuylist () {
       this.arsenalState = ArsenalStates.loading;
 

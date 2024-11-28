@@ -100,7 +100,30 @@ import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   /* Attempt to load a loadout */
   const route = useRoute();
   const id = route.params.id;
-  await arsenalStore.fetchLoadout(id as string);
+
+  /* Fetch loadout */
+  // await arsenalStore.fetchLoadout(id as string);
+  const { data: loadoutData } = await useFetch<ArsenalLoadoutJson>(`/api/loadout/${ id as string }`); // Inefficient bandaid for bug with useSEOMeta composable);
+  arsenalStore.loadLoadout(loadoutData.value);
+
+    /* Set SEO Site Meta */
+  useHead({
+    title: loadoutData.value?.title,
+    meta: [
+      { name: 'description', content: loadoutData.value?.description },
+      { property: 'og:title', content: loadoutData.value?.title },
+      { property: 'og:description', content: loadoutData.value?.description },
+      { property: 'og:image', content: loadoutData.value?.preview?.path },
+      { property: 'og:image:alt', content: 'Kosher Arsenal' },
+      { property: 'og:url', content: 'https://kosher-arsenal.com' },
+      { name: 'twitter:card', content: 'app' },
+      { name: 'twitter:title', content: loadoutData.value?.title },
+      { name: 'twitter:description', content: loadoutData.value?.description },
+      { name: 'twitter:image', content: loadoutData.value?.preview?.path },
+    ]
+  });
+
+  /* Get user's buylist */
   arsenalStore.fetchBuylist();
 
   /* Set mode and view mode */
@@ -149,24 +172,6 @@ import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   const onDrop = () => {
     arsenalStore.saveLoadout();
   };
-
-  /* SEO Site Meta */
-  const { data: loadoutData } = await useFetch<ArsenalLoadoutJson>(`/api/loadout/${ id as string }`); // Inefficient bandaid for bug with useSEOMeta composable);
-  useHead({
-    title: loadoutData.value?.title,
-    meta: [
-      { name: 'description', content: loadoutData.value?.description },
-      { property: 'og:title', content: loadoutData.value?.title },
-      { property: 'og:description', content: loadoutData.value?.description },
-      { property: 'og:image', content: loadoutData.value?.preview?.path },
-      { property: 'og:image:alt', content: 'Kosher Arsenal' },
-      { property: 'og:url', content: 'https://kosher-arsenal.com' },
-      { name: 'twitter:card', content: 'app' },
-      { name: 'twitter:title', content: loadoutData.value?.title },
-      { name: 'twitter:description', content: loadoutData.value?.description },
-      { name: 'twitter:image', content: loadoutData.value?.preview?.path },
-    ]
-  });
 </script>
 
 <style lang="scss">
