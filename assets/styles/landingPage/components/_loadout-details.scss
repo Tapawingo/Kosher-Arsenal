@@ -105,6 +105,9 @@ div.loadout-details {
         p {
           height: 15.5rem;
           border-bottom: 1px solid $border-color;
+          overflow: auto;
+
+          @include scrollbar(0.3rem);
         }
 
         div.tags {

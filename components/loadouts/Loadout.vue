@@ -20,14 +20,14 @@
         </div>
         <h1> {{ loadout.title }} </h1>
         <p>{{ loadout.description }}</p>
-        <div class="actions">
-          <button v-if="!props.isBuylist" @click="viewLoadout(loadout.id)">View</button>
-          <button v-if="props.isBuylist" @click="viewBuylist(loadout.id)">View Buylist</button>
-          <UDropdown :popper="{ placement: 'bottom-start' }" :items="loadoutActions" v-if="showOptions">
-            <UButton class="dropdown" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid"/>
-          </UDropdown>
-        </div>
       </div>
+    </div>
+    <div class="actions">
+      <button v-if="!props.isBuylist" @click="viewLoadout(loadout.id)">View</button>
+      <button v-if="props.isBuylist" @click="viewBuylist(loadout.id)">View Buylist</button>
+      <UDropdown :popper="{ placement: 'bottom-start' }" :items="loadoutActions" v-if="showOptions">
+        <UButton class="dropdown" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid"/>
+      </UDropdown>
     </div>
   </div>
 
