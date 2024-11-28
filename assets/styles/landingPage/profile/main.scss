@@ -13,10 +13,27 @@
         img {
             border-radius: 50%;
             height: 10rem;
+            width: 10rem;
+            display: block;
+            margin: 0 auto;
+
+            @media (max-width: 768px) {
+                height: 8rem; // Scale down avatar size
+            }
+
+            @media (max-width: 576px) {
+                height: 6rem; // Further scale down for small screens
+            }
         }
 
         div.meta {
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+
+            @media (max-width: 768px) {
+                gap: 0.5rem; // Reduce spacing for smaller screens
+            }
         }
     }
 
@@ -26,6 +43,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; // Allow wrapping on smaller screens
+
+            @media (max-width: 768px) {
+                width: 100%; // Full width on smaller screens
+                gap: 1rem;
+            }
 
             & > div.username {
                 display: flex;
@@ -33,11 +56,23 @@
 
                 h1 {
                     font-size: 3rem;
+
+                    @media (max-width: 768px) {
+                        font-size: 2rem; // Adjust font size for tablets
+                    }
+
+                    @media (max-width: 576px) {
+                        font-size: 1.5rem; // Adjust font size for mobile
+                    }
                 }
 
                 sub {
                     font-size: 1rem;
                     color: $muted-foreground;
+
+                    @media (max-width: 576px) {
+                        font-size: 0.9rem; // Adjust font size for mobile
+                    }
                 }
             }
 
@@ -55,6 +90,10 @@
                     background-color: $active-background;
                     color: $active-foreground;
                 }
+
+                @media (max-width: 768px) {
+                    width: 100%; // Full width button on smaller screens
+                }
             }
         }
 
@@ -64,17 +103,49 @@
             display: flex;
             gap: 1rem;
             justify-content: space-between;
+            flex-wrap: wrap; // Allow child elements to wrap onto new lines if needed
             font-size: 1.1rem;
+        
+            @media (max-width: 768px) {
+                width: 100%; // Make the container take full width
+                font-size: 1rem; // Scale down font size
+            }
+        
+            @media (max-width: 576px) {
+                gap: 0.5rem; // Reduce gap for smaller screens
+            }
+        
+            & > div {
+                flex: 1 1 calc(25% - 1rem); // Default: Four items in a row with spacing
+                text-align: center; // Center-align text for each statistic
+                min-width: 10rem; // Prevent elements from shrinking too much
+        
+                @media (max-width: 768px) {
+                    flex: 1 1 calc(50% - 0.5rem); // Two items per row on smaller screens
+                }
+        
+                @media (max-width: 576px) {
+                    flex: 1 1 100%; // One item per row on extra-small screens
+                }
+            }
         }
 
         div.description {
             margin-top: 1rem;
             width: 75%;
+
+            @media (max-width: 768px) {
+                width: 100%; // Full width on smaller screens
+            }
         }
     }
 
     section.content {
         background-color: $background;
         height: 100%;
+
+        @media (max-width: 768px) {
+            padding: 1rem; // Add padding for smaller screens
+        }
     }
 }

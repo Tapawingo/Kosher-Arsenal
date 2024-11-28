@@ -14,6 +14,7 @@
 
   <ArsenalModalCategory
     v-model:isOpen="isModalOpen"
+    v-model:is-saving="isModalSaving"
     v-model:form-data="editModalData"
     v-model:category="props.category"
     :is-sub="props.isSub"
@@ -138,6 +139,7 @@
 
   /* Update modal */
   const isModalOpen = ref(false);
+  const isModalSaving = ref(false);
   const editModalData = ref({
     title: '',
     icon: ''
@@ -147,6 +149,8 @@
     props.category.title = editModalData.value.title;
     props.category.icon = editModalData.value.icon;
     arsenalStore.saveLoadout();
+    isModalOpen.value = false;
+    isModalSaving.value = false;
   }
 </script>
 

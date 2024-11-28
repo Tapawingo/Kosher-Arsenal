@@ -48,7 +48,7 @@
 
       <div class="button-group">
         <UButton label="Cancel" color="red" @click="onClose"/>
-        <UButton :label="props.submitLabel" type="submit" />
+        <UButton type="submit" :class="{ loading: isSaving }">{{ props.submitLabel }}<div class="loader"></div></UButton>
       </div>
     </UForm>
   </UModal>
@@ -151,7 +151,10 @@
   };
 
   /* Upload image and emit submit event */
+  const isSaving = defineModel<boolean>('isSaving', { default: false });
   const onSubmit = async (event: any) => {
+    if (isSaving.value) return;
+    isSaving.value = true;
     if (files.value) {
       const file = new File(
         [files.value], 
@@ -165,7 +168,6 @@
     }
     
     emit('submit');
-    isOpen.value = false;
   };
 </script>
 
@@ -211,7 +213,7 @@
       left: 100%;
 
     img {
-      object-fit: contain;
+      object-fit: cover;
       transition-property: height;
       transition-duration: 0.25s;
       transition-timing-function: linear;

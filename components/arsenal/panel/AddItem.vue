@@ -9,6 +9,7 @@
 
   <ArsenalModalItem 
     v-model:is-open="isOpen" 
+    v-model:is-saving="isSaving"
     v-model:form-data="itemModalData"
     @submit="onSubmit"
   />
@@ -23,6 +24,7 @@
   const toast = useToast()
 
   const isOpen = ref<boolean>(false);
+  const isSaving = ref<boolean>(false);
   const itemModalData = ref({
     title: '',
     description: '',
@@ -57,6 +59,8 @@
     itemModalData.value.description = '';
     itemModalData.value.preview = new ArsenalPreviewImage().toJSON();
     arsenalStore.saveLoadout();
+    isOpen.value = false;
+    isSaving.value = false;
   }
 </script>
 

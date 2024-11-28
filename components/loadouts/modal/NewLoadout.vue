@@ -18,7 +18,7 @@
       </UFormGroup>
       <div class="button-group">
         <UButton color="red" @click="isOpen = false">Cancel</UButton>
-        <UButton type="submit">Create</UButton>
+        <UButton type="submit" :class="{ loading: isSaving }">Create<div class="loader"></div></UButton>
       </div>
     </UForm>
   </UModal>
@@ -66,19 +66,29 @@
     visibility: 0
   });
 
+  const isSaving = defineModel('isSaving', { default: false });
   const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+    if (isSaving.value) return;
+    isSaving.value = true;
     formEl.value.clear();
 
-    const result = await useFetch("/api/loadout/new", {
-      method: "POST",
-      body: JSON.stringify(event)
-    });
-
-    if (result.error.value) {
-      formEl.value.setErrors(result.error.value.data?.message);
-      return toast.add({ title: 'Error', description: result.error.value.data?.message, color: "red" });
+    try {
+      const result = await useFetch("/api/loadout/new", {
+        method: "POST",
+        body: JSON.stringify(event)
+      });
+  
+      if (result.error.value) {
+        formEl.value.setErrors(result.error.value.data?.message);
+        isSaving.value = false;
+        return toast.add({ title: 'Error', description: result.error.value.data?.message, color: "red" });
+      }
+      
+      isSaving.value = false;
+      await navigateTo(`/loadout/${ result.data.value }?mode=2`);
+    } catch (e: any) {
+      isSaving.value = false;
+      return toast.add({ title: 'Error', description: e.message, color: "red" });
     }
-
-    await navigateTo(`/loadout/${ result.data.value }?mode=2`);
   }
 </script>

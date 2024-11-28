@@ -1,20 +1,45 @@
 @import "../globals";
 
+.loader {
+    border: 0.3rem solid #ffffff;
+    border-top: 0.3rem solid #000000;
+    border-radius: 50%;
+    width: 1.2rem;
+    height: 1.2rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 html:not(.dark-theme) {
     @import "colors-light";
 
     font-family: $main-font, 'Courier New', Courier, monospace;
 
+    .loader {
+        border-color: $foreground;
+        border-top-color: $background;
+    }
+
     @import "arsenal";
     @import "list-view";
     @import "modal";
     @import "item";
+
 }
 
 html.dark-theme {
     @import "colors-dark";
 
     font-family: $main-font, 'Courier New', Courier, monospace;
+    
+    .loader {
+        border-color: $foreground;
+        border-top-color: $background;
+    }
 
     @import "arsenal";
     @import "list-view";

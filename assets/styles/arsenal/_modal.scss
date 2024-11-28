@@ -26,6 +26,40 @@
         --tw-ring-inset: none;
     }
 
+    button.loading {
+        cursor: default;
+
+        .loader {
+            display: block;
+        }
+    }
+
+    button .loader {
+        display: none;
+        border: none;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
+        --d: 5px;
+        --s: 1px;
+        width: 1px;
+        height: 1px;
+        border-radius: 50%;
+        color: $modal-background;
+        box-shadow: 
+            calc(1 * var(--d))      calc(0*var(--d))     0 0,
+            calc(0.707 * var(--d))  calc(0.707*var(--d)) 0 calc((var(--s) / 6) * 1),
+            calc(0 * var(--d))      calc(1*var(--d))     0 calc((var(--s) / 6) * 2),
+            calc(-0.707 * var(--d)) calc(0.707*var(--d)) 0 calc((var(--s) / 6) * 3),
+            calc(-1 * var(--d))     calc(0*var(--d))     0 calc((var(--s) / 6) * 4),
+            calc(-0.707 * var(--d)) calc(-0.707*var(--d))0 calc((var(--s) / 6) * 5),
+            calc(0 * var(--d))      calc(-1*var(--d))    0 calc((var(--s) / 6) * 6);
+        animation: l27 1s infinite steps(8);
+
+        @keyframes l27 {
+            100% {transform: rotate(1turn)}
+        }
+    }
+
     ul[role=listbox] {
         background-color: $modal-input-background;
         border: 1px solid $border-color;

@@ -37,6 +37,7 @@
 
   <ArsenalModalInfo 
     v-model:is-open="isInfoModalOpen"
+    v-model:is-saving="isSavingInfo"
     v-model:form-data="infoModalData"
     @submit="onSubmit"
   />
@@ -52,6 +53,7 @@ import { ArsenalViewMode } from '~/stores/arsenal';
 
   const exportLink = ref<HTMLAnchorElement>();
   const isInfoModalOpen = ref(false);
+  const isSavingInfo = ref(false);
   const infoSelected = ref(false);
   const infoModalData = ref<{ title: string, description: string, tags: LoadoutTagJson[], preview: File | undefined }>({
     title: arsenalStore.loadout.title,
@@ -137,6 +139,7 @@ import { ArsenalViewMode } from '~/stores/arsenal';
     });
 
     arsenalStore.saveLoadout();
+    isSavingInfo.value = false;
     isInfoModalOpen.value = false;
   }
 </script>

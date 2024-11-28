@@ -24,7 +24,7 @@
 
       <div class="button-group">
         <UButton label="Cancel" color="red" @click="onClose"/>
-        <UButton :label="props.submitLabel" type="submit" />
+        <UButton type="submit" :class="{ loading: isSaving }">{{ props.submitLabel }}<div class="loader"></div></UButton>
       </div>
     </UForm>
   </UModal>
@@ -93,8 +93,10 @@
   };
 
   /* Submit Data */
+  const isSaving = defineModel<boolean>('isSaving', { default: false });
   const onSubmit = async () => {
-    isOpen.value = false;
+    if (isSaving.value) return;
+    isSaving.value = true;
     emit('submit');
   }
 </script>

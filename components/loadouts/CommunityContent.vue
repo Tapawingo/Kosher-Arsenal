@@ -28,23 +28,11 @@
   <div class="section popular">
     <h3>Popular loadouts (temporarily all public loadouts)</h3>
     <div class="body">
-      <div class="loadout" v-for="loadout in popLoadouts">
-        <div class="preview">
-          <img :src="loadout.preview.path" />
-        </div>
-        <div class="meta">
-          <div class="tags">
-            <div v-for="tag in loadout.tags">
-              #{{ tag.label.replace('y:', '').replace('d:', '') }}
-            </div>
-          </div>
-          <h1> {{ loadout.title }} </h1>
-          <p>{{ loadout.description }}</p>
-          <div class="actions">
-            <button @click="viewLoadout(loadout.id)">View</button>
-          </div>
-        </div>
-      </div>
+      <LoadoutsLoadout 
+        v-if="popLoadouts" 
+        v-for="loadout in popLoadouts.slice().reverse()" 
+        :loadout="loadout"
+      />
 
       <div class="load-message" v-if="!popLoadouts"><div class="loader"></div></div>
       <div class="load-message" v-if="popLoadouts && popLoadouts.length === 0">Could not find any loadouts. Try again later.</div>

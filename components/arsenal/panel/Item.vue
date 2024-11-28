@@ -39,7 +39,8 @@
 
   <ArsenalModalItem
     submit-label="Update"
-    v-model:is-open="isEditOpen" 
+    v-model:is-open="isEditOpen"
+    v-model:is-saving="isEditSaving"
     v-model:form-data="itemModalData"
     v-model:item="props.item"
     @submit="onEditSubmit"
@@ -257,11 +258,14 @@
   }
 
   /* Edit Item */
+  const isEditSaving = ref(false);
   const onEditSubmit = async () => {
     props.item.title = itemModalData.value.title;
     props.item.description = itemModalData.value.description;
     props.item.preview = itemModalData.value.preview;
     arsenalStore.saveLoadout();
+
+    isEditOpen.value = false;
   };
 
   /* Copy Item */

@@ -1,36 +1,24 @@
 <template>
   <loadoutsModalNewLoadout v-model:isOpen="isNewLoadoutOpen" />
-  <!-- <LoadoutsLoadoutDetails :loadout="myLoadouts[0]" /> -->
 
   <div v-if="user">
     <div class="section">
   
       <h1>My loadouts</h1>
       <div class="body">
-        <div class="loadout-new" @click="isNewLoadoutOpen = true">
+        <div class="loadout loadout-new" @click="isNewLoadoutOpen = true">
           <span class="plus-icon">+</span>
           <span>NEW</span>
           <span>LOADOUT</span>
         </div>
 
-        <div class="loadout" v-if="myLoadouts" v-for="loadout in myLoadouts.slice().reverse()">
-          <div class="preview">
-            <img :src="loadout.preview.path" alt="Preview" />
-          </div>
-          <div class="meta">
-            <div class="tags">
-              <div v-for="tag in loadout.tags">#{{ tag.label.replace('y:', '').replace('d:', '') }}</div>
-            </div>
-            <h1> {{ loadout.title }} </h1>
-            <p>{{ loadout.description }}</p>
-            <div class="actions">
-              <button @click="viewLoadout(loadout.id)">View</button>
-              <UDropdown :popper="{ placement: 'bottom-start' }" :items="loadoutActions">
-                <UButton class="dropdown" label="Options" trailing-icon="i-heroicons-chevron-down-20-solid" @click="selectedLoadout = loadout"/>
-              </UDropdown>
-            </div>
-          </div>
-        </div>
+        <LoadoutsLoadout 
+          v-if="myLoadouts" 
+          v-for="loadout in myLoadouts.slice().reverse()" 
+          :loadout="loadout" 
+          showOptions
+          @onDelete="onLoadoutDelete"
+        />
 
         <div class="load-message" v-if="!myLoadouts">Loading Loadouts...</div>
       </div>
@@ -39,21 +27,13 @@
     <div class="section discover">
       <h2>My buylists</h2>
       <div class="body">
-        <div class="loadout" v-if="myBuylists" v-for="buylist in myBuylists">
-          <div class="preview">
-            <img :src="buylist.preview.path" alt="Preview" />
-          </div>
-          <div class="meta">
-            <div class="tags">
-              <div v-for="tag in buylist.tags">#{{ tag.label.replace('y:', '').replace('d:', '') }}</div>
-            </div>
-            <h1> {{ buylist.title }} </h1>
-            <p>{{ buylist.description }}</p>
-            <div class="actions">
-              <button @click="viewBuylist(buylist.id)">View Buylist</button>
-            </div>
-          </div>
-        </div>
+        <LoadoutsLoadout 
+          v-if="myLoadouts" 
+          v-for="buylist in myBuylists" 
+          :loadout="buylist" 
+          isBuylist
+          @onDelete="onLoadoutDelete"
+        />
 
         <div class="load-message" v-if="!myBuylists">Loading Buylists...</div>
       </div>
@@ -85,7 +65,6 @@
   const myLoadouts = ref<ArsenalLoadoutJson[] | undefined>();
   const myBuylists = ref<ArsenalLoadoutJson[] | undefined>();
   const isNewLoadoutOpen = ref(false);
-  const selectedLoadout = ref();
     
   onMounted(async () => {
     if (user.value) {
@@ -109,83 +88,16 @@
         toast.add({ title: "Error", description: e.message, color: "red" });
       };
     }
-  })
-
-  /* Open Preview */
-  const viewLoadout = async (loadoutId: string) => {
-    await navigateTo(`/loadout/${ loadoutId }`);
-  };
+  });
 
   /* Open buylist */
   const viewBuylist = async (loadoutId: string) => {
     await navigateTo(`/loadout/${ loadoutId }?mode=1`);
   };
 
-  /* Open edit */
-  const editLoadout = async (loadoutId: string) => {
-    await navigateTo(`/loadout/${ loadoutId }?mode=2`);
-  };
-
-  const loadoutActions = [
-    [
-      {
-        label: 'Share',
-        icon: 'material-symbols:link-rounded',
-        disabled: true
-      },
-      {
-        label: 'Change visibility',
-        icon: 'material-symbols:visibility-rounded',
-        disabled: true
-      }
-    ],
-    [
-      {
-        label: 'Buylist',
-        icon: 'material-symbols:check-box',
-        click: async () => {
-          if (!selectedLoadout.value) return;
-          const arsenalStore = useArsenalStore();
-          arsenalStore.setMode(ArsenalMode.buylist);
-
-          await navigateTo(`/loadout/${ selectedLoadout.value.id }`);
-        }
-      },
-      {
-        label: 'Edit',
-        icon: 'material-symbols:edit-square-outline',
-        /* shortcuts: ['E'], */
-        click: async () => {
-          if (!selectedLoadout.value) return;
-          editLoadout(selectedLoadout.value.id);
-        }
-      }, {
-        label: 'Duplicate',
-        icon: 'material-symbols:content-copy-rounded',
-        /* shortcuts: ['D'], */
-        disabled: true
-      }
-    ],
-    [
-      {
-        label: 'Delete',
-        icon: 'material-symbols:delete-rounded',
-        /* shortcuts: ['D'], */
-        click: async () => {
-          if (!selectedLoadout.value) return;
-          const { error } = await useFetch(`/api/loadout/delete/${ selectedLoadout.value.id }`);
-
-          if (error.value) {
-            toast.add({ title: 'Error', description: error.value?.message, color: 'red' });
-          } else {
-            toast.add({ description: 'Deleted loadout', color: 'green' });
-
-            /* Delete loadout from local array */
-            const loadoutIndex = myLoadouts.value!.findIndex((loadout: ArsenalLoadoutJson) => loadout.id === selectedLoadout.value.id);
-            myLoadouts.value!.splice(loadoutIndex, 1);
-          }
-        }
-      }
-    ]
-  ];
+  /* Remove deleted loadout from list */
+  const onLoadoutDelete = (loadout: ArsenalLoadoutJson) => {
+    const index = myLoadouts.value!.findIndex((storedLoadout: ArsenalLoadoutJson) => storedLoadout.id === loadout.id);
+    myLoadouts.value!.splice(index, 1);
+  }
 </script>

@@ -7,6 +7,7 @@
 
   <ArsenalModalCategory
     v-model:isOpen="isModalOpen"
+    v-model:is-saving="isModalSaving"
     v-model:form-data="ModalData"
     :is-sub="props.isSub"
     @submit="addCategory"
@@ -27,6 +28,7 @@
   const icon = 'arsenal/icons/icon_plus.svg';
 
   const isModalOpen = ref<boolean>(false);
+  const isModalSaving = ref<boolean>(false);
   const ModalData = ref({
     title: '',
     icon: ''
@@ -47,6 +49,9 @@
 
     toast.add({ title: `${ state ? 'Added' : 'Failed to add' } ${ props.isSub ? 'subcategory' : 'category' }: "${ ModalData.value.title }"` });
     arsenalStore.saveLoadout();
+
+    isModalOpen.value = false;
+    isModalSaving.value = false;
   }
 
   const classOverride = {

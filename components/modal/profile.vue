@@ -12,7 +12,7 @@
       </UFormGroup>
       <div class="button-group">
         <UButton color="red" @click="isOpen = false">Cancel</UButton>
-        <UButton type="submit">Save</UButton>
+        <UButton type="submit" :class="{ loading: isSaving }">Save<div class="loader"></div></UButton>
       </div>
     </UForm>
   </UModal>
@@ -20,13 +20,14 @@
 
 <script lang="ts" setup>
   import loadoutTemplates from '@/content/loadoutTemplates.json';
-  import { mixed, number, object, string, type InferType } from 'yup';
+  import { mixed, object, string, type InferType } from 'yup';
   import type { FormSubmitEvent } from '#ui/types'
 
   const user = useUser();
   const toast = useToast();
 
   const isOpen = defineModel('isOpen', { default: true });
+  const isSaving = defineModel<boolean>('isSaving', { default: false });
   const user_meta = defineModel<any>('userMeta', { required: true });
   
   const templates = ref(loadoutTemplates);
@@ -51,8 +52,10 @@
     biography: user_meta.value.biography,
     avatar: undefined
   });
-
   const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+    if (isSaving.value) return;
+    isSaving.value = true;
+
     formEl.value.clear();
 
     if (event.data.avatar) {
@@ -76,10 +79,11 @@
       user_meta.value.display_name = event.data.display_name;
       user_meta.value.biography = event.data.biography;
       user_meta.value.avatar = event.data.avatar;
+      isSaving.value = false;
+      isOpen.value = false;
+      
     }).catch((e: any) => {
       return toast.add({ title: 'Error', description: e.message, color: "red" });
     });
-
-    isOpen.value = false;
   }
 </script>

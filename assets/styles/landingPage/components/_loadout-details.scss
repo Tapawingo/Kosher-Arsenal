@@ -10,32 +10,92 @@ div.loadout-details {
   display: flex;
   justify-content: center;
   align-items: center;
+  visibility: visible;
+  opacity: 0; /* Initially invisible */
+  transform: scale(0.9); /* Slightly smaller initially */
+  transition: opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* For both pop-in and pop-out effect */
+
+  /* Modal shown (pop-in effect) */
+  &.visible {
+    opacity: 1;
+    transform: scale(1); /* Full scale */
+    transition: opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+
+  /* Modal hidden (pop-out effect) */
+  &.hidden {
+    visibility: hidden; /* Hide the modal, no interaction */
+    opacity: 0; /* Fade out */
+    transform: scale(0.9); /* Shrink */
+    transition: opacity 0.2s ease-in-out, transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth transition */
+  }
 
   div.body {
-    width: 40%;
-    height: 80%;
+    max-width: 40%;
+    width: 100%;
     background-color: $background;
     border: 1px solid $border-color;
     border-radius: 0.5rem;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    gap: 1rem;
+    position: absolute;
 
-    & > h1 {
-      font-size: 2.5rem;
-      width: 100%;
-      text-align: left;
+    @media (max-width: 768px) {
+      max-width: 90%;
+    }
+
+    & > .owner-container {
+      display: flex;
       border-bottom: 1px solid $border-color;
+      align-items: center;
+      padding: 0.5rem;
+      gap: 1rem;
+
+      & > div.avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid $border-color;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      & > .identity {
+        display: flex;
+        flex-direction: column;
+        line-height: 1;
+
+        .username {
+          color: $muted-foreground;
+          font-size: smaller;
+        }
+      }
+    }
+
+    & h1 {
+      margin: 0rem 0.5rem;
+      margin-top: 1rem;
+      border-bottom: 1px solid $border-color;
+      font-size: 2.5rem;
+      text-align: left;
     }
 
     & > div.details {
-      width: 100%;
-      flex-grow: 1;
       display: flex;
+      justify-content: space-between;
+      flex-grow: 1;
       padding: 0.5rem;
+      padding-top: 0;
       border-bottom: 1px solid $border-color;
-      gap: 1rem;
+
+      @media (max-width: 768px) {
+        flex-wrap: wrap;
+      }
 
       header {
         width: 50%;
@@ -52,10 +112,6 @@ div.loadout-details {
           display: flex;
           gap: 0.5rem;
           padding-top: 1rem;
-
-          & > div {
-            color: $muted-foreground;
-          }
         }
       }
 
@@ -65,7 +121,11 @@ div.loadout-details {
         flex-direction: column;
         padding: 0.5rem;
         gap: 1rem;
-  
+
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+
         & > div.preview {
           border: 1px dashed black;
           border-radius: 0.5rem;
@@ -76,9 +136,9 @@ div.loadout-details {
           justify-content: center;
           align-items: center;
           height: 15rem;
-  
+
           img {
-              height: 100%;
+            height: 100%;
           }
         }
 
@@ -107,48 +167,122 @@ div.loadout-details {
             }
           }
         }
-  
       }
     }
 
-    div.comments {
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+    }
+
+    .comments-preview {
       width: 100%;
+      padding: 0.5rem;
+      padding-bottom: 1rem;
       display: flex;
       flex-direction: column;
-      overflow-y: hidden;
+      align-items: center;
+      border-bottom: 1px solid $border-color;
+  
+      & > span {
+        text-align: center;
+        margin-bottom: 1rem;
 
-      & > textarea[name=comment] {
-        border: 1px solid $border-color;
+        &.empty {
+          color: $muted-foreground;
+        }
+      }
+    }
+  }
+
+
+  .comments-side-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    background-color: $background;
+    box-shadow: -5px 0px 10px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 60;
+
+    &.visible {
+      transform: translateX(0);
+    }
+
+    .comments-header {
+      padding: 1rem;
+      background-color: $background;
+      color: $foreground;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
         background-color: $background;
         color: $foreground;
-        height: 5rem;
-        margin-bottom: 1rem;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
       }
-      
-      & > section {
-        display: flex;
-        flex-direction: column;
-        overflow-y: scroll;
-        gap: 0.5rem;
+    }
 
-        @include scrollbar;
+    .comments-list {
+      background-color: $background;
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: 90vh;
 
-        & > div {
-          border: 1px solid $border-color;
-  
-          div.author {
-            border-bottom: 1px solid $border-color;
-          }
-  
-          div.details {
-            font-size: 0.65rem;
-            text-decoration: underline;
-          }
-  
-          div, p {
-            padding: 0.5rem;
-          }
+      .comment-item {
+        border-bottom: 1px solid $border-color;
+        padding: 0.5rem 0;
+
+        .author {
+          font-weight: bold;
+          color: red;
         }
+
+        .content {
+          margin-top: 0.5rem;
+          font-size: 0.9rem;
+          color: $foreground;
+        }
+
+        .timestamp {
+          font-size: 0.75rem;
+          color: $muted-foreground;
+          margin-top: 0.3rem;
+        }
+      }
+    }
+  }
+
+  /* Button Styles */
+  button {
+    width: 15rem;
+    border-radius: 1rem;
+    background-color: $background;
+    border: 1px solid $border-color;
+    color: $foreground;
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    justify-content: center;
+
+    &:disabled, [disabled] {
+      color: $muted-foreground;
+      background-color: $background;
+      cursor: default;
+    }
+
+    &:hover:not([disabled], :disabled) {
+      background-color: $active-background;
+      color: $active-foreground;
+
+      &.danger {
+        background-color: $color-danger;
       }
     }
   }
