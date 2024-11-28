@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 		}
 
 		const token = await generatePasswordResetToken(db, user.id);
-		await sendPasswordResetLink(user.email, token);
+		await sendPasswordResetLink(user, token);
 
 		return {};
 	} catch (e) {
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
 	}
 });
 
-const sendPasswordResetLink = async (email: string, token: string) => {
+const sendPasswordResetLink = async (user: DatabaseUser, token: string) => {
   config();
 
   const transporter = mailer.createTransport({
@@ -50,16 +50,9 @@ const sendPasswordResetLink = async (email: string, token: string) => {
 
   let mail = {
     from: process.env.MAIL_ADDRESS,
-    to: email,
+    to: user.email,
     subject: 'Account password reset',
-    html: [
-      `<h1>Reset your password</h1>`,
-      `<p>Follow this link to reset your account password at <a href="kosher-arsenal.nuxt.dev">kosher-arsenal.com</a>.`,
-      `If you didn't request a new password, you can safely delete this email.<br/><br/>`,
-      `<a href="kosher-arsenal.nuxt.dev/password-reset/${ token }" style="
-      padding: 7px 10px; border-radius: 5px; background-color: black; color: white; text-decoration: none;
-      ">Reset your password</a>`
-    ].join('')
+    html: emailContent(token, user)
   };
 
   transporter.sendMail(mail, (error, info) => {
@@ -73,4 +66,31 @@ const sendPasswordResetLink = async (email: string, token: string) => {
       console.log(`Email sent: ${ info.response }`);
     }
   });
+}
+
+const emailContent = (token: string, user: DatabaseUser): string => {
+  return `
+    <img src="https://kosher-arsenal.nuxt.dev/logo.svg" style="height: 100px" />
+    <div style="margin-left: 20px">
+    <h2>Hello, ${ user.username }</h2>
+    <p>Follow this link to reset your account password at <a href="kosher-arsenal.com">kosher-arsenal.com</a>.<br/><br/>
+    </p>
+    <a href="kosher-arsenal.com/password-reset/${ token }" 
+    style="padding: 12px; border-radius: 5px; background-color: black; color: white; text-decoration: none;"
+    >Reset your password</a><br/><br/>
+    <p>If you didn't send us the password change request, ignore this email.<br/><br/>
+    If the button doesn't work, copy this link and paste it into your browser.<br>
+    <a href="/password-reset/${ token }">https://www.kosher-arsenal.com/password-reset/${ token }</a>
+    </p>
+    <p>
+    Best Wishes, <br/>
+    Kosher Arsenal Team
+    </p>
+
+    <div style="border-bottom: 1px solid rgb(164, 164, 164); border-top: 1px solid rgb(164, 164, 164); padding: 15px 0px">
+    This email has been generated automatically. <b>Please do not reply to it.</b>
+    </div>
+    <p style="color: rgb(128, 128, 128)">&#169 Kosher Arsenal (Tapawingo) 2020 - 2024</p>
+    </div>
+  `;
 }

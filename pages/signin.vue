@@ -10,7 +10,7 @@
         <UInput type="password" v-model="state.password" />
       </UFormGroup>
       <p>
-        <NuxtLink to="/password-reset">Forgot password</NuxtLink> <br/>
+        <NuxtLink to="/password-reset">Forgot your password?</NuxtLink> <br/>
       </p>
 
       <UButton type="submit">Submit</UButton>
