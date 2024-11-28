@@ -1,20 +1,7 @@
 <template>
   <head>
-    <Meta name="title" :content="arsenalStore.loadout.title" />
-    <Meta name="description" :content="arsenalStore.loadout.description" />
-    <Meta name="applicationName" content="Kosher Arsenal" />
-    <Meta name="author" content="JSOK (Tapawingo)" />
-    <Meta name="ogTitle" :content="arsenalStore.loadout.title" />
-    <Meta name="ogDescription" :content="arsenalStore.loadout.description" />
-    <Meta name="ogImage" :content="arsenalStore.loadout.preview.path" />
-    <Meta name="ogImageAlt" content="Kosher Arsenal" />
-    <Meta name="ogUrl" content="https://kosher-arsenal.com" />
-    <Meta name="twitterCard" content="app" />
-    <Meta name="twitterTitle" :content="arsenalStore.loadout.title" />
-    <Meta name="twitterDescription" :content="arsenalStore.loadout.description" />
-    <Meta name="twitterImage" :content="arsenalStore.loadout.preview.path" />
+    
   </head>
-  
   <div v-if="!isPhone && arsenalStore.viewMode !== ArsenalViewMode.list" class="arsenal">
     <div v-if="arsenalStore.arsenalState == ArsenalStates.loading" class="arsenal-loading">
       <Icon name="i-heroicons:arrow-path-20-solid" />
@@ -163,23 +150,27 @@
   };
 
   /* SEO Site Meta */
-  /* useSeoMeta({
-    title: arsenalStore.loadout.title,
-    description: arsenalStore.loadout.description,
-    applicationName: 'Kosher Arsenal',
-    author: 'JSOK',
-    
-    ogTitle: arsenalStore.loadout.title,
-    ogDescription: arsenalStore.loadout.description,
-    ogImage: arsenalStore.loadout.preview.path,
-    ogImageAlt: 'Kosher Arsenal',
-    ogUrl: 'https://kosher-arsenal.com',
+  useFetch(`/api/loadout/${ id as string }`, {
+    onResponse({ request, response, options }) { // bandaid for bug with useSEOMeta composable
+      useSeoMeta({
+        title: response._data.title,
+        description: response._data.description,
+        applicationName: 'Kosher Arsenal',
+        author: 'JSOK',
+        
+        ogTitle: response._data.title,
+        ogDescription: response._data.description,
+        ogImage: response._data.preview.path,
+        ogImageAlt: 'Kosher Arsenal',
+        ogUrl: 'https://kosher-arsenal.com',
 
-    twitterCard: 'app',
-    twitterTitle: arsenalStore.loadout.title,
-    twitterDescription: arsenalStore.loadout.description,
-    twitterImage: arsenalStore.loadout.preview.path,
-  }); */
+        twitterCard: 'app',
+        twitterTitle: response._data.title,
+        twitterDescription: response._data.description,
+        twitterImage: response._data.preview.path,
+      });
+    }
+  });
 </script>
 
 <style lang="scss">
