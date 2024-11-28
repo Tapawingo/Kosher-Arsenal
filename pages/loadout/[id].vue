@@ -86,6 +86,7 @@
 <script lang="ts" setup>
   import { useMediaQuery, useMagicKeys } from '@vueuse/core'
   import { VueDraggable } from 'vue-draggable-plus';
+import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
   import { ArsenalMode, ArsenalStates, ArsenalViewMode } from '~/stores/arsenal';
   
   const { ctrl } = useMagicKeys();
@@ -150,27 +151,27 @@
   };
 
   /* SEO Site Meta */
-  useFetch(`/api/loadout/${ id as string }`, {
-    onResponse({ request, response, options }) { // bandaid for bug with useSEOMeta composable
-      useSeoMeta({
-        title: response._data.title,
-        description: response._data.description,
-        applicationName: 'Kosher Arsenal',
-        author: 'JSOK',
-        
-        ogTitle: response._data.title,
-        ogDescription: response._data.description,
-        ogImage: response._data.preview.path,
-        ogImageAlt: 'Kosher Arsenal',
-        ogUrl: 'https://kosher-arsenal.com',
+  const { data: loadoutData } = await useLazyFetch<ArsenalLoadoutJson>(`/api/loadout/${ id as string }`); // Inefficient bandaid for bug with useSEOMeta composable);
 
-        twitterCard: 'app',
-        twitterTitle: response._data.title,
-        twitterDescription: response._data.description,
-        twitterImage: response._data.preview.path,
-      });
-    }
-  });
+  if (loadoutData.value) {
+    useSeoMeta({
+      title: loadoutData.value.title,
+      description: loadoutData.value.description,
+      applicationName: 'Kosher Arsenal',
+      author: 'JSOK',
+      
+      ogTitle: loadoutData.value.title,
+      ogDescription: loadoutData.value.description,
+      ogImage: loadoutData.value.preview.path,
+      ogImageAlt: 'Kosher Arsenal',
+      ogUrl: 'https://kosher-arsenal.com',
+  
+      twitterCard: 'app',
+      twitterTitle: loadoutData.value.title,
+      twitterDescription: loadoutData.value.description,
+      twitterImage: loadoutData.value.preview.path,
+    });
+  }
 </script>
 
 <style lang="scss">
