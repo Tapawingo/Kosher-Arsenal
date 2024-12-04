@@ -28,11 +28,19 @@ export const visibility2Icon = (visibility: LoadoutVisibility): string => {
   }
 }
 
+export declare interface UserMetaJson {
+  user_id: string;
+  display_name: string;
+  username: string;
+  biography: string;
+  avatar: string;
+}
+
 export declare interface ArsenalLoadoutJson {
   id: string,
   title: string,
   description: string,
-  owner: string,
+  owner: UserMetaJson,
   collaborators: Array<string>,
   preview: ArsenalPreviewImageJson | ArsenalPreviewImage,
   tags: Array<LoadoutTagJson>,
@@ -46,7 +54,7 @@ export class ArsenalLoadout {
   public title: string = '';
   public description: string = '';
   public preview: ArsenalPreviewImage = new ArsenalPreviewImage();
-  public owner: string = ''; // Replace with User Class Type in future
+  public owner: UserMetaJson = { user_id: '', display_name: '', username: '', biography: '', avatar: '' };
   public collaborators: Array<string> = []; // Replace with Array of User Class Types in future
   public tags: Array<LoadoutTag> = [];
   public visibility: LoadoutVisibility = LoadoutVisibility.public;

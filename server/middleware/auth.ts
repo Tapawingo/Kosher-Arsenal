@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const { session, user } = await lucia.validateSession(sessionId);
-  if (session && session.fresh) {
+  if (session?.fresh) {
     appendResponseHeader(
       event,
       "Set-Cookie",

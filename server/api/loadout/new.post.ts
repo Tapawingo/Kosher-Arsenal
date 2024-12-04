@@ -1,12 +1,13 @@
 import { ArsenalCategory, type ArsenalCategoryJson } from '~/classes/ArsenalCategory';
 import { generateId } from 'lucia';
 import { array, number, object, string } from 'yup';
+import { UserMetaJson } from '~/classes/ArsenalLoadout';
 
 interface IBody {
   data: {
     title: string;
     description: string;
-    owner: string;
+    owner: UserMetaJson;
     template: {
       name: string;
       categories: Array<{

@@ -47,13 +47,6 @@
 
   const toast = useToast();
 
-  const viewLoadout = async (loadoutId: string) => {
-    const arsenalStore = useArsenalStore();
-    arsenalStore.setMode(ArsenalMode.view);
-
-    await navigateTo(`/loadout/${ loadoutId }`);
-  };
-
   const viewTag = async (tagLabel: string) => {
     await navigateTo(`/tag/${ tagLabel }`);
   }
@@ -69,7 +62,7 @@
       }
     }).catch((e: any) => {
       toast.add({ title: "Error", description: e.message, color: "red" });
-      popLoadouts.value = [];
+      recTags.value = [];
     });
 
     $fetch(`/api/loadout/loadouts`).then((res) => {

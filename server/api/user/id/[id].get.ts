@@ -20,10 +20,13 @@ export default defineEventHandler(async (event): Promise<UserMeta | null> => {
     } else {
       const user = await db.prepare(`SELECT * FROM user WHERE id = ?1`).bind(id).first<DatabaseUser>();
 
-      if (!user) throw createError({
-        message: 'User does not exist',
-        statusCode: 400
-      });
+      if (!user) {
+        console.error(`User does not exist: ${ id }`)
+        throw createError({
+          message: 'User does not exist',
+          statusCode: 400
+        });
+      }
 
       return {
         user_id: user.id,

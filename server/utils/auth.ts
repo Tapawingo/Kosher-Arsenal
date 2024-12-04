@@ -1,4 +1,4 @@
-import { Lucia } from 'lucia';
+import { Lucia, Session } from 'lucia';
 import { D1Adapter } from '@lucia-auth/adapter-sqlite';
 
 import type { D1Database } from '@nuxthub/core';
@@ -25,6 +25,25 @@ export function initializeLucia(D1: D1Database) {
       }
     }
   });
+}
+
+export async function validateSession(luciaSession: Session | null, lucia: ReturnType<typeof initializeLucia>) {
+  /* Check if user is logged in */
+  if (!luciaSession) {
+    throw createError({
+      message: 'Unauthenticated User',
+      statusCode: 403
+    });
+  }
+
+  /* Validate session */
+  const { session, user } = await lucia.validateSession(luciaSession.id);
+  if (!session) throw createError({
+    message: 'Unauthenticated User',
+    statusCode: 403
+  });
+
+  return { session, user };
 }
 
 declare module "lucia" {

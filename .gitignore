@@ -6,6 +6,9 @@
 .cache
 dist
 
+# jsdoc outputs
+docs
+
 # Node dependencies
 node_modules
 

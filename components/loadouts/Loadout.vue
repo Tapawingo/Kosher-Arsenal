@@ -3,10 +3,10 @@
 
     <div class="card-title">
       <div class="avatar">
-        <img :src="owner.avatar" alt="Avatar">
+        <img :src="props.loadout.owner?.avatar" alt="Avatar">
       </div>
-      <NuxtLink class="identity" :to="`/profile/${ owner.username }`">
-        <span class="displayname">{{ owner.display_name }}</span>
+      <NuxtLink class="identity" :to="`/profile/${ props.loadout.owner?.username }`">
+        <span class="displayname">{{ props.loadout.owner?.display_name }}</span>
       </NuxtLink>
     </div>
 
@@ -34,12 +34,12 @@
   <LoadoutsLoadoutDetails 
     v-model:isOpen="isDetailOpen" 
     :loadout="props.loadout"
-    :owner="owner"
+    :owner="props.loadout.owner"
   />
 </template>
 
 <script lang="ts" setup>
-  import type { ArsenalLoadoutJson } from '~/classes/ArsenalLoadout';
+  import type { ArsenalLoadoutJson, UserMetaJson } from '~/classes/ArsenalLoadout';
 
   const emit = defineEmits(['onDelete']);
   const props = withDefaults(
@@ -50,10 +50,18 @@
     }
   );
 
-  const { data: owner } = await useFetch<any>(`/api/user/id/${ props.loadout.owner }`);
-
   const toast = useToast();
   const isDetailOpen = ref(false);
+
+  /* if (typeof props.loadout.owner === 'string') {
+    console.log(typeof props.loadout.owner);
+    const { data: owner } = await useFetch<UserMetaJson>(`/api/user/id/${ props.loadout.owner }`, { server: true });
+    if (owner.value) {
+      props.loadout.owner = owner.value;
+    } else {
+      toast.add({ title: "Error", description: 'Failed to fetch user data.', color: "red" });
+    }
+  } */
 
   const viewDetails = (loadout: ArsenalLoadoutJson) => {
     /* Open detail panel */

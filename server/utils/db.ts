@@ -1,5 +1,9 @@
 import { D1Database } from "@nuxthub/core";
 
+export const dateToSQL = (date: Date) => {
+  return date.toISOString().slice(0, 19).replace('T', ' ');
+}
+
 export const initializeDB = (db: D1Database): D1Database => {
   /* Create user table */
   db.prepare(`CREATE TABLE IF NOT EXISTS user (

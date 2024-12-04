@@ -3,17 +3,17 @@
     <div class="body">
       <div class="owner-container">
         <div class="avatar">
-          <img :src="owner.avatar" alt="Avatar">
+          <img :src="props.loadout.owner.avatar" alt="Avatar">
         </div>
-        <NuxtLink class="identity" :to="`/profile/${ owner.username }`">
-          <span class="displayname">{{ owner.display_name }}</span>
-          <span class="username">@{{ owner.username }}</span>
+        <NuxtLink class="identity" :to="`/profile/${ props.loadout.owner.username }`">
+          <span class="displayname">{{ props.loadout.owner.display_name }}</span>
+          <span class="username">@{{ props.loadout.owner.username }}</span>
         </NuxtLink>
       </div>
-      <h1>{{ loadout?.title }}</h1>
+      <h1>{{ loadout.title }}</h1>
       <div class="details">
         <header>
-          <p>{{ loadout?.description }}</p>
+          <p>{{ loadout.description }}</p>
           <div class="tags">
             <div v-for="tag in loadout?.tags">#{{ tag.label }}</div>
           </div>
@@ -21,7 +21,7 @@
 
         <div class="meta">
           <div class="preview">
-            <img src="/arsenal/preview/default.svg" alt="">
+            <img :src="loadout.preview.path" alt="">
           </div>
           <div class="statistics">
             <UTooltip text="Visibility" class="visibility">
@@ -84,9 +84,9 @@
   ]);
 
   const isCommentsOpen = ref(false);
-  const user_meta = ref<any>({ display_name: '', username: '', avatar: '' });
-  const { data } = await useFetch<any>(`/api/user/id/${ props.loadout.owner }`);
-  user_meta.value = data;
+  //const user_meta = ref<any>({ display_name: '', username: '', avatar: '' });
+  //const { data } = await useFetch<any>(`/api/user/id/${ props.loadout.owner }`);
+  //user_meta.value = data;
 
   const viewLoadout = async (loadoutId: string) => {
     await navigateTo(`/loadout/${ loadoutId }`);
