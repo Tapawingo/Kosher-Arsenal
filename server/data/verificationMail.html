@@ -1,0 +1,30 @@
+<img src="https://kosher-arsenal.nuxt.dev/logo.svg" alt="Logo" style="height: 100px" />
+<div style="margin-left: 20px"> 
+    <h2>Hello, {{ USERNAME }}</h2>
+    <p>
+        Follow this link to verify your account email at <a href="kosher-arsenal.com">kosher-arsenal.com</a>. 
+        The link expires in 48 hours.<br/><br/>
+    </p>
+
+    <a href="kosher-arsenal.com/verify-email/{{ TOKEN }}" style="padding: 
+        12px; border-radius: 5px; background-color: black; color: white; text-decoration: none;">
+        Verify my email address
+    </a><br/><br/>
+
+    <p>
+        If the button doesn't work, copy this link and paste it into your browser.<br>
+        <a href="/password-reset/{{ TOKEN }}">https://www.kosher-arsenal.com/verify-email/{{ TOKEN }}</a>
+    </p>
+
+    <p>
+    Best Wishes, <br/>
+    Kosher Arsenal Team
+    </p>
+
+    <div style="border-bottom: 1px solid rgb(164, 164, 164); border-top: 1px solid rgb(164, 164, 164); padding: 15px 0px">
+        This email has been generated automatically. <b>Please do not reply to it.</b>
+    </div>
+    <p style="color: rgb(128, 128, 128)">
+        &#169 Kosher Arsenal (Tapawingo) 2020 - 2024
+    </p>
+</div>

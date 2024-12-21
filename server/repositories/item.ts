@@ -1,5 +1,5 @@
 import { D1Database } from "@nuxthub/core";
-import { mixed, number, object, string } from "yup";
+import { mixed, number, object, string, ValidationError } from "yup";
 import { LoadoutItemSerialized } from "~/models/LoadoutItem.model";
 import LoadoutCategoryRepository from "./category";
 
@@ -133,19 +133,46 @@ export default class LoadoutItemRepository {
     }
 
     /**
+     * Validate request body
+     * @param body Body to validate
+     */
+    public async validateBody(body: any) {
+        try {
+            await this.schema.validate(body);
+
+            return true;
+          } catch (e: any) {
+            console.warn(e);
+
+            if (e instanceof ValidationError) {
+                throw createError({
+                    message: e.message,
+                    statusCode: 400
+                });
+            } else {
+                throw createError({
+                    message: e,
+                    statusCode: 400
+                });
+            }
+        }
+    }
+
+    /**
      * Creates table if it doesn't exist
      * @private
      */
     private _createTable() {
         try {
+            // @FIXME: delete and recreate loadout table for new changes
             this.db.prepare(`CREATE TABLE IF NOT EXISTS loadout_item (
                 id TEXT PRIMARY KEY NOT NULL,
                 category_id TEXT NOT NULL,
                 loadout_id TEXT NOT NULL,
                 position INTEGER,
-                title TEXT,
-                description TEXT,
-                preview JSON,
+                title TEXT NOT NULL,
+                description TEXT NOT NULL,
+                preview TEXT,
                 FOREIGN KEY(category_id) REFERENCES loadout_category(id) ON DELETE CASCADE
             )`).run();
         } catch (e: any) {

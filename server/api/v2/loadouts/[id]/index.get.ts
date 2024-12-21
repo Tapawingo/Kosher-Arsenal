@@ -20,12 +20,12 @@ export default defineEventHandler(async (event): Promise<ArsenalLoadoutSerialize
   const lucia = event.context.lucia;
   const loadoutRepository = new LoadoutRepository(event.context.db);
 
-  if (!event.context.params?.loadout_id) throw createError({
+  if (!event.context.params?.id) throw createError({
     message: 'Missing Loadout ID',
     statusCode: 400
   });
   
-  const loadoutId = event.context.params.loadout_id;
+  const loadoutId = event.context.params.id;
 
   try {
     const loadout =  await loadoutRepository.getById(loadoutId);

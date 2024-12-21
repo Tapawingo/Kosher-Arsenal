@@ -1,16 +1,22 @@
 import { D1Database } from "@nuxthub/core";
 import { ArsenalLoadoutSerialized, ArsenalLoadoutVisibility } from "~/models/ArsenalLoadout.model";
-import { array, number, object, string } from "yup";
+import { array, number, object, string, ValidationError } from "yup";
 import LoadoutContributorRepository from "./contributor";
 import LoadoutCategoryRepository from "./category";
 import { dateToSQL } from "../utils/db";
 import LoadoutItemRepository from "./item";
+import { LoadoutPreview } from "~/models/LoadoutPreview.model";
+import { ArsenalUser } from "~/models/ArsenalUser.model";
+import { ArsenalUserProfile } from "~/models/ArsenalUserProfile.model";
 
-interface DatabaseLoadout extends ArsenalLoadoutSerialized {
-    owner_id: string;
-    owner_username: string;
-    owner_email: string;
-    owner_email_verified: number;
+export interface ArsenalLoadoutRaw extends ArsenalLoadoutSerialized {
+     user_id: string, 
+     user_username: string, 
+     user_displayName: string, 
+     user_avatar: string, 
+     jsonPreview: string,
+     tag_labels: string[],
+     tag_types: number[]
 }
 
 export default class LoadoutRepository {
@@ -22,7 +28,7 @@ export default class LoadoutRepository {
         preview: object({
             type: number().required('Missing Preview Type'),
             path: string().required('Missing Preview Path')
-        }),
+        }).required('Missing Preview'),
         owner: string().required('Missing Owner ID'),
         visibility: number().required('Missing visibility'),
         created_at: string().datetime(),
@@ -44,29 +50,62 @@ export default class LoadoutRepository {
      * @param visibilities Array of Loadout visibility values to filter for
      * @returns Array of loadouts
      */
-    async getAll(limit = 10, offset = 0, visibilities: number[] = [0]): Promise<DatabaseLoadout[]> {
-        return (await this.db.prepare(`
+    async getAll(limit = 10, offset = 0, visibilities: number[] = [0]): Promise<ArsenalLoadoutSerialized[]> {
+        const loadouts = (await this.db.prepare(`
             SELECT
                 loadout.id,
                 loadout.title,
                 loadout.description,
-                loadout.preview,
+                loadout.preview AS jsonPreview,
                 loadout.visibility,
-                loadout.created_at,
-                loadout.updated_at,
+                loadout.created_at AS created,
+                loadout.updated_at AS updated,
+                GROUP_CONCAT(tag.label) AS tag_labels,
+                GROUP_CONCAT(tag.type) AS tag_types,
                 user.id AS owner_id,
                 user.username AS owner_username,
-                user.email AS owner_email,
-                user.email_verified AS owner_email_verified
+                user_profile.avatar AS user_avatar,
+                user_profile.display_name AS user_displayName
             FROM loadout
-            JOIN user on loadout.owner = user.id
+            JOIN user ON loadout.owner = user.id
+            JOIN user_profile ON loadout.owner = user_profile.id
+            JOIN tag_loadout_relation tlr ON loadout.id = tlr.loadout_id
+            JOIN tag on tlr.tag_label = tag.label
             WHERE loadout.visibility IN (${ visibilities.join(', ') })
             ORDER BY loadout.created_at DESC
             LIMIT ?1 OFFSET ?2
         `).bind(
             limit,
             offset
-        ).all<DatabaseLoadout>()).results;
+        ).all<ArsenalLoadoutRaw>()).results;
+
+        return loadouts.map((loadout) => {
+            return {
+                id: loadout.id,
+                title: loadout.title,
+                description: loadout.description,
+                preview: new LoadoutPreview(JSON.parse(loadout.jsonPreview)).serialize(),
+                owner: new ArsenalUser({
+                    id: loadout.user_id,
+                    username: loadout.user_username,
+                    profile: new ArsenalUserProfile({
+                        userId: loadout.user_id,
+                        username: loadout.user_username,
+                        displayName: loadout.user_displayName,
+                        avatar: loadout.user_avatar
+                    })
+                }).serialize(),
+                tags: loadout.tag_labels.map((label, index) => {
+                    return {
+                        label: label,
+                        type: loadout.tag_types[index]
+                    };
+                }),
+                visibility: loadout.visibility,
+                created: loadout.created,
+                updated: loadout.updated
+            }
+        });
     }
 
     /**
@@ -74,26 +113,59 @@ export default class LoadoutRepository {
      * @param loadoutId ID of loadout to get
      * @returns Loadout
      */
-    async getById(loadoutId: string): Promise<DatabaseLoadout | null> {
-        return (await this.db.prepare(`
+    async getById(loadoutId: string): Promise<ArsenalLoadoutSerialized | null> {
+        const loadout =  (await this.db.prepare(`
             SELECT
                 loadout.id,
                 loadout.title,
                 loadout.description,
-                loadout.preview,
+                loadout.preview AS jsonPreview,
                 loadout.visibility,
-                loadout.created_at,
-                loadout.updated_at,
+                GROUP_CONCAT(tag.label) AS tag_labels,
+                GROUP_CONCAT(tag.type) AS tag_types,
+                loadout.created_at AS created,
+                loadout.updated_at AS updated,
                 user.id AS owner_id,
-                user.username AS owner_username,
-                user.email AS owner_email,
-                user.email_verified AS owner_email_verified
+                user.username AS user_username,
+                user_profile.avatar AS user_avatar,
+                user_profile.display_name AS user_displayName
             FROM loadout
-            JOIN user on loadout.owner = user.id
+            JOIN user ON loadout.owner = user.id
+            JOIN user_profile ON loadout.owner = user_profile.id
+            JOIN tag_loadout_relation tlr ON loadout.id = tlr.loadout_id
+            JOIN tag on tlr.tag_label = tag.label
             WHERE loadout.id = ?1
         `).bind(
             loadoutId
-        ).first<DatabaseLoadout>());
+        ).first<ArsenalLoadoutRaw>());
+
+        if (!loadout) return null;
+
+        return {
+            id: loadout.id,
+            title: loadout.title,
+            description: loadout.description,
+            preview: new LoadoutPreview(JSON.parse(loadout.jsonPreview)).serialize(),
+            owner: new ArsenalUser({
+                id: loadout.user_id,
+                username: loadout.user_username,
+                profile: new ArsenalUserProfile({
+                    userId: loadout.user_id,
+                    username: loadout.user_username,
+                    displayName: loadout.user_displayName,
+                    avatar: loadout.user_avatar
+                })
+            }).serialize(),
+            tags: loadout.tag_labels.map((label, index) => {
+                return {
+                    label: label,
+                    type: loadout.tag_types[index]
+                };
+            }),
+            visibility: loadout.visibility,
+            created: loadout.created,
+            updated: loadout.updated
+        }
     }
 
     /**
@@ -104,29 +176,62 @@ export default class LoadoutRepository {
      * @param visibilities Array of visibilities to filter by
      * @returns Array of Loadouts
      */
-    async getByUser(userId: string, limit = 10, offset = 0, visibilities: number[] = [0]): Promise<DatabaseLoadout[]> {
-        return (await this.db.prepare(`
+    async getByUser(userId: string, limit = 10, offset = 0, visibilities: number[] = [0]): Promise<ArsenalLoadoutSerialized[]> {
+        const loadouts = (await this.db.prepare(`
             SELECT
                 loadout.id,
                 loadout.title,
                 loadout.description,
-                loadout.preview,
+                loadout.preview AS jsonPreview,
                 loadout.visibility,
-                loadout.created_at,
-                loadout.updated_at,
+                GROUP_CONCAT(tag.label) AS tag_labels,
+                GROUP_CONCAT(tag.type) AS tag_types,
+                loadout.created_at AS created,
+                loadout.updated_at AS updated,
                 user.id AS owner_id,
-                user.username AS owner_username,
-                user.email AS owner_email,
-                user.email_verified AS owner_email_verified
+                user.username AS user_username,
+                user_profile.avatar AS user_avatar,
+                user_profile.display_name AS user_displayName
             FROM loadout
             JOIN user on loadout.owner = user.id
+            JOIN user_profile on loadout.owner = user_profile.id
+            JOIN tag_loadout_relation tlr ON loadout.id = tlr.loadout_id
+            JOIN tag on tlr.tag_label = tag.label
             WHERE loadout.owner = ?1 AND loadout.visibility IN (${ visibilities.join(', ') })
             LIMIT ?2 OFFSET ?3
         `).bind(
             userId,
             limit,
             offset
-        ).all<DatabaseLoadout>()).results;
+        ).all<ArsenalLoadoutRaw>()).results;
+
+        return loadouts.map((loadout) => {
+            return {
+                id: loadout.id,
+                title: loadout.title,
+                description: loadout.description,
+                preview: new LoadoutPreview(JSON.parse(loadout.jsonPreview)).serialize(),
+                owner: new ArsenalUser({
+                    id: loadout.user_id,
+                    username: loadout.user_username,
+                    profile: new ArsenalUserProfile({
+                        userId: loadout.user_id,
+                        username: loadout.user_username,
+                        displayName: loadout.user_displayName,
+                        avatar: loadout.user_avatar
+                    })
+                }).serialize(),
+                tags: loadout.tag_labels.map((label, index) => {
+                    return {
+                        label: label,
+                        type: loadout.tag_types[index]
+                    };
+                }),
+                visibility: loadout.visibility,
+                created: loadout.created,
+                updated: loadout.updated
+            }
+        })
     }
 
     /**
@@ -245,7 +350,6 @@ export default class LoadoutRepository {
             loadoutId
         ).first<{ owner: string, visibility: number }>();
 
-        console.log(loadout);
         if (loadout?.owner !== userId) {
             const contributor = await this.db.prepare(`
                 SELECT
@@ -285,20 +389,47 @@ export default class LoadoutRepository {
     }
 
     /**
+     * Validate request body
+     * @param body Body to validate
+     */
+    public async validateBody(body: any) {
+        try {
+            await this.schema.validate(body);
+
+            return true;
+          } catch (e: any) {
+            console.warn(e);
+
+            if (e instanceof ValidationError) {
+                throw createError({
+                    message: e.message,
+                    statusCode: 400
+                });
+            } else {
+                throw createError({
+                    message: e,
+                    statusCode: 400
+                });
+            }
+        }
+    }
+
+    /**
      * Creates table if it doesn't exist
      * @private
      */
     private _createTable() {
         try {
+            // @FIXME: delete and recreate loadout table for new changes
             this.db.prepare(`CREATE TABLE IF NOT EXISTS loadout (
                 id TEXT PRIMARY KEY NOT NULL,
-                title VARCHAR(100) NOT NULL,
-                description TEXT,
-                preview TEXT,
+                title VARCHAR(255) NOT NULL,
+                description VARCHAR(1024) NOT NULL,
+                preview TEXT NOT NULL,
                 owner TEXT NOT NULL,
                 visibility BIGINT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                created_at NOT NULL TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at NOT NULL TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (owner) REFERENCES user(id) ON DELETE CASCADE
             )`).run();
 

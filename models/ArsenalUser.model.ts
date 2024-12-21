@@ -1,13 +1,23 @@
 import type { User } from "lucia";
+import type { ArsenalUserProfile, ArsenalUserProfileSerialized } from "./ArsenalUserProfile.model";
 
 /**
  * Arsenal User serialized for storage
  */
 export interface ArsenalUserSerialized {
     id: string;
-    email: string;
     username: string;
-    email_verified?: number;
+    email?: string;
+    emailVerified?: number;
+    profile?: ArsenalUserProfileSerialized;
+}
+
+interface ArsenalUserOptions {
+    id: string;
+    username: string;
+    email?: string;
+    emailVerified?: number;
+    profile?: ArsenalUserProfile;
 }
 
 /**
@@ -16,22 +26,33 @@ export interface ArsenalUserSerialized {
  */
 export class ArsenalUser {
     id: string;
-    email: string;
     username: string;
-    email_verified?: number;
+    email?: string;
+    emailVerified?: number;
+    profile?: ArsenalUserProfile;
 
-    constructor (user: ArsenalUser | User | string) {
+    constructor (user: ArsenalUserOptions | User | string) {
         if (typeof user === 'string') {
             const fetchedUser = this._fetchFromId(user);
             this.id = fetchedUser.id;
             this.username = fetchedUser.username;
             this.email = fetchedUser.email;
-            this.email_verified = fetchedUser.email_verified;
+            this.emailVerified = fetchedUser.emailVerified;
         } else {
             this.id = user.id;
             this.username = user.username;
             this.email = user.email;
         };
+    }
+
+    public serialize(): ArsenalUserSerialized {
+        return {
+            id: this.id,
+            email: this.email,
+            username: this.username,
+            emailVerified: this.emailVerified,
+            profile: this.profile?.serialize()
+        }
     }
 
     /**

@@ -45,12 +45,12 @@ export default defineEventHandler(async (event) => {
   });
 
   /* Check if body is valid */
-  itemRepository.schema.isValid(body).catch((e: any) => {
+  if (!await itemRepository.validateBody(body)) {
     throw createError({
-      message: e,
+      message: 'Invalid body',
       statusCode: 400
     });
-  });
+  }
 
   /* Update category */
   try {

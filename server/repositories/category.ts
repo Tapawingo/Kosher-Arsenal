@@ -1,5 +1,5 @@
 import { D1Database } from "@nuxthub/core";
-import { mixed, number, object, string } from "yup";
+import { mixed, number, object, string, ValidationError } from "yup";
 import { LoadoutCategorySerialized, LoadoutCategoryType } from "~/models/LoadoutCategory.model";
 import LoadoutRepository from "./loadout";
 import LoadoutItemRepository from "./item";
@@ -169,6 +169,32 @@ export default class LoadoutCategoryRepository {
             categoryId,
             loadoutId
         ).run();
+    }
+
+    /**
+     * Validate request body
+     * @param body Body to validate
+     */
+    public async validateBody(body: any) {
+        try {
+            await this.schema.validate(body);
+
+            return true;
+          } catch (e: any) {
+            console.warn(e);
+
+            if (e instanceof ValidationError) {
+                throw createError({
+                    message: e.message,
+                    statusCode: 400
+                });
+            } else {
+                throw createError({
+                    message: e,
+                    statusCode: 400
+                });
+            }
+        }
     }
 
     /**

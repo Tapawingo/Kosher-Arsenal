@@ -71,4 +71,8 @@ export class LoadoutPreview {
         this.type = type;
         return false;
     }
+
+    public serialize(): LoadoutPreviewSerialized {
+        return '' as any
+    }
 }

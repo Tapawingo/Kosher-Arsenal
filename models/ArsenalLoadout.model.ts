@@ -2,6 +2,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { ArsenalUser, type ArsenalUserSerialized } from "./ArsenalUser.model";
 import { LoadoutCategory, type LoadoutCategorySerialized } from "./LoadoutCategory.model";
 import { LoadoutPreview, type LoadoutPreviewSerialized } from "./LoadoutPreview.model";
+import type { ArsenalTag, ArsenalTagSerialized } from "./ArsenalTag.model";
 
 /**
  * A loadouts visibility
@@ -34,22 +35,13 @@ export interface ArsenalLoadoutSerialized {
     title: string;
     description: string;
     preview: LoadoutPreviewSerialized;
-    owner: string;
+    owner: ArsenalUserSerialized | string;
+    tags: string[] | ArsenalTagSerialized[];
     visibility: number;
-    created_at: string;
-    updated_at: string;
+    created?: string;
+    updated?: string;
     categories?: LoadoutCategorySerialized[];
     contributors?: ArsenalUserSerialized[];
-}
-
-/**
- * Loadout extended for use with raw database data
- */
-interface ArsenalLoadoutExtended extends ArsenalLoadout {
-    owner_id: string;
-    owner_username: string;
-    owner_email: string;
-    owner_email_verified: number;
 }
 
 /**
@@ -61,14 +53,15 @@ export class ArsenalLoadout {
     public title: string;
     public description: string;
     public preview!: LoadoutPreview;
-    public owner!: ArsenalUser;
+    public owner!: ArsenalUser | string;
+    public tags: string[] | ArsenalTag[]; // @TODO: Maybe instead of doing queries on construct, do queries in getter functions
     public visibility: ArsenalLoadoutVisibility;
-    public created_at!: Date;
-    public updated_at!: Date;
+    public created!: Date;
+    public updated!: Date;
     public categories!: LoadoutCategory[];
     public contributors!: ArsenalUser[];
 
-    public constructor (loadout?: Partial<ArsenalLoadoutExtended> | Omit<Partial<ArsenalLoadoutExtended>, 'preview'> & { 
+    public constructor (loadout?: Partial<ArsenalLoadout> | Omit<Partial<ArsenalLoadout>, 'preview'> & { 
         preview: Partial<LoadoutPreview>
     } | string) {
         if (typeof loadout === 'string') {
@@ -81,8 +74,8 @@ export class ArsenalLoadout {
     
             this._setOwner(loadout);
             this._setPreview(loadout?.preview);
-            this._setCreatedAt(loadout?.created_at);
-            this._setUpdatedAt(loadout?.updated_at);
+            this._setCreatedAt(loadout?.created);
+            this._setUpdatedAt(loadout?.updated);
             this._setCategories(loadout?.categories);
             this._setContributors(loadout?.contributors);
         };
@@ -112,8 +105,20 @@ export class ArsenalLoadout {
      * Serializes Loadout (pure JSON object).
      * @returns Serialized loadout
      */
-    public serialize () {
+    public serialize (): ArsenalLoadoutSerialized {
         // @TODO Create serialize function.
+        return {
+            id: this.id,
+            title: this.title,
+            description: this.description,
+            preview: this.preview,
+            owner: this.owner instanceof ArsenalUser ? this.owner.serialize() : this.owner,
+            visibility: this.visibility,
+            created: this.created,
+            updated: this.updated,
+            categories?: LoadoutCategorySerialized[] | string[];
+            contributors?: ArsenalUserSerialized[] | string[];
+        }
     };
 
     /**
@@ -133,8 +138,8 @@ export class ArsenalLoadout {
 
             this._setOwner(loadout);
             this._setPreview(loadout?.preview);
-            this._setCreatedAt(loadout?.created_at);
-            this._setUpdatedAt(loadout?.updated_at);
+            this._setCreatedAt(loadout?.created);
+            this._setUpdatedAt(loadout?.updated);
             this._setCategories(loadout?.categories);
             this._setContributors(loadout?.contributors);
         });
@@ -145,7 +150,7 @@ export class ArsenalLoadout {
      * @param userData Data of user
      * @private
      */
-    private _setOwner(loadoutData?: Partial<ArsenalLoadoutExtended> | Omit<Partial<ArsenalLoadoutExtended>, 'preview'> & { 
+    private _setOwner(loadoutData?: Partial<ArsenalLoadout> | Omit<Partial<ArsenalLoadout>, 'preview'> & { 
         preview: Partial<LoadoutPreview>
     }) {
         if (loadoutData?.owner && loadoutData.owner instanceof ArsenalUser) {
@@ -186,9 +191,9 @@ export class ArsenalLoadout {
      */
     private _setCreatedAt (created_at?: Date | string) {
         if (created_at) {
-            this.created_at = created_at instanceof Date ? created_at : new Date(created_at);
+            this.created = created_at instanceof Date ? created_at : new Date(created_at);
         } else {
-            this.created_at = new Date();
+            this.created = new Date();
         }
     }
 
@@ -199,9 +204,9 @@ export class ArsenalLoadout {
      */
     private _setUpdatedAt (updated_at?: Date | string) {
         if (updated_at) {
-            this.updated_at = updated_at instanceof Date ? updated_at : new Date(updated_at);
+            this.updated = updated_at instanceof Date ? updated_at : new Date(updated_at);
         } else {
-            this.updated_at = new Date();
+            this.updated = new Date();
         }
     }
 

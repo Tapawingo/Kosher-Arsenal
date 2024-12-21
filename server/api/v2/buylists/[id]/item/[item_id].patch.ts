@@ -1,0 +1,63 @@
+/** 
+ * @file index.patch.ts
+ * @description API to update a buylist item
+ * 
+ * @route /api/v2/items/:id/buylist
+ * @method PATCH
+ */
+
+import { ArsenalBuylistItemSerialized } from "~/models/ArsenalBuylistItem.model";
+import BuylistRepository from "~/server/repositories/buylist";
+
+/**
+ * API handler for updating a buylist item.
+ *
+ * @param {H3Event} event - The incoming API event, including request, response, and context.
+ */
+export default defineEventHandler(async (event) => {
+  const lucia = event.context.lucia;
+  const buylistRepository = new BuylistRepository(event.context.db);
+  const body = await readBody<ArsenalBuylistItemSerialized>(event);
+
+  /* Check if user is logged in to valid session */
+  const { user } = await validateSession(event.context.session, lucia);
+
+  /* Check for buylist ID */
+  if (!event.context.params?.id) throw createError({
+    message: 'Missing buylist ID',
+    statusCode: 400
+  });
+  
+  /* Check for item ID */
+  if (!event.context.params?.item_id) throw createError({
+    message: 'Missing item ID',
+    statusCode: 400
+  });
+  
+  /* Check if current user is authorized to update buylist item */
+  const buylistId = event.context.params.id;
+  const itemId = event.context.params.item_id;
+  if (!await buylistRepository.isEditAuthorized(buylistId, user.id)) throw createError({
+    message: 'User attempted unauthorized delete',
+    statusCode: 403
+  });
+
+  /* Check if body is valid */
+  if (!await buylistRepository.validateItemBody(body)) {
+    throw createError({
+      message: 'Invalid body',
+      statusCode: 400
+    });
+  }
+
+  /* Update buylist item */
+  try {
+    return await buylistRepository.updateItem(buylistId, itemId, body);
+  } catch (e: any) {
+    console.error(e);
+    throw createError({
+      message: 'Something went wrong',
+      statusCode: 500
+    });
+  }
+});

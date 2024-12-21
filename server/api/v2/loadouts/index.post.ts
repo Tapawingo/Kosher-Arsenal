@@ -6,6 +6,7 @@
  * @method POST
  */
 
+import { ValidationError } from "yup";
 import { ArsenalLoadoutSerialized } from "~/models/ArsenalLoadout.model";
 import LoadoutRepository from "~/server/repositories/loadout";
 import { validateSession } from "~/server/utils/auth";
@@ -24,13 +25,12 @@ export default defineEventHandler(async (event) => {
   const { user } = await validateSession(event.context.session, lucia);
 
   /* Check if body is valid */
-  loadoutRepository.schema.isValid(body).catch((e: any) => {
-    console.warn(e);
+  if (!await loadoutRepository.validateBody(body)) {
     throw createError({
-      message: e,
+      message: 'Invalid body',
       statusCode: 400
     });
-  });
+  }
 
   /* Check if user is trying to create loadout for different user */
   if (body.owner !== user.id) throw createError({

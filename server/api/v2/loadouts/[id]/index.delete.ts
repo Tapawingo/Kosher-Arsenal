@@ -25,12 +25,12 @@ export default defineEventHandler(async (event) => {
   const { user } = await validateSession(event.context.session, lucia);
 
   /* Check if loadout ID has been provided */
-  if (!event.context.params?.loadout_id) throw createError({
+  if (!event.context.params?.id) throw createError({
     message: 'Missing Loadout ID',
     statusCode: 400
   });
   
-  const loadoutId = event.context.params.loadout_id;
+  const loadoutId = event.context.params.id;
 
   /* Check if body is valid */
   loadoutRepository.schema.isValid(body).catch((e: any) => {
